@@ -1,5 +1,5 @@
 
-package org.usfirst.frc.team1076.robot;
+package org.usfirst.frc.team1076.robot.physical;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
