@@ -6,7 +6,7 @@ public class OperatorInput implements IInput {
 
 	IGamepad gamepad;
 	
-	OperatorInput(IGamepad gamepad) {
+	public OperatorInput(IGamepad gamepad) {
 		this.gamepad = gamepad;
 	}
 	

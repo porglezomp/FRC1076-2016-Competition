@@ -3,6 +3,11 @@ package org.usfirst.frc.team1076.robot.physical;
 
 import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.controllers.IRobotController;
+import org.usfirst.frc.team1076.robot.controllers.TeleopController;
+import org.usfirst.frc.team1076.robot.gamepad.IGamepad;
+import org.usfirst.frc.team1076.robot.gamepad.IInput;
+import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
+import org.usfirst.frc.team1076.robot.gamepad.TankInput;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
@@ -55,6 +60,12 @@ public class Robot extends IterativeRobot implements IRobot {
 		
 		compressor.setClosedLoopControl(true);
 		intakePneumatic.set(DoubleSolenoid.Value.kOff);
+		
+		IGamepad driverGamepad = new Gamepad(0);
+		IGamepad operatorGamepad = new Gamepad(1);
+		IInput driver = new TankInput(driverGamepad);
+		IInput operator = new OperatorInput(operatorGamepad);
+		teleopController = new TeleopController(driver, operator);
 		
     	if (teleopController != null) {
     		teleopController.robotInit(this);
@@ -121,25 +132,21 @@ public class Robot extends IterativeRobot implements IRobot {
 
 	@Override
 	public void setLeftSpeed(double speed) {
-		// TODO Auto-generated method stub
-		
+		leftMotor.set(speed);
 	}
 
 	@Override
 	public void setRightSpeed(double speed) {
-		// TODO Auto-generated method stub
-		
+		rightMotor.set(speed);
 	}
 
 	@Override
 	public void setArmSpeed(double speed) {
-		// TODO Auto-generated method stub
-		
+		armMotor.set(speed);
 	}
 
 	@Override
 	public void setIntakeSpeed(double speed) {
-		// TODO Auto-generated method stub
-		
+		intakeMotor.set(speed);
 	}
 }
