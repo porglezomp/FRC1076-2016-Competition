@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="FRC Robot Prototype" default="test">
+<project name="FRC Competition Robot 2016" default="test">
 	<property name="robot.build.dir" value="build/robot"/>
 	<property name="robot.src.dir" value="src/"/>
 	<property name="test.build.dir" value="build/test"/>
