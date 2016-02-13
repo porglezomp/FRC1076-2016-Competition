@@ -6,20 +6,14 @@ public class TeleopController implements IRobotController {
 
 	@Override
 	public void robotInit(IRobot robot) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void autonomousInit(IRobot robot) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void autonomousPeriodic(IRobot robot) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
