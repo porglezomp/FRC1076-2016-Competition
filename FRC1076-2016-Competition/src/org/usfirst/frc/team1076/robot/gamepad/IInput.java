@@ -4,7 +4,7 @@ public interface IInput {
 	public class MotorOutput {
 		public final double left, right;
 		
-		MotorOutput(double left, double right) {
+		public MotorOutput(double left, double right) {
 			this.left = left;
 			this.right = right;
 		}
