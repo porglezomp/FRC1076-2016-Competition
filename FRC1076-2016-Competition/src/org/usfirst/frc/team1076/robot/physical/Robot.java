@@ -4,6 +4,9 @@ package org.usfirst.frc.team1076.robot.physical;
 import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.controllers.IRobotController;
 
+import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -19,11 +22,40 @@ public class Robot extends IterativeRobot implements IRobot {
      * used for any initialization code.
      */
 	
+	static final int LEFT_INDEX = 0;
+	static final int LEFT_SLAVE_INDEX = LEFT_INDEX + 1;
+	static final int RIGHT_INDEX = 2;
+	static final int RIGHT_SLAVE_INDEX = RIGHT_INDEX + 1;
+	static final int INTAKE_INDEX = 4;
+	static final int ARM_INDEX = 5;
+	
+	CANTalon leftMotor = new CANTalon(LEFT_INDEX);
+	CANTalon leftSlave = new CANTalon(LEFT_SLAVE_INDEX);
+	CANTalon rightMotor = new CANTalon(RIGHT_INDEX);
+	CANTalon rightSlave = new CANTalon(RIGHT_SLAVE_INDEX);
+	CANTalon intakeMotor = new CANTalon(INTAKE_INDEX);
+	CANTalon armMotor = new CANTalon(ARM_INDEX);
+	
+	Compressor compressor = new Compressor(0);
+	DoubleSolenoid intakePneumatic = new DoubleSolenoid(0, 1);
+	
 	IRobotController teleopController;
 	IRobotController autoController;
 	
 	@Override
     public void robotInit() {
+		// Initialize the physical components before the controllers,
+		// in case they depend on them.
+		rightSlave.changeControlMode(CANTalon.TalonControlMode.Follower);
+		rightSlave.set(RIGHT_INDEX);
+		rightMotor.setInverted(true);
+		
+		leftSlave.changeControlMode(CANTalon.TalonControlMode.Follower);
+		leftSlave.set(LEFT_INDEX);
+		
+		compressor.setClosedLoopControl(true);
+		intakePneumatic.set(DoubleSolenoid.Value.kOff);
+		
     	if (teleopController != null) {
     		teleopController.robotInit(this);
     	} else {
