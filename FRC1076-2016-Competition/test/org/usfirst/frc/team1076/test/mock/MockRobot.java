@@ -4,7 +4,7 @@ import org.usfirst.frc.team1076.robot.IRobot;
 
 public class MockRobot implements IRobot {
 
-	double left, right, arm, intake;
+	public double left, right, arm, intake;
 	
 	@Override
 	public void setLeftSpeed(double speed) {

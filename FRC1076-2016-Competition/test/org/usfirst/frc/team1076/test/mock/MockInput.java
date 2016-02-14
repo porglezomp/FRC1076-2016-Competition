@@ -4,7 +4,7 @@ import org.usfirst.frc.team1076.robot.gamepad.IInput;
 
 public class MockInput implements IInput {
 
-	double left, right, arm, intake;
+	public double left, right, arm, intake;
 	
 	public void reset() {
 		left = right = arm = intake = 0;
