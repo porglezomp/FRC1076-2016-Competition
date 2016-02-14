@@ -4,11 +4,15 @@ import org.usfirst.frc.team1076.robot.gamepad.IInput;
 
 public class MockInput implements IInput {
 
-	private double left, right, arm, intake;
+	double left, right, arm, intake;
+	
+	public void reset() {
+		left = right = arm = intake = 0;
+	}
 	
 	@Override
 	public MotorOutput driveTrainSpeed() {
-		return new MotorOutput(getLeft(), right);
+		return new MotorOutput(left, right);
 	}
 
 	@Override
@@ -19,9 +23,5 @@ public class MockInput implements IInput {
 	@Override
 	public double intakeSpeed() {
 		return intake;
-	}
-
-	public double getLeft() {
-		return left;
 	}
 }

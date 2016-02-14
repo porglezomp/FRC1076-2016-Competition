@@ -139,7 +139,7 @@ public class Robot extends IterativeRobot implements IRobot {
 	public void setRightSpeed(double speed) {
 		rightMotor.set(speed);
 	}
-
+	
 	@Override
 	public void setArmSpeed(double speed) {
 		armMotor.set(speed);
