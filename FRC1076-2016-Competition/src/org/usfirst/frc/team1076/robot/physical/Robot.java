@@ -1,10 +1,18 @@
 
 package org.usfirst.frc.team1076.robot.physical;
 
+import org.usfirst.frc.team1076.robot.IRobot;
+import org.usfirst.frc.team1076.robot.controllers.IRobotController;
+import org.usfirst.frc.team1076.robot.controllers.TeleopController;
+import org.usfirst.frc.team1076.robot.gamepad.IGamepad;
+import org.usfirst.frc.team1076.robot.gamepad.IInput;
+import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
+import org.usfirst.frc.team1076.robot.gamepad.TankInput;
+
+import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -13,21 +21,62 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot {
-    final String defaultAuto = "Default";
-    final String customAuto = "My Auto";
-    String autoSelected;
-    SendableChooser chooser;
-	
+public class Robot extends IterativeRobot implements IRobot {	
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
+	
+	static final int LEFT_INDEX = 0;
+	static final int LEFT_SLAVE_INDEX = LEFT_INDEX + 1;
+	static final int RIGHT_INDEX = 2;
+	static final int RIGHT_SLAVE_INDEX = RIGHT_INDEX + 1;
+	static final int INTAKE_INDEX = 4;
+	static final int ARM_INDEX = 5;
+	
+	CANTalon leftMotor = new CANTalon(LEFT_INDEX);
+	CANTalon leftSlave = new CANTalon(LEFT_SLAVE_INDEX);
+	CANTalon rightMotor = new CANTalon(RIGHT_INDEX);
+	CANTalon rightSlave = new CANTalon(RIGHT_SLAVE_INDEX);
+	CANTalon intakeMotor = new CANTalon(INTAKE_INDEX);
+	CANTalon armMotor = new CANTalon(ARM_INDEX);
+	
+	Compressor compressor = new Compressor(0);
+	DoubleSolenoid intakePneumatic = new DoubleSolenoid(0, 1);
+	
+	IRobotController teleopController;
+	IRobotController autoController;
+	
+	@Override
     public void robotInit() {
-        chooser = new SendableChooser();
-        chooser.addDefault("Default Auto", defaultAuto);
-        chooser.addObject("My Auto", customAuto);
-        SmartDashboard.putData("Auto choices", chooser);
+		// Initialize the physical components before the controllers,
+		// in case they depend on them.
+		rightSlave.changeControlMode(CANTalon.TalonControlMode.Follower);
+		rightSlave.set(RIGHT_INDEX);
+		rightMotor.setInverted(true);
+		
+		leftSlave.changeControlMode(CANTalon.TalonControlMode.Follower);
+		leftSlave.set(LEFT_INDEX);
+		
+		compressor.setClosedLoopControl(true);
+		intakePneumatic.set(DoubleSolenoid.Value.kOff);
+		
+		IGamepad driverGamepad = new Gamepad(0);
+		IGamepad operatorGamepad = new Gamepad(1);
+		IInput driver = new TankInput(driverGamepad);
+		IInput operator = new OperatorInput(operatorGamepad);
+		teleopController = new TeleopController(driver, operator);
+		
+    	if (teleopController != null) {
+    		teleopController.robotInit(this);
+    	} else {
+    		System.out.println("Teleop Controller on Robot is null in robotInit()");
+    	}
+    	if (autoController != null) {
+    		autoController.robotInit(this);
+    	} else {
+    		System.out.println("Autonomous Controller on Robot is null in robotInit()");
+    	}
     }
     
 	/**
@@ -39,39 +88,65 @@ public class Robot extends IterativeRobot {
 	 * You can add additional auto modes by adding additional comparisons to the switch structure below with additional strings.
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
+	@Override
     public void autonomousInit() {
-    	autoSelected = (String) chooser.getSelected();
-//		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
-		System.out.println("Auto selected: " + autoSelected);
+    	if (autoController != null) {
+    		autoController.autonomousInit(this);
+    	} else {
+    		System.out.println("Autonomous Controller on Robot is null in autonomousInit()");
+    	}
     }
 
     /**
      * This function is called periodically during autonomous
      */
+	@Override
     public void autonomousPeriodic() {
-    	switch(autoSelected) {
-    	case customAuto:
-        //Put custom auto code here   
-            break;
-    	case defaultAuto:
-    	default:
-    	//Put default auto code here
-            break;
+    	if (autoController != null) {
+    		autoController.autonomousPeriodic(this);
+    	} else {
+    		System.out.println("Autonomous Controller on Robot is null in autonomousPeriodic()");
     	}
     }
 
+    @Override
+    public void teleopInit() {
+    	if (teleopController != null) {
+    		teleopController.teleopInit(this);
+    	} else {
+    		System.out.println("Teleop Controller on Robot is null in teleopInit()");
+    	}
+    }
+    
     /**
      * This function is called periodically during operator control
      */
+    @Override
     public void teleopPeriodic() {
-        
+        if (teleopController != null) {
+        	teleopController.teleopPeriodic(this);
+        } else {
+    		System.out.println("Teleop Controller on Robot is null in teleopPeriodic()");
+    	}
     }
-    
-    /**
-     * This function is called periodically during test mode
-     */
-    public void testPeriodic() {
-    
-    }
-    
+
+	@Override
+	public void setLeftSpeed(double speed) {
+		leftMotor.set(speed);
+	}
+
+	@Override
+	public void setRightSpeed(double speed) {
+		rightMotor.set(speed);
+	}
+	
+	@Override
+	public void setArmSpeed(double speed) {
+		armMotor.set(speed);
+	}
+
+	@Override
+	public void setIntakeSpeed(double speed) {
+		intakeMotor.set(speed);
+	}
 }
