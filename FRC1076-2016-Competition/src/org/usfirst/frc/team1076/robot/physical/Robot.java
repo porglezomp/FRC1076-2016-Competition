@@ -2,12 +2,14 @@
 package org.usfirst.frc.team1076.robot.physical;
 
 import org.usfirst.frc.team1076.robot.IRobot;
+import org.usfirst.frc.team1076.robot.controllers.AutoController;
 import org.usfirst.frc.team1076.robot.controllers.IRobotController;
 import org.usfirst.frc.team1076.robot.controllers.TeleopController;
 import org.usfirst.frc.team1076.robot.gamepad.IGamepad;
 import org.usfirst.frc.team1076.robot.gamepad.IInput;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
+import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
@@ -66,6 +68,7 @@ public class Robot extends IterativeRobot implements IRobot {
 		IInput driver = new TankInput(driverGamepad);
 		IInput operator = new OperatorInput(operatorGamepad);
 		teleopController = new TeleopController(driver, operator);
+		autoController = new AutoController(new NothingAutonomous());
 		
     	if (teleopController != null) {
     		teleopController.robotInit(this);
