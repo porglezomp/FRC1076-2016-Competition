@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,6 +35,8 @@ public class Robot extends IterativeRobot implements IRobot {
 	static final int INTAKE_INDEX = 4;
 	static final int ARM_INDEX = 5;
 	
+	double MOTOR_REDUCTION_FACTOR = 0.9;
+	
 	CANTalon leftMotor = new CANTalon(LEFT_INDEX);
 	CANTalon leftSlave = new CANTalon(LEFT_SLAVE_INDEX);
 	CANTalon rightMotor = new CANTalon(RIGHT_INDEX);
@@ -47,16 +50,22 @@ public class Robot extends IterativeRobot implements IRobot {
 	IRobotController teleopController;
 	IRobotController autoController;
 	
+	double robotSpeed = 0.5;
+	double armSpeed = 0.5;
+	double intakeSpeed = 0.5;
+	
 	@Override
     public void robotInit() {
+    	SmartDashboard.putNumber("Motor Tweak", MOTOR_REDUCTION_FACTOR);
+		
 		// Initialize the physical components before the controllers,
 		// in case they depend on them.
 		rightSlave.changeControlMode(CANTalon.TalonControlMode.Follower);
 		rightSlave.set(RIGHT_INDEX);
-		rightMotor.setInverted(true);
 		
 		leftSlave.changeControlMode(CANTalon.TalonControlMode.Follower);
 		leftSlave.set(LEFT_INDEX);
+		leftMotor.setInverted(true);
 		
 		compressor.setClosedLoopControl(true);
 		intakePneumatic.set(DoubleSolenoid.Value.kOff);
@@ -123,6 +132,16 @@ public class Robot extends IterativeRobot implements IRobot {
      */
     @Override
     public void teleopPeriodic() {
+    	MOTOR_REDUCTION_FACTOR = SmartDashboard.getNumber("Motor Tweak");
+    	
+    	int left = leftMotor.getEncVelocity();
+    	int right = rightMotor.getEncVelocity();
+    	if (left != 0) {
+        	System.out.println("Left motor " + leftMotor.getEncVelocity());
+    	}
+    	if (right != 0) {
+    		System.out.println("Right motor " + rightMotor.getEncVelocity());
+    	}
         if (teleopController != null) {
         	teleopController.teleopPeriodic(this);
         } else {
@@ -132,21 +151,21 @@ public class Robot extends IterativeRobot implements IRobot {
 
 	@Override
 	public void setLeftSpeed(double speed) {
-		leftMotor.set(speed);
+		leftMotor.set(speed * robotSpeed);
 	}
 
 	@Override
 	public void setRightSpeed(double speed) {
-		rightMotor.set(speed);
+		rightMotor.set(speed * MOTOR_REDUCTION_FACTOR * robotSpeed);
 	}
 	
 	@Override
 	public void setArmSpeed(double speed) {
-		armMotor.set(speed);
+		armMotor.set(speed * armSpeed);
 	}
-
+	
 	@Override
 	public void setIntakeSpeed(double speed) {
-		intakeMotor.set(speed);
+		intakeMotor.set(speed * intakeSpeed);
 	}
 }
