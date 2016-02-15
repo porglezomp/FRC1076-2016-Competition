@@ -40,4 +40,12 @@ public class TeleopController implements IRobotController {
 		robot.setRightSpeed(drive.right);		
 	}
 
+	@Override
+	public void testInit(IRobot robot) {
+	}
+
+	@Override
+	public void testPeriodic(IRobot robot) {
+	}
+
 }
