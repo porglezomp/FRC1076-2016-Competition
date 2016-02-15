@@ -49,6 +49,7 @@ public class Robot extends IterativeRobot implements IRobot {
 	
 	IRobotController teleopController;
 	IRobotController autoController;
+	IRobotController testController;
 	
 	double robotSpeed = 0.5;
 	double armSpeed = 0.5;
@@ -81,10 +82,17 @@ public class Robot extends IterativeRobot implements IRobot {
     	} else {
     		System.out.println("Teleop Controller on Robot is null in robotInit()");
     	}
+    	
     	if (autoController != null) {
     		autoController.robotInit(this);
     	} else {
     		System.out.println("Autonomous Controller on Robot is null in robotInit()");
+    	}
+    	
+    	if (testController != null) {
+    		testController.robotInit(this);
+    	} else {
+    		System.out.println("Test Controller on Robot is null in robotInit()");
     	}
     }
     
@@ -145,7 +153,25 @@ public class Robot extends IterativeRobot implements IRobot {
         if (teleopController != null) {
         	teleopController.teleopPeriodic(this);
         } else {
-    		System.out.println("Teleop Controller on Robot is null in teleopPeriodic()");
+    		System.err.println("Teleop Controller on Robot is null in teleopPeriodic()");
+    	}
+    }
+    
+    @Override
+    public void testInit() {
+    	if (testController != null) {
+    		testController.testPeriodic(this);
+    	} else {
+    		System.err.println("Test Controller on Robot is null in testInit()");
+    	}
+    }
+    
+    @Override
+    public void testPeriodic() {
+    	if (testController != null) {
+    		testController.testPeriodic(this);
+    	} else {
+    		System.err.println("Test Controller on Robot is null in testInit()");
     	}
     }
 
