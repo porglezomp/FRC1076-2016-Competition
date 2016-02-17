@@ -5,13 +5,12 @@ import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 public class ForwardAutonomous implements IAutoState {
 	int counter = 0; // replace with encoders
 	int limit = 100;
+	
 	public ForwardAutonomous(int limit) {
 		this.limit = limit;
 	}
 	
-	public void init() {
-
-	}
+	public void init() { }
 	
 	public IAutoState next() {
 		return new NothingAutonomous();

@@ -23,12 +23,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot implements IRobot {	
-    /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     */
-	
+public class Robot extends IterativeRobot implements IRobot {
 	static final int LEFT_INDEX = 0;
 	static final int LEFT_SLAVE_INDEX = LEFT_INDEX + 1;
 	static final int RIGHT_INDEX = 2;
@@ -49,6 +44,10 @@ public class Robot extends IterativeRobot implements IRobot {
 	IRobotController teleopController;
 	IRobotController autoController;
 	
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
 	@Override
     public void robotInit() {
 		// Initialize the physical components before the controllers,
@@ -75,6 +74,7 @@ public class Robot extends IterativeRobot implements IRobot {
     	} else {
     		System.out.println("Teleop Controller on Robot is null in robotInit()");
     	}
+    	
     	if (autoController != null) {
     		autoController.robotInit(this);
     	} else {

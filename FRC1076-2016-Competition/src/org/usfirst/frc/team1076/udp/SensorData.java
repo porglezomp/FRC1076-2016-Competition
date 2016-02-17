@@ -8,7 +8,7 @@ public class SensorData {
 	private double distance;
 	private FieldPosition position;
 	
-	public SensorData(int port) throws Exception {
+	public SensorData(int port) {
 		this.port = port;
 		receiver = new Channel(this.port);
 	}

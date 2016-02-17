@@ -10,12 +10,15 @@ public class Accelerometer implements IAccelerometer {
 	public double getX() {
 		return accel.getX();
 	}
+	
 	public double getY() {
 		return accel.getY();
 	}
+	
 	public double getZ() {
 		return accel.getZ();
 	}
+	
 	public Vector getVector() {
 		return new Vector(accel.getX(), accel.getY(), accel.getZ());
 	}

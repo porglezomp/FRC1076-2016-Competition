@@ -3,9 +3,7 @@ package org.usfirst.frc.team1076.robot.statemachine;
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 
 public class NothingAutonomous implements IAutoState {
-	public void init() {
-		
-	}
+	public void init() { }
 	
 	public IAutoState next() {
 		return this;

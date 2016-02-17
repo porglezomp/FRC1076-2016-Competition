@@ -14,21 +14,16 @@ public class AutoController implements IRobotController {
 	}
 	
 	@Override
-	public void robotInit(IRobot robot) {
-	}
+	public void robotInit(IRobot robot) { }
 
 	@Override
-	public void teleopInit(IRobot robot) {
-	}
+	public void teleopInit(IRobot robot) { }
 
 	@Override
-	public void teleopPeriodic(IRobot robot) {
-	}
+	public void teleopPeriodic(IRobot robot) { }
 
 	@Override
-	public void autonomousInit(IRobot robot) {
-		// TODO Auto-generated method stub
-	}
+	public void autonomousInit(IRobot robot) { }
 	
 	@Override
 	public void autonomousPeriodic(IRobot robot) {

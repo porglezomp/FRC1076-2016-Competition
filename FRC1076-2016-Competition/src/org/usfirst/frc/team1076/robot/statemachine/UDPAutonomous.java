@@ -8,14 +8,13 @@ public class UDPAutonomous implements IAutoState {
 	private int port;
 	private SensorData sensors;
 	private IAccelerometer accel;
-	public UDPAutonomous(int port) throws Exception {
+	
+	public UDPAutonomous(int port) {
 		this.port = port;
 		sensors = new SensorData(this.port);
 	}
 	
-	public void init() {
-		
-	}
+	public void init() { }
 	
 	public IAutoState next() {
 		return this;

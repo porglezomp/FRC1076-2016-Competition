@@ -11,10 +11,15 @@ public class Channel {
 	private boolean doesReceive = true;
 	private Queue<UDPMessage> queue;
 	
-	public Channel(int port) throws Exception {
+	public Channel(int port) {
 		this.queue = new LinkedList<UDPMessage>();
 		this.port = port;
-		this.serverSocket = new DatagramSocket(port);
+		try {
+			this.serverSocket = new DatagramSocket(port);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		
 		this.receiveWorker = new Thread(new Runnable() {
 			private Channel containerChannel;
 			
@@ -29,7 +34,9 @@ public class Channel {
 			
 			public void run() {
 				while (true) {
-					if (!this.shouldReceive()) continue;
+					if (!this.shouldReceive()) {
+						continue;
+					}
 					DatagramPacket receivePacket = new DatagramPacket(new byte[1024], 1024);
 					try {
 						serverSocket.receive(receivePacket);
@@ -61,19 +68,24 @@ public class Channel {
 	public void setReceiveStatus(boolean receive) {
 		doesReceive = receive;
 	}
+	
+	public UDPMessage popLatestMessage() {
+		if(queue.isEmpty()) {
+			return null;
+		}
+		return queue.poll();
+	}
 
 	public void putMessage(UDPMessage str) {
 		queue.add(str);
 	}
 	
-	public UDPMessage popLatestMessage() {
-		if(queue.isEmpty())
-			return null;
-		return queue.poll();
-	}
-	
-	public void sendMessage(String message) throws Exception {
-		serverSocket.send(new UDPMessage(message, this.receiverIP).sendPacket(5880));
+	public void sendMessage(String message) {
+		try {
+			serverSocket.send(new UDPMessage(message, this.receiverIP).sendPacket(this.port));
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void close() {
