@@ -24,7 +24,8 @@ public class SensorData {
 			if(vstatus != null) {
 				if(vstatus.toLowerCase().contains("right") && position == FieldPosition.Right) {
 					this.set(head, dist);
-				} else if(vstatus.toLowerCase().contains("left") && position == FieldPosition.Left) {
+				} else if(vstatus.toLowerCase().contains("left") && 
+						position == FieldPosition.Left) {
 					this.set(head, dist);
 				} else if(vstatus.toLowerCase().equals("ok")) {
 					this.set(head, dist);

@@ -1,11 +1,13 @@
 package org.usfirst.frc.team1076.robot.statemachine;
 
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.sensors.IAccelerometer;
 import org.usfirst.frc.team1076.udp.SensorData;
 
 public class UDPAutonomous implements IAutoState {
 	private int port;
 	private SensorData sensors;
+	private IAccelerometer accel;
 	public UDPAutonomous(int port) throws Exception {
 		this.port = port;
 		sensors = new SensorData(this.port);
