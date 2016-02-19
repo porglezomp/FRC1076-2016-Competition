@@ -7,6 +7,10 @@ import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 public class Accelerometer implements IAccelerometer {
 	private BuiltInAccelerometer accel;
 	
+	public Accelerometer() {
+		accel = new BuiltInAccelerometer();
+	}
+	
 	public double getX() {
 		return accel.getX();
 	}

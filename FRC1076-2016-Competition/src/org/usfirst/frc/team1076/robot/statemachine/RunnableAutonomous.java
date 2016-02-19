@@ -1,14 +1,21 @@
 package org.usfirst.frc.team1076.robot.statemachine;
-
+import org.usfirst.frc.team1076.robot.controllers.AutoRun;
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 
-public class NothingAutonomous implements IAutoState {
+public class RunnableAutonomous implements IAutoState {
 	private IAutoState nextState = null;
+	private AutoRun customWorker;
 
-	public void init() { }
+	public RunnableAutonomous(AutoRun autoRun) {
+		customWorker = autoRun;
+	}
+
+	public void init() {
+		customWorker.init();
+	}
 	
 	public IAutoState next() {
-		return nextState ;
+		return nextState;
 	}
 	
 	public IAutoState setNext(IAutoState nextState) {
@@ -21,18 +28,19 @@ public class NothingAutonomous implements IAutoState {
 	}
 	
 	public boolean shouldChange() {
-		return false;
+		return customWorker.shouldChange();
 	}
-	
+
 	public MotorOutput driveTrainSpeed() {
-		return new MotorOutput(0, 0);
+		return customWorker.driveTrainSpeed();
 	}
-	
+
 	public double armSpeed() {
-		return 0;
+		return customWorker.armSpeed();
 	}
-	
+
 	public double intakeSpeed() {
-		return 0;
+		return customWorker.intakeSpeed();
 	}
+
 }

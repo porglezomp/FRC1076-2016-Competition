@@ -63,4 +63,8 @@ public class SensorData {
 	public Channel getChannel() {
 		return receiver;
 	}
+
+	public double currentHeading() {
+		return 0;
+	}
 }

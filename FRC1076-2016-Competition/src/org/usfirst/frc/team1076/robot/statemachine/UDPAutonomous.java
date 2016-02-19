@@ -8,15 +8,25 @@ public class UDPAutonomous implements IAutoState {
 	private int port;
 	private SensorData sensors;
 	private IAccelerometer accel;
+	private IAutoState nextState = null;
 	
 	public UDPAutonomous(int port) {
 		this.port = port;
 		sensors = new SensorData(this.port);
 	}
-	
+
 	public void init() { }
 	
 	public IAutoState next() {
+		return nextState;
+	}
+	
+	public IAutoState setNext(IAutoState nextState) {
+		if(this.nextState == null) {
+			this.nextState = nextState;
+		} else {
+			this.nextState.setNext(nextState);
+		}
 		return this;
 	}
 	
@@ -25,7 +35,11 @@ public class UDPAutonomous implements IAutoState {
 	}
 	
 	public MotorOutput driveTrainSpeed() {
-		return new MotorOutput(0, 0);
+		sensors.interpretData();
+		if (Math.abs(sensors.getHeading() - sensors.currentHeading()) > 1) {
+			return new MotorOutput(1, -1);
+		}
+		return new MotorOutput(1, 1);
 	}
 	
 	public double armSpeed() {
