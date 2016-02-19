@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -30,9 +29,9 @@ public class Robot extends IterativeRobot implements IRobot {
      */
 	
 	static final int LEFT_INDEX = 0;
-	static final int LEFT_SLAVE_INDEX = LEFT_INDEX + 1;
+	static final int LEFT_SLAVE_INDEX = 1;
 	static final int RIGHT_INDEX = 2;
-	static final int RIGHT_SLAVE_INDEX = RIGHT_INDEX + 1;
+	static final int RIGHT_SLAVE_INDEX = 3;
 	static final int INTAKE_INDEX = 4;
 	static final int ARM_INDEX = 5;
 	
@@ -62,12 +61,13 @@ public class Robot extends IterativeRobot implements IRobot {
 		
 		// Initialize the physical components before the controllers,
 		// in case they depend on them.
-		rightSlave.changeControlMode(CANTalon.TalonControlMode.Follower);
-		rightSlave.set(RIGHT_INDEX);
+		// rightSlave.changeControlMode(TalonControlMode.Follower);
+		// rightSlave.set(RIGHT_INDEX);
+		rightSlave.setInverted(true);
 		rightMotor.setInverted(true);
 		
-		leftSlave.changeControlMode(CANTalon.TalonControlMode.Follower);
-		leftSlave.set(LEFT_INDEX);
+		// leftSlave.changeControlMode(TalonControlMode.Follower);
+		// leftSlave.set(LEFT_INDEX);
 		
 		compressor.setClosedLoopControl(true);
 		intakePneumatic.set(DoubleSolenoid.Value.kOff);
@@ -179,15 +179,16 @@ public class Robot extends IterativeRobot implements IRobot {
     	int left = leftMotor.getEncVelocity();
     	int right = rightMotor.getEncVelocity();
     	if (left != 0) {
-        	System.out.println("Left motor " + leftMotor.getEncVelocity());
+        	System.out.println("Left motor " + left);
     	}
     	if (right != 0) {
-    		System.out.println("Right motor " + rightMotor.getEncVelocity());
+    		System.out.println("Right motor " + right);
     	}
     }
     
 	@Override
 	public void setLeftSpeed(double speed) {
+		leftSlave.set(speed * MOTOR_POWER_FACTOR * robotSpeed);
 		leftMotor.set(speed * MOTOR_POWER_FACTOR * robotSpeed);
 		System.out.println("Left: " + speed * MOTOR_POWER_FACTOR * robotSpeed);
 	}
@@ -195,6 +196,7 @@ public class Robot extends IterativeRobot implements IRobot {
 	@Override
 	public void setRightSpeed(double speed) {
 		rightMotor.set(speed * robotSpeed);
+		rightSlave.set(speed * robotSpeed);
 		System.out.println("Right: " + speed * robotSpeed);
 	}
 	

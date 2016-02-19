@@ -82,8 +82,8 @@ public class TestController implements IRobotController {
 	}
 	
 	public void driveForward(IRobot robot) {
-		robot.setLeftSpeed(-1);
-		robot.setRightSpeed(-1);
+		robot.setLeftSpeed(1);
+		robot.setRightSpeed(1);
 		actionProgress += 300;
 		if (actionProgress > 30000) {
 			currentAction = Action.None;
