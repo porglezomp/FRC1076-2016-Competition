@@ -1,5 +1,9 @@
 package org.usfirst.frc.team1076.udp;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 public class SensorData {
 	enum FieldPosition { Right, Left; }
 	private int port;
@@ -7,6 +11,7 @@ public class SensorData {
 	private double heading;
 	private double distance;
 	private FieldPosition position;
+	private JSONParser parser = new JSONParser();
 	
 	public SensorData(int port) {
 		this.port = port;
@@ -17,34 +22,62 @@ public class SensorData {
 		UDPMessage latest = receiver.popLatestMessage();
 		while(latest != null) {
 			latest = receiver.popLatestMessage();
-			String vstatus = findByVariableName(latest.getMessage(), "VSTATUS");
-			double head = Double.parseDouble(findByVariableName(latest.getMessage(), "TH"));
-			double dist = Double.parseDouble(findByVariableName(latest.getMessage(), "TD"));
-			String lstatus = findByVariableName(latest.getMessage(), "LSTATUS");
-			if(vstatus != null) {
-				if(vstatus.toLowerCase().contains("right") && position == FieldPosition.Right) {
-					this.set(head, dist);
-				} else if(vstatus.toLowerCase().contains("left") && 
-						position == FieldPosition.Left) {
-					this.set(head, dist);
-				} else if(vstatus.toLowerCase().equals("ok")) {
-					this.set(head, dist);
-				}
-			} else if(lstatus != null && lstatus.contains("ok")) {
-				this.set(head, dist);
+			JSONObject obj;
+			try {
+				obj = (JSONObject) parser.parse(latest.getMessage());
+			} catch (ParseException e) {
+				e.printStackTrace();
+				continue;
+			}
+			
+			switch ((String) obj.get("sender")) {
+			case "lidar":
+				handleLidarMessage(obj);
+				break;
+			case "vision":
+				handleVisionMessage(obj);
+				break;
+			case "sonar":
+				handleSonarMessage(obj);
+				break;
+			default:
 			}
 		}
 	}
 	
-	public static String findByVariableName(String str, String name) {
-		String[] temp = str.replace(" ", "").toLowerCase().split(",");
-		for(String i: temp) {
-			String[] pair = i.split("\\=");
-			if(pair[0].contains(name.toLowerCase())) {
-				return pair[1];
-			}
+	private void handleSonarMessage(JSONObject msg) {
+
+	}
+	
+	private void handleVisionMessage(JSONObject msg) {
+		String status = (String) msg.get("status");
+		double heading = ((Number) msg.get("heading")).doubleValue();
+		double range = ((Number) msg.get("range")).doubleValue();
+		switch (status) {
+		case "left":
+			if (position == FieldPosition.Right) set(heading, range);
+			break;
+		case "right":
+			if (position == FieldPosition.Left) set(heading, range);
+			break;
+		case "ok":
+			set(heading, range);
+			break;
+		default:
 		}
-		return null;
+	}
+	
+	private void handleLidarMessage(JSONObject msg) {
+		String message = (String) msg.get("message");
+		switch (message) {
+		case "range and heading":
+			double heading = ((Number) msg.get("heading")).doubleValue();
+			double range = ((Number) msg.get("range")).doubleValue();
+			this.heading = heading;
+			this.distance = range;
+			break;
+		default:
+		}
 	}
 	
 	public void set(double h, double d) {
