@@ -6,7 +6,9 @@
 	<property name="test.build.dir" value="build/test"/>
 	<property name="test.src.dir" value="test"/>
 	
-	<path id="classpath.base"/>
+	<path id="classpath.base">
+		<pathelement location="lib/json-simple-1.1.1.jar"/>
+	</path>
 	
 	<path id="classpath.test">
 		<pathelement location="lib/junit-4.12.jar"/>
@@ -26,7 +28,7 @@
 				<fileset dir="${test.src.dir}" includes="**/*Test*.java"/>
 			</batchtest>
 		</junit>
-                <fail message="Some test(s) failed." if="test.failed"/>
+        <fail message="Some test(s) failed." if="test.failed"/>
 	</target>
 	
 	<target name="build" depends="clean">

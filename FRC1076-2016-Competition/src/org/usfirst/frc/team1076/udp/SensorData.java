@@ -31,8 +31,9 @@ public class SensorData {
 				e.printStackTrace();
 				continue;
 			}
+			System.out.println(obj);
 			
-			switch ((String) obj.get("sender")) {
+			switch (((String) obj.get("sender")).toLowerCase()) {
 			case "lidar":
 				handleLidarMessage(obj);
 				break;
