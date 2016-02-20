@@ -6,13 +6,16 @@ import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.IAutoState;
 import org.usfirst.frc.team1076.robot.statemachine.RunnableAutonomous;
+import org.usfirst.frc.team1076.udp.SensorData;
 
 public class AutoController implements IRobotController {
 
+	SensorData sensorData;
 	IAutoState autoState;
 	
 	public AutoController(IAutoState mode) {
 		this.autoState = mode;
+		sensorData = new SensorData(5880);
 		/*this.autoState = new RunnableAutonomous(new AutoRun() {
 			private final double sp = 1;
 			private double time = 0;
@@ -45,7 +48,8 @@ public class AutoController implements IRobotController {
 	
 	@Override
 	public void autonomousPeriodic(IRobot robot) {
-		if(autoState.shouldChange()) {
+		sensorData.interpretData();
+		if (autoState.shouldChange()) {
 			autoState = autoState.next();
 			autoState.init(); // Initialize the new autonomous mode
 		}
