@@ -22,8 +22,8 @@ public class SensorData {
 	}
 	
 	public void interpretData() {
-		UDPMessage latest;
-		while ((latest = receiver.popLatestMessage()) != null) {
+		while (receiver.hasMessage()) {
+			UDPMessage latest = receiver.popLatestMessage();
 			JSONObject obj;
 			try {
 				obj = (JSONObject) parser.parse(latest.getMessage());

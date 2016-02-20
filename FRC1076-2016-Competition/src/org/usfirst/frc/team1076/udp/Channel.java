@@ -80,6 +80,10 @@ public class Channel {
 		queue.add(str);
 	}
 	
+	public boolean hasMessage() {
+		return !queue.isEmpty();
+	}
+	
 	public void sendMessage(String message) {
 		try {
 			serverSocket.send(new UDPMessage(message, this.receiverIP).sendPacket(this.port));
