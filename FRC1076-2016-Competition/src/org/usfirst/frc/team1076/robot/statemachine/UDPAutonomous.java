@@ -3,6 +3,7 @@ package org.usfirst.frc.team1076.robot.statemachine;
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.sensors.IAccelerometer;
 import org.usfirst.frc.team1076.udp.SensorData;
+import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
 public class UDPAutonomous implements IAutoState {
 	private int port;
@@ -10,9 +11,9 @@ public class UDPAutonomous implements IAutoState {
 	private IAccelerometer accel;
 	private IAutoState nextState = null;
 	
-	public UDPAutonomous(int port) {
+	public UDPAutonomous(int port, FieldPosition position) {
 		this.port = port;
-		sensors = new SensorData(this.port);
+		sensors = new SensorData(this.port, position); 
 	}
 
 	public void init() { }

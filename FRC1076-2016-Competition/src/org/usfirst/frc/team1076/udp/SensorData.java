@@ -5,7 +5,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class SensorData {
-	enum FieldPosition { Right, Left; }
+	public enum FieldPosition { Right, Left; }
 	private int port;
 	private Channel receiver;
 	private double heading;
@@ -16,8 +16,9 @@ public class SensorData {
 	private double leftSideBack, rightSideBack, leftSideFront, rightSideFront;
 	private double leftFront, rightFront;	
 	
-	public SensorData(int port) {
+	public SensorData(int port, FieldPosition position) {
 		this.port = port;
+		this.position = position;
 		receiver = new Channel(this.port);
 	}
 	
