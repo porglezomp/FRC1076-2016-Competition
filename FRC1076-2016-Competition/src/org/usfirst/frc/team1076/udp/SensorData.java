@@ -13,15 +13,17 @@ public class SensorData {
 	private FieldPosition position;
 	private JSONParser parser = new JSONParser();
 	
+	private double leftSideBack, rightSideBack, leftSideFront, rightSideFront;
+	private double leftFront, rightFront;	
+	
 	public SensorData(int port) {
 		this.port = port;
 		receiver = new Channel(this.port);
 	}
 	
 	public void interpretData() {
-		UDPMessage latest = receiver.popLatestMessage();
-		while(latest != null) {
-			latest = receiver.popLatestMessage();
+		UDPMessage latest;
+		while ((latest = receiver.popLatestMessage()) != null) {
 			JSONObject obj;
 			try {
 				obj = (JSONObject) parser.parse(latest.getMessage());
@@ -46,7 +48,31 @@ public class SensorData {
 	}
 	
 	private void handleSonarMessage(JSONObject msg) {
-
+		try {
+			String type = (String) msg.get("message");
+			if (!type.equals("ranges")) {
+				System.err.println("Error, sonar message was \"" + type + "\" expecting \"ranges\"");
+				// If the message type is wrong, we can't trust it to have all the attributes
+				return;
+			}
+			
+			leftSideBack = ((Number) msg.get("left side back")).doubleValue();
+			leftSideFront = ((Number) msg.get("left side front")).doubleValue();
+			rightSideBack = ((Number) msg.get("right side back")).doubleValue();
+			rightSideFront = ((Number) msg.get("right side front")).doubleValue();
+			leftFront = ((Number) msg.get("left front")).doubleValue();
+			rightFront = ((Number) msg.get("right front")).doubleValue();
+			System.out.println("Got the sonar data");
+			System.out.println("Left side back: " + leftSideBack);
+			System.out.println("Left side front: " + leftSideFront);
+			System.out.println("Right side back: " + rightSideBack);
+			System.out.println("Right side front: " + rightSideFront);
+			System.out.println("Left front: " + leftFront);
+			System.out.println("Right front: " + rightFront);
+		} catch (Throwable e) {
+			// TODO: Figure out what the correct exception is for missing JSON attributes
+			e.printStackTrace();
+		}
 	}
 	
 	private void handleVisionMessage(JSONObject msg) {
