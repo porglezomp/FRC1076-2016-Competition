@@ -19,7 +19,7 @@ public class Channel {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		
+
 		this.receiveWorker = new Thread(new Runnable() {
 			private Channel containerChannel;
 			
@@ -33,14 +33,11 @@ public class Channel {
 			}
 			
 			public void run() {
-				while (true) {
-					if (!this.shouldReceive()) {
-						continue;
-					}
+				while (!Thread.interrupted()) {
+					if (!this.shouldReceive()) { continue; }
 					DatagramPacket receivePacket = new DatagramPacket(new byte[1024], 1024);
 					try {
 						serverSocket.receive(receivePacket);
-						containerChannel.setIP(receivePacket.getAddress());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -48,6 +45,7 @@ public class Channel {
 					data = data.substring(0, receivePacket.getLength());
 					containerChannel.putMessage(new UDPMessage(data, receivePacket.getAddress()));
 				}
+				serverSocket.close();
 			}
 		}.init(this));
 		this.receiveWorker.start();
@@ -93,6 +91,6 @@ public class Channel {
 	}
 	
 	public void close() {
-		serverSocket.close();
+		receiveWorker.interrupt();
 	}
 }
