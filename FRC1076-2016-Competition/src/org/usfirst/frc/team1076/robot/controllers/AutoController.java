@@ -1,11 +1,8 @@
 package org.usfirst.frc.team1076.robot.controllers;
 
 import org.usfirst.frc.team1076.robot.IRobot;
-import org.usfirst.frc.team1076.robot.gamepad.IInput;
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
-import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.IAutoState;
-import org.usfirst.frc.team1076.robot.statemachine.RunnableAutonomous;
 import org.usfirst.frc.team1076.udp.SensorData;
 
 public class AutoController implements IRobotController {

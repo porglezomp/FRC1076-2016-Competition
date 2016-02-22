@@ -4,13 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.usfirst.frc.team1076.robot.controllers.AutoController;
-import org.usfirst.frc.team1076.robot.controllers.AutoRun;
-import org.usfirst.frc.team1076.robot.controllers.TeleopController;
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
-import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
-import org.usfirst.frc.team1076.robot.statemachine.RunnableAutonomous;
-import org.usfirst.frc.team1076.test.mock.MockInput;
 import org.usfirst.frc.team1076.test.mock.MockRobot;
 
 public class AutoControllerTest {
