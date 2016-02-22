@@ -5,8 +5,10 @@ import org.usfirst.frc.team1076.robot.gamepad.IInput;
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.IAutoState;
+import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.RunnableAutonomous;
 import org.usfirst.frc.team1076.udp.SensorData;
+import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
 public class AutoController implements IRobotController {
 
@@ -15,7 +17,7 @@ public class AutoController implements IRobotController {
 	
 	public AutoController(IAutoState mode) {
 		this.autoState = mode;
-		sensorData = new SensorData(5880);
+		sensorData = new SensorData(5880, FieldPosition.Right);
 		/*this.autoState = new RunnableAutonomous(new AutoRun() {
 			private final double sp = 1;
 			private double time = 0;
@@ -51,6 +53,9 @@ public class AutoController implements IRobotController {
 		sensorData.interpretData();
 		if (autoState.shouldChange()) {
 			autoState = autoState.next();
+			if (autoState == null) {
+				autoState = new NothingAutonomous();
+			}
 			autoState.init(); // Initialize the new autonomous mode
 		}
 		robot.setArmSpeed(autoState.armSpeed());
