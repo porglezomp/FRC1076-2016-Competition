@@ -15,15 +15,15 @@ import org.usfirst.frc.team1076.test.mock.MockRobot;
 
 public class AutoControllerTest {
 	private static final double EPSILON = 1e-10;
-	AutoController controller = new AutoController(new ForwardAutonomous(0));
+	AutoController controller = new AutoController(new ForwardAutonomous(1000, 0.8));
 	MockRobot robot = new MockRobot();
 	
 	@Test
 	public void testForward() {
 		controller.autonomousPeriodic(robot);
 		assertEquals("The left motor should be 0;",
-				0, robot.left, EPSILON);
+				0.8, robot.left, EPSILON);
 		assertEquals("The right motor should be 0;",
-				0, robot.right, EPSILON);
+				0.8, robot.right, EPSILON);
 	}
 }
