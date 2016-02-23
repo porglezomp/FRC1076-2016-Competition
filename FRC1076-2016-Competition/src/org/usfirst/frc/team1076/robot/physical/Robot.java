@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,6 +42,7 @@ public class Robot extends IterativeRobot implements IRobot {
 	CANTalon rightSlave = new CANTalon(RIGHT_SLAVE_INDEX);
 	CANTalon intakeMotor = new CANTalon(INTAKE_INDEX);
 	CANTalon armMotor = new CANTalon(ARM_INDEX);
+	Servo lidarServo = new Servo(0);
 	
 	Compressor compressor = new Compressor(0);
 	DoubleSolenoid intakePneumatic = new DoubleSolenoid(0, 1);
@@ -58,6 +61,7 @@ public class Robot extends IterativeRobot implements IRobot {
      */
 	@Override
     public void robotInit() {
+    	SmartDashboard.putNumber("LIDAR Speed", 80);		
 //    	SmartDashboard.putNumber("Motor Tweak", MOTOR_POWER_FACTOR);
 		
 		// Initialize the physical components before the controllers,
@@ -177,6 +181,7 @@ public class Robot extends IterativeRobot implements IRobot {
 
     public void commonPeriodic() {
     	// MOTOR_POWER_FACTOR = SmartDashboard.getNumber("Motor Tweak");
+    	lidarServo.setAngle(SmartDashboard.getNumber("LIDAR Speed"));
     	
     	int left = leftMotor.getEncVelocity();
     	int right = rightMotor.getEncVelocity();
