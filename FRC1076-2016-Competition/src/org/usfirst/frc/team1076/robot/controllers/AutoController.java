@@ -2,33 +2,19 @@ package org.usfirst.frc.team1076.robot.controllers;
 
 import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
-import org.usfirst.frc.team1076.robot.statemachine.IAutoState;
+import org.usfirst.frc.team1076.robot.statemachine.AutoState;
+import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 import org.usfirst.frc.team1076.udp.SensorData;
+import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
 public class AutoController implements IRobotController {
 
 	SensorData sensorData;
-	IAutoState autoState;
+	AutoState autoState;
 	
-	public AutoController(IAutoState mode) {
+	public AutoController(AutoState mode) {
 		this.autoState = mode;
-		sensorData = new SensorData(5880);
-		/*this.autoState = new RunnableAutonomous(new AutoRun() {
-			private final double sp = 1;
-			private double time = 0;
-			
-			public void init() {
-				time = System.currentTimeMillis();
-			}
-			
-			public MotorOutput driveTrainSpeed() {
-				if(System.currentTimeMillis() - time < 1000) {
-					return new MotorOutput(sp, sp);
-				} else {
-					return new MotorOutput(0, 0);
-				}
-			}
-		});*/
+		sensorData = new SensorData(5880, FieldPosition.Right);
 	}
 	
 	@Override
@@ -48,6 +34,9 @@ public class AutoController implements IRobotController {
 		sensorData.interpretData();
 		if (autoState.shouldChange()) {
 			autoState = autoState.next();
+			if (autoState == null) {
+				autoState = new NothingAutonomous();
+			}
 			autoState.init(); // Initialize the new autonomous mode
 		}
 		robot.setArmSpeed(autoState.armSpeed());

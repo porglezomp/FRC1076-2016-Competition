@@ -2,23 +2,8 @@ package org.usfirst.frc.team1076.robot.statemachine;
 
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 
-public class NothingAutonomous implements IAutoState {
-	private IAutoState nextState = null;
-
+public class NothingAutonomous extends AutoState {
 	public void init() { }
-	
-	public IAutoState next() {
-		return nextState ;
-	}
-	
-	public IAutoState setNext(IAutoState nextState) {
-		if(this.nextState == null) {
-			this.nextState = nextState;
-		} else {
-			this.nextState.setNext(nextState);
-		}
-		return this;
-	}
 	
 	public boolean shouldChange() {
 		return false;
