@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 
 public class NothingAutonomousTest {
@@ -11,7 +12,7 @@ public class NothingAutonomousTest {
 
 	@Test
 	public void testNext() {
-		NothingAutonomous auto = new NothingAutonomous();
+		AutoState auto = new NothingAutonomous();
 		assertSame(null, auto.next());
 		auto.setNext(auto);
 		assertSame(auto, auto.next());
@@ -19,13 +20,13 @@ public class NothingAutonomousTest {
 	
 	@Test
 	public void testShouldNeverChange() {
-		NothingAutonomous auto = new NothingAutonomous();
+		AutoState auto = new NothingAutonomous();
 		assertEquals(false, auto.shouldChange());
 	}
 	
 	@Test
 	public void testNoMotion() {
-		NothingAutonomous auto = new NothingAutonomous();
+		AutoState auto = new NothingAutonomous();
 		MotorOutput motorOutput = auto.driveTrainSpeed();
 		assertEquals(0, motorOutput.left, EPSILON);
 		assertEquals(0, motorOutput.right, EPSILON);
@@ -33,13 +34,13 @@ public class NothingAutonomousTest {
 	
 	@Test
 	public void testNoArmMotion() {
-		NothingAutonomous auto = new NothingAutonomous();
+		AutoState auto = new NothingAutonomous();
 		assertEquals(0, auto.armSpeed(), EPSILON);
 	}
 	
 	@Test
 	public void testNoIntakeMotion() {
-		NothingAutonomous auto = new NothingAutonomous();
+		AutoState auto = new NothingAutonomous();
 		assertEquals(0, auto.intakeSpeed(), EPSILON);
 	}
 }

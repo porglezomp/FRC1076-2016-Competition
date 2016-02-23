@@ -5,11 +5,11 @@ import org.usfirst.frc.team1076.robot.sensors.IAccelerometer;
 import org.usfirst.frc.team1076.udp.SensorData;
 import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
-public class UDPAutonomous implements IAutoState {
+public class UDPAutonomous extends AutoState {
 	private int port;
 	private SensorData sensors;
 	private IAccelerometer accel;
-	private IAutoState nextState = null;
+	private AutoState nextState = null;
 	
 	public UDPAutonomous(int port, FieldPosition position) {
 		this.port = port;
@@ -17,19 +17,6 @@ public class UDPAutonomous implements IAutoState {
 	}
 
 	public void init() { }
-	
-	public IAutoState next() {
-		return nextState;
-	}
-	
-	public IAutoState setNext(IAutoState nextState) {
-		if(this.nextState == null) {
-			this.nextState = nextState;
-		} else {
-			this.nextState.setNext(nextState);
-		}
-		return this;
-	}
 	
 	public boolean shouldChange() {
 		return false;

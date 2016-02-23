@@ -4,7 +4,7 @@ import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.gamepad.IInput;
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
-import org.usfirst.frc.team1076.robot.statemachine.IAutoState;
+import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.RunnableAutonomous;
 import org.usfirst.frc.team1076.udp.SensorData;
@@ -13,9 +13,9 @@ import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 public class AutoController implements IRobotController {
 
 	SensorData sensorData;
-	IAutoState autoState;
+	AutoState autoState;
 	
-	public AutoController(IAutoState mode) {
+	public AutoController(AutoState mode) {
 		this.autoState = mode;
 		sensorData = new SensorData(5880, FieldPosition.Right);
 		/*this.autoState = new RunnableAutonomous(new AutoRun() {

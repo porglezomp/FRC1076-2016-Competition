@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.usfirst.frc.team1076.robot.sensors.IAutoSelector;
 import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
-import org.usfirst.frc.team1076.robot.statemachine.IAutoState;
+import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.UDPAutonomous;
 import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
@@ -20,7 +20,7 @@ public class AutoSelector implements IAutoSelector {
 		//button = new Button();
 		SmartDashboard.putNumber("Autonomous", 0);
 	}
-	public IAutoState getState() {
+	public AutoState getState() {
 		int chooser = (int) SmartDashboard.getNumber("Autonomous", 0);
 		switch(chooser) {
 		// TODO: make the actual state chains
