@@ -1,3 +1,5 @@
 language: java
+jdk:
+    - oraclejdk8
 script:
-    ant build -buildfile FRC1076-2016-Competition/testbuild.xml
+    ant test -buildfile FRC1076-2016-Competition/testbuild.xml

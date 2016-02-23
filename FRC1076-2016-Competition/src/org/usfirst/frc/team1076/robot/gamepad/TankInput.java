@@ -3,7 +3,6 @@ package org.usfirst.frc.team1076.robot.gamepad;
 import org.usfirst.frc.team1076.robot.gamepad.IGamepad.GamepadAxis;
 
 public class TankInput implements IInput {
-	
 	IGamepad gamepad;
 
 	public TankInput(IGamepad gamepad) {
@@ -25,5 +24,15 @@ public class TankInput implements IInput {
 	@Override
 	public double intakeSpeed() {
 		return 0;
+	}
+
+	@Override
+	public double armExtendSpeed() {
+		return 0;
+	}
+
+	@Override
+	public IntakeRaiseState intakeRaiseState() {
+		return IntakeRaiseState.Neutral;
 	}
 }

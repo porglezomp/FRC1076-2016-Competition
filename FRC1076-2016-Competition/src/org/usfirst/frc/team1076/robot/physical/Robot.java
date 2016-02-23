@@ -2,6 +2,7 @@
 package org.usfirst.frc.team1076.robot.physical;
 
 import org.usfirst.frc.team1076.robot.IRobot;
+import org.usfirst.frc.team1076.robot.controllers.AutoController;
 import org.usfirst.frc.team1076.robot.controllers.IRobotController;
 import org.usfirst.frc.team1076.robot.controllers.TeleopController;
 import org.usfirst.frc.team1076.robot.controllers.TestController;
@@ -9,6 +10,7 @@ import org.usfirst.frc.team1076.robot.gamepad.IGamepad;
 import org.usfirst.frc.team1076.robot.gamepad.IInput;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
+import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
@@ -22,12 +24,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot implements IRobot {	
-    /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     */
-	
+public class Robot extends IterativeRobot implements IRobot {
 	static final int LEFT_INDEX = 0;
 	static final int LEFT_SLAVE_INDEX = 1;
 	static final int RIGHT_INDEX = 2;
@@ -55,6 +52,10 @@ public class Robot extends IterativeRobot implements IRobot {
 	double armSpeed = 0.5;
 	double intakeSpeed = 0.5;
 	
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
 	@Override
     public void robotInit() {
 //    	SmartDashboard.putNumber("Motor Tweak", MOTOR_POWER_FACTOR);
@@ -77,8 +78,9 @@ public class Robot extends IterativeRobot implements IRobot {
 		IInput driver = new TankInput(driverGamepad);
 		IInput operator = new OperatorInput(operatorGamepad);
 		teleopController = new TeleopController(driver, operator);
+		autoController = new AutoController(new NothingAutonomous());
 		testController = new TestController(driverGamepad);
-		
+
     	if (teleopController != null) {
     		teleopController.robotInit(this);
     	} else {
