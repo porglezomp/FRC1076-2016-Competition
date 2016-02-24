@@ -18,7 +18,7 @@ public abstract class GearShiftStateManager {
 	abstract public void shiftGear(GearStates newState, IRobot robot);
 	
 	public void shiftAuto(IRobot robot) {
-		MotorOutput motorSpeeds = null;
+		MotorOutput motorSpeeds = robot.getMotorSpeed();
 		boolean shiftUp = motorSpeeds.left > shiftUpSpeed && motorSpeeds.right > shiftUpSpeed; // Check if we should try to shift up
 		boolean shiftDown = motorSpeeds.left < shiftDownSpeed && motorSpeeds.right < shiftDownSpeed; // Shift down check
 		if (shiftUp) {
@@ -33,6 +33,6 @@ public abstract class GearShiftStateManager {
 	}
 	
 	public void shiftLow(IRobot robot) {
-		shiftGear(GearStates.High, robot);
+		shiftGear(GearStates.Low, robot);
 	}
 }

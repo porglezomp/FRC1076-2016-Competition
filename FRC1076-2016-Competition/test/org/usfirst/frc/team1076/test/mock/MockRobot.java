@@ -3,11 +3,9 @@ package org.usfirst.frc.team1076.test.mock;
 import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-
 public class MockRobot implements IRobot {
-	public double left, right, arm, intake;
-	public Value gear;
+	public double left, right, arm, intake = 0;
+	public SolenoidValue gear = SolenoidValue.Off;
 	
 	@Override
 	public void setLeftSpeed(double speed) {
@@ -30,7 +28,7 @@ public class MockRobot implements IRobot {
 	}
 
 	@Override
-	public void setGear(Value value) {
+	public void setGear(SolenoidValue value) {
 		gear = value;
 	}
 

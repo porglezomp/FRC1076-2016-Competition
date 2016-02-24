@@ -156,8 +156,8 @@ public class Robot extends IterativeRobot implements IRobot {
 	}
 
 	@Override
-	public void setGear(Value value) {
-		
+	public void setGear(SolenoidValue value) {
+		// TODO: Actually add in the double solenoid
 	}
 
 	@Override
