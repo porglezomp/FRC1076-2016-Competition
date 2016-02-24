@@ -2,18 +2,19 @@ package org.usfirst.frc.team1076.robot.statemachine;
 
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.sensors.IAccelerometer;
+import org.usfirst.frc.team1076.udp.IChannel;
 import org.usfirst.frc.team1076.udp.SensorData;
 import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
 public class UDPAutonomous extends AutoState {
-	private int port;
+	private IChannel channel;
 	private SensorData sensors;
 	private IAccelerometer accel;
 	private AutoState nextState = null;
 	
-	public UDPAutonomous(int port, FieldPosition position) {
-		this.port = port;
-		sensors = new SensorData(this.port, position); 
+	public UDPAutonomous(IChannel channel, FieldPosition position) {
+		this.channel = channel;
+		sensors = new SensorData(channel, position); 
 	}
 
 	public void init() { }
