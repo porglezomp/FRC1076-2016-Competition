@@ -18,22 +18,6 @@ public class AutoController implements IRobotController {
 	public AutoController(AutoState mode) {
 		this.autoState = mode;
 		sensorData = new SensorData(5880, FieldPosition.Right);
-		/*this.autoState = new RunnableAutonomous(new AutoRun() {
-			private final double sp = 1;
-			private double time = 0;
-			
-			public void init() {
-				time = System.currentTimeMillis();
-			}
-			
-			public MotorOutput driveTrainSpeed() {
-				if(System.currentTimeMillis() - time < 1000) {
-					return new MotorOutput(sp, sp);
-				} else {
-					return new MotorOutput(0, 0);
-				}
-			}
-		});*/
 	}
 	
 	@Override

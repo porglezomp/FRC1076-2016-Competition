@@ -7,6 +7,7 @@ import org.usfirst.frc.team1076.robot.controllers.IRobotController;
 import org.usfirst.frc.team1076.robot.controllers.TeleopController;
 import org.usfirst.frc.team1076.robot.gamepad.IGamepad;
 import org.usfirst.frc.team1076.robot.gamepad.IInput;
+import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
@@ -14,6 +15,7 @@ import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -151,5 +153,16 @@ public class Robot extends IterativeRobot implements IRobot {
 	@Override
 	public void setIntakeSpeed(double speed) {
 		intakeMotor.set(speed);
+	}
+
+	@Override
+	public void setGear(Value value) {
+		
+	}
+
+	@Override
+	public MotorOutput getMotorSpeed() {
+		MotorOutput currentOutput = new MotorOutput(leftMotor.getSpeed(), rightMotor.getSpeed());
+		return currentOutput;
 	}
 }
