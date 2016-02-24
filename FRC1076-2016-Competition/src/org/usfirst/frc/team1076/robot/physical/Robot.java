@@ -215,5 +215,13 @@ public class Robot extends IterativeRobot implements IRobot {
 	@Override
 	public void setIntakeSpeed(double speed) {
 		intakeMotor.set(speed * intakeSpeed);
+	}
+
+	@Override
+	public void setBreaks(boolean enabled) {
+		leftMotor.enableBrakeMode(enabled);
+		leftSlave.enableBrakeMode(enabled);
+		rightMotor.enableBrakeMode(enabled);
+		rightSlave.enableBrakeMode(enabled);
 	}	
 }
