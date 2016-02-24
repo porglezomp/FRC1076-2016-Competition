@@ -73,10 +73,14 @@ public class SensorData {
 		double range = ((Number) msg.get("range")).doubleValue();
 		switch (status.toLowerCase()) {
 		case "left":
-			if (position == FieldPosition.Left) set(heading, range);
+			if (position == FieldPosition.Left) {
+				set(heading, range);
+			}
 			break;
 		case "right":
-			if (position == FieldPosition.Right) set(heading, range);
+			if (position == FieldPosition.Right) {
+				set(heading, range);
+			}
 			break;
 		case "ok":
 			set(heading, range);
