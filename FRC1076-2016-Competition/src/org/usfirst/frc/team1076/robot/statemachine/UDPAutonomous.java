@@ -25,9 +25,7 @@ public class UDPAutonomous extends AutoState {
 	
 	public MotorOutput driveTrainSpeed() {
 		sensors.interpretData();
-		if (Math.abs(sensors.getHeading() - sensors.currentHeading()) > 1) {
-			return new MotorOutput(1, -1);
-		}
+		// TODO: Decide motion based on sensors
 		return new MotorOutput(1, 1);
 	}
 	

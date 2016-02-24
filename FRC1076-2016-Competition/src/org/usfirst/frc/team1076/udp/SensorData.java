@@ -30,7 +30,6 @@ public class SensorData {
 				e.printStackTrace();
 				continue;
 			}
-			System.out.println(obj);
 			
 			switch (((String) obj.get("sender")).toLowerCase()) {
 			case "lidar":
@@ -62,13 +61,6 @@ public class SensorData {
 			rightSideFront = ((Number) msg.get("right side front")).doubleValue();
 			leftFront = ((Number) msg.get("left front")).doubleValue();
 			rightFront = ((Number) msg.get("right front")).doubleValue();
-			System.out.println("Got the sonar data");
-			System.out.println("Left side back: " + leftSideBack);
-			System.out.println("Left side front: " + leftSideFront);
-			System.out.println("Right side back: " + rightSideBack);
-			System.out.println("Right side front: " + rightSideFront);
-			System.out.println("Left front: " + leftFront);
-			System.out.println("Right front: " + rightFront);
 		} catch (Throwable e) {
 			// TODO: Figure out what the correct exception is for missing JSON attributes
 			e.printStackTrace();
@@ -79,12 +71,12 @@ public class SensorData {
 		String status = (String) msg.get("status");
 		double heading = ((Number) msg.get("heading")).doubleValue();
 		double range = ((Number) msg.get("range")).doubleValue();
-		switch (status) {
+		switch (status.toLowerCase()) {
 		case "left":
-			if (position == FieldPosition.Right) set(heading, range);
+			if (position == FieldPosition.Left) set(heading, range);
 			break;
 		case "right":
-			if (position == FieldPosition.Left) set(heading, range);
+			if (position == FieldPosition.Right) set(heading, range);
 			break;
 		case "ok":
 			set(heading, range);
@@ -111,19 +103,16 @@ public class SensorData {
 		this.distance = d;
 	}
 	
-	public double getHeading() {
-		return heading;
-	}
+	public FieldPosition getFieldPosition() { return position; }
+	public void setFieldPosition(FieldPosition pos) { position = pos; }
 	
-	public double getDistance() {
-		return distance;
-	}
-	
-	public IChannel getChannel() {
-		return receiver;
-	}
-
-	public double currentHeading() {
-		return 0;
-	}
+	public double getHeading() { return heading; }
+	public double getDistance() { return distance; }
+	public IChannel getChannel() { return receiver; }
+	public double getLeftSideBack() { return leftSideBack; }
+	public double getRightSideBack() { return rightSideBack; }
+	public double getLeftSideFront() { return leftSideFront; }
+	public double getRightSideFront() { return rightSideFront; }
+	public double getLeftFront() { return leftFront; }
+	public double getRightFront() { return rightFront; }
 }
