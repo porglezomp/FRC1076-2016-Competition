@@ -6,8 +6,7 @@ import org.json.simple.parser.ParseException;
 
 public class SensorData {
 	public enum FieldPosition { Right, Left; }
-	private int port;
-	private Channel receiver;
+	private IChannel receiver;
 	private double heading;
 	private double distance;
 	private FieldPosition position;
@@ -16,10 +15,9 @@ public class SensorData {
 	private double leftSideBack, rightSideBack, leftSideFront, rightSideFront;
 	private double leftFront, rightFront;	
 	
-	public SensorData(int port, FieldPosition position) {
-		this.port = port;
+	public SensorData(IChannel channel, FieldPosition position) {
 		this.position = position;
-		receiver = new Channel(this.port);
+		receiver = channel;
 	}
 	
 	public void interpretData() {
@@ -118,10 +116,10 @@ public class SensorData {
 	}
 	
 	public double getDistance() {
-		return heading;
+		return distance;
 	}
 	
-	public Channel getChannel() {
+	public IChannel getChannel() {
 		return receiver;
 	}
 
