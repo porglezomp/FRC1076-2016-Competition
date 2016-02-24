@@ -4,6 +4,8 @@ import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
+import org.usfirst.frc.team1076.udp.Channel;
+import org.usfirst.frc.team1076.udp.IChannel;
 import org.usfirst.frc.team1076.udp.SensorData;
 import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
@@ -13,7 +15,8 @@ public class AutoController implements IRobotController {
 	
 	public AutoController(AutoState mode) {
 		this.autoState = mode;
-		sensorData = new SensorData(5880, FieldPosition.Right);
+		IChannel channel = new Channel(5880);
+		sensorData = new SensorData(channel, FieldPosition.Right);
 	}
 	
 	@Override

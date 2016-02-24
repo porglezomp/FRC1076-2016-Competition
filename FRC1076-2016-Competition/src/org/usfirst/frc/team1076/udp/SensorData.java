@@ -6,8 +6,7 @@ import org.json.simple.parser.ParseException;
 
 public class SensorData {
 	public enum FieldPosition { Right, Left; }
-	private int port;
-	private Channel receiver;
+	private IChannel receiver;
 	private double heading;
 	private double distance;
 	private FieldPosition position;
@@ -17,10 +16,9 @@ public class SensorData {
 	private double leftSideBack, rightSideBack, leftSideFront, rightSideFront;
 	private double leftFront, rightFront;	
 	
-	public SensorData(int port, FieldPosition position) {
-		this.port = port;
+	public SensorData(IChannel channel, FieldPosition position) {
 		this.position = position;
-		receiver = new Channel(this.port);
+		receiver = channel;
 	}
 	
 	public void interpretData() {
@@ -33,7 +31,6 @@ public class SensorData {
 				e.printStackTrace();
 				continue;
 			}
-			System.out.println(obj);
 			
 			String sender = (String) obj.get("sender");
 			switch (sender.toLowerCase()) {
@@ -67,13 +64,6 @@ public class SensorData {
 			rightSideFront = ((Number) msg.get("right side front")).doubleValue();
 			leftFront = ((Number) msg.get("left front")).doubleValue();
 			rightFront = ((Number) msg.get("right front")).doubleValue();
-			System.out.println("Got the sonar data");
-			System.out.println("Left side back: " + leftSideBack);
-			System.out.println("Left side front: " + leftSideFront);
-			System.out.println("Right side back: " + rightSideBack);
-			System.out.println("Right side front: " + rightSideFront);
-			System.out.println("Left front: " + leftFront);
-			System.out.println("Right front: " + rightFront);
 		} catch (Throwable e) {
 			// TODO: Figure out what the correct exception is for missing JSON attributes
 			e.printStackTrace();
@@ -128,23 +118,17 @@ public class SensorData {
 		this.distance = d;
 	}
 	
-	public double getHeading() {
-		return heading;
-	}
+	public FieldPosition getFieldPosition() { return position; }
+	public void setFieldPosition(FieldPosition pos) { position = pos; }
 	
-	public double getDistance() {
-		return distance;
-	}
-	
-	public Channel getChannel() {
-		return receiver;
-	}
-	
-	public double getLidarRpm() {
-		return lidarRpm;
-	}
-
-	public double currentHeading() {
-		return 0;
-	}
+	public double getLidarRpm() { return lidarRpm; }
+	public double getHeading() { return heading; }
+	public double getDistance() { return distance; }
+	public IChannel getChannel() { return receiver; }
+	public double getLeftSideBack() { return leftSideBack; }
+	public double getRightSideBack() { return rightSideBack; }
+	public double getLeftSideFront() { return leftSideFront; }
+	public double getRightSideFront() { return rightSideFront; }
+	public double getLeftFront() { return leftFront; }
+	public double getRightFront() { return rightFront; }
 }
