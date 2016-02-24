@@ -181,8 +181,7 @@ public class Robot extends IterativeRobot implements IRobot {
 
     public void commonPeriodic() {
     	// MOTOR_POWER_FACTOR = SmartDashboard.getNumber("Motor Tweak");
-    	lidarServo.setAngle(SmartDashboard.getNumber("LIDAR Speed"));
-    	
+
     	int left = leftMotor.getEncVelocity();
     	int right = rightMotor.getEncVelocity();
     	if (left != 0) {
@@ -192,19 +191,17 @@ public class Robot extends IterativeRobot implements IRobot {
     		System.out.println("Right motor " + right);
     	}
     }
-    
+
 	@Override
 	public void setLeftSpeed(double speed) {
 		leftSlave.set(speed * MOTOR_POWER_FACTOR * robotSpeed);
 		leftMotor.set(speed * MOTOR_POWER_FACTOR * robotSpeed);
-		System.out.println("Left: " + speed * MOTOR_POWER_FACTOR * robotSpeed);
 	}
 
 	@Override
 	public void setRightSpeed(double speed) {
 		rightMotor.set(speed * robotSpeed);
 		rightSlave.set(speed * robotSpeed);
-		System.out.println("Right: " + speed * robotSpeed);
 	}
 	
 	@Override
@@ -218,10 +215,16 @@ public class Robot extends IterativeRobot implements IRobot {
 	}
 
 	@Override
+	public void setLidarSpeed(double speed) {
+	    final double motorCenter = 92;
+    	lidarServo.setAngle(motorCenter - speed);
+	}
+	
+	@Override
 	public void setBreaks(boolean enabled) {
 		leftMotor.enableBrakeMode(enabled);
 		leftSlave.enableBrakeMode(enabled);
 		rightMotor.enableBrakeMode(enabled);
 		rightSlave.enableBrakeMode(enabled);
-	}	
+	}
 }

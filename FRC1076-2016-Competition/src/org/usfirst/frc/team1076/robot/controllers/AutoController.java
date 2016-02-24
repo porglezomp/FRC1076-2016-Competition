@@ -31,8 +31,12 @@ public class AutoController implements IRobotController {
 	@Override
 	public void autonomousInit(IRobot robot) { }
 	
+	private final double RPM_MIN = 240;
+	private final double RPM_MAX = 280;
+    private double motorSpeed = 7;
+	
 	@Override
-	public void autonomousPeriodic(IRobot robot) {
+	public void autonomousPeriodic(IRobot robot) {		
 		sensorData.interpretData();
 		if (autoState.shouldChange()) {
 			autoState = autoState.next();
@@ -46,6 +50,13 @@ public class AutoController implements IRobotController {
 		MotorOutput drive = autoState.driveTrainSpeed();
 		robot.setLeftSpeed(drive.left);
 		robot.setRightSpeed(drive.right);		
+		
+	    if (sensorData.getLidarRpm() < RPM_MIN) {
+	    	motorSpeed *= 1.01;
+	    } else if (sensorData.getLidarRpm() > RPM_MAX) {
+	    	motorSpeed *= 0.99;
+	    }
+	    robot.setLidarSpeed(motorSpeed);
 	}
 
 	@Override

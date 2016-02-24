@@ -12,7 +12,7 @@ public class SensorData {
 	private FieldPosition position;
 	private JSONParser parser = new JSONParser();
 	
-	private double lidarRpm;
+	private double lidarRpm = 250;
 	private double leftSideBack, rightSideBack, leftSideFront, rightSideFront;
 	private double leftFront, rightFront;	
 	
@@ -31,6 +31,7 @@ public class SensorData {
 				e.printStackTrace();
 				continue;
 			}
+			System.out.println(obj);
 			
 			String sender = (String) obj.get("sender");
 			switch (sender.toLowerCase()) {
