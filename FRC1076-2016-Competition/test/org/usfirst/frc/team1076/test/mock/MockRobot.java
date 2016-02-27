@@ -5,6 +5,7 @@ import org.usfirst.frc.team1076.robot.IRobot;
 public class MockRobot implements IRobot {
 
 	public double left, right, arm, intake;
+	public double lidarSpeed;
 	public boolean brakes;
 	
 	@Override
@@ -30,6 +31,11 @@ public class MockRobot implements IRobot {
 	@Override
 	public void setBreaks(boolean enabled) {
 		brakes = enabled;
+	}
+
+	@Override
+	public void setLidarSpeed(double speed) {
+		lidarSpeed = speed;
 	}
 
 }

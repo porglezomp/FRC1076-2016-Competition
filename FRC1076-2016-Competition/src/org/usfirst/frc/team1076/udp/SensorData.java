@@ -31,7 +31,7 @@ public class SensorData {
 				e.printStackTrace();
 				continue;
 			}
-			System.out.println(obj);
+			System.out.println("Object: " + obj);
 			
 			String sender = (String) obj.get("sender");
 			switch (sender.toLowerCase()) {
@@ -72,7 +72,7 @@ public class SensorData {
 	}
 	
 	private void handleVisionMessage(JSONObject msg) {
-		String message = (String) msg.get("msg");
+		String message = (String) msg.get("message");
 		switch (message.toLowerCase()) {
 		case "heading and range":
 			String status = (String) msg.get("status");
@@ -80,10 +80,14 @@ public class SensorData {
 			double range = ((Number) msg.get("range")).doubleValue();
 			switch (status) {
 			case "left":
-				if (position == FieldPosition.Right) set(heading, range);
+				if (position == FieldPosition.Left) {
+					set(heading, range);
+				}
 				break;
 			case "right":
-				if (position == FieldPosition.Left) set(heading, range);
+				if (position == FieldPosition.Right) {
+					set(heading, range);
+				}
 				break;
 			case "ok":
 				set(heading, range);
@@ -97,14 +101,19 @@ public class SensorData {
 	}
 	
 	private void handleLidarMessage(JSONObject msg) {
+		double heading, range;
 		String message = (String) msg.get("message");
 		switch (message.toLowerCase()) {
 		case "range and heading":
-			double heading = ((Number) msg.get("heading")).doubleValue();
-			double range = ((Number) msg.get("range")).doubleValue();
+			heading = ((Number) msg.get("heading")).doubleValue();
+			range = ((Number) msg.get("range")).doubleValue();
 			this.heading = heading;
 			this.distance = range;
 			break;
+		case "range at heading":
+			heading = ((Number) msg.get("heading")).doubleValue();
+			range = ((Number) msg.get("range")).doubleValue();
+			System.out.println("Range " + range + " at " + heading);
 		case "periodic":
 			double rpm = ((Number) msg.get("rpm")).doubleValue();
 			this.lidarRpm = rpm;
