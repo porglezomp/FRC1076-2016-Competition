@@ -19,7 +19,7 @@ public class UDPAutonomous extends AutoState {
 	public void init() { }
 	
 	public boolean shouldChange() {
-		return false;
+		return true;
 	}
 	
 	public MotorOutput driveTrainSpeed() {
