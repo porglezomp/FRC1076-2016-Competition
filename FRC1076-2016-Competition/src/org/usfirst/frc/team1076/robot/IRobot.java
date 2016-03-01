@@ -5,6 +5,6 @@ public interface IRobot {
 	public void setRightSpeed(double speed);
 	public void setArmSpeed(double speed);
 	public void setIntakeSpeed(double speed);
-	public void setBreaks(boolean enabled);
+	public void setBrakes(boolean enabled);
 	void setLidarSpeed(double speed);
 }

@@ -222,7 +222,7 @@ public class Robot extends IterativeRobot implements IRobot {
 	}
 	
 	@Override
-	public void setBreaks(boolean enabled) {
+	public void setBrakes(boolean enabled) {
 		leftMotor.enableBrakeMode(enabled);
 		leftSlave.enableBrakeMode(enabled);
 		rightMotor.enableBrakeMode(enabled);

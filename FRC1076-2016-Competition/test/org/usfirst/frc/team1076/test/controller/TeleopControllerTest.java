@@ -56,5 +56,17 @@ public class TeleopControllerTest {
 			assertEquals("The arm motion should match the arm input",
 					value, robot.arm, EPSILON);
 		}
-	}	
+	}
+	
+	@Test
+	public void testBrakes() {
+		driverInput.reset();
+		driverInput.brakes = true;
+		controller.teleopPeriodic(robot);
+		assertEquals(true, robot.brakes);
+		
+		driverInput.brakes = false;
+		controller.teleopPeriodic(robot);
+		assertEquals(false, robot.brakes);
+	}
 }

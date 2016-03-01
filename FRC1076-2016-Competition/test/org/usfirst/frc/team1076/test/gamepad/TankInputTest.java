@@ -30,4 +30,15 @@ public class TankInputTest {
 			}
 		}
 	}
+	
+	@Test
+	public void testBrakes() {
+		gamepad.reset();
+		gamepad.lt = 0;
+		assertEquals(false, input.brakesApplied());
+		gamepad.lt = 0.5;
+		assertEquals(true, input.brakesApplied());
+		gamepad.lt = 1;
+		assertEquals(true, input.brakesApplied());
+	}
 }

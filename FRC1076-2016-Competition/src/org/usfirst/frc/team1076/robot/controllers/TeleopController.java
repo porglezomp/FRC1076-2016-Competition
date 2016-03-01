@@ -33,7 +33,8 @@ public class TeleopController implements IRobotController {
 		robot.setIntakeSpeed(operatorInput.intakeSpeed());
 		MotorOutput drive = driverInput.driveTrainSpeed();
 		robot.setLeftSpeed(drive.left);
-		robot.setRightSpeed(drive.right);		
+		robot.setRightSpeed(drive.right);
+		robot.setBrakes(driverInput.brakesApplied());
 	}
 
 	@Override
