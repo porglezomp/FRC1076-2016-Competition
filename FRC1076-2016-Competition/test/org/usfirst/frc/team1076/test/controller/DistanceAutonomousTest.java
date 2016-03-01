@@ -11,11 +11,6 @@ import org.usfirst.frc.team1076.robot.statemachine.DistanceAutonomous;
 public class DistanceAutonomousTest {
 
 	private static final double EPSILON = 1e-12;
-
-	public DistanceAutonomousTest() {
-		// TODO Auto-generated constructor stub
-	}
-	
 	
 	@Test
 	public void testNext() {
@@ -32,26 +27,53 @@ public class DistanceAutonomousTest {
 	}
 	
 	@Test
-	public void testDistanceTraveled() {
-		AutoState auto = new DistanceAutonomous(10, 1); // go 10 units in 1 second
+	public void testFixedDistanceTraveled() {
+		AutoState auto = new DistanceAutonomous(3, 0.8);
 		MotorOutput motorOutput = auto.driveTrainSpeed();
 		
-		
+		// We haven't driven far enough yet, so the robot should still be moving.
 		assertEquals(false, auto.shouldChange());
-		assertEquals(10, motorOutput.left, EPSILON);
-		assertEquals(10, motorOutput.right, EPSILON);
+		assertEquals(0.8, motorOutput.left, EPSILON);
+		assertEquals(0.8, motorOutput.right, EPSILON);
 		
+		
+		// Sleep for a few seconds to allow the robot to move forward.
 		try {
-		    Thread.sleep(1000);                 //Sleep for 1 seconds
+		    Thread.sleep(4000);                
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
 
 		motorOutput = auto.driveTrainSpeed();
 		
+		// The robot should stop by now.
 		assertEquals(true, auto.shouldChange());
 		assertEquals(0, motorOutput.left, EPSILON);
 		assertEquals(0, motorOutput.right, EPSILON);
+	}
+	
+	@Test
+	public void testVaribleDistance() {
+		for (double distance = 1.0; distance < 2.5; distance += 0.5) {
+			AutoState auto = new DistanceAutonomous(distance, 0.8);
+			MotorOutput motorOutput = auto.driveTrainSpeed();
+			
+			assertEquals(false, auto.shouldChange());
+			assertEquals(0.8, motorOutput.left, EPSILON);
+			assertEquals(0.8, motorOutput.right, EPSILON);
+			
+			try {
+			    Thread.sleep(3000);                
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
+
+			motorOutput = auto.driveTrainSpeed();
+
+			assertEquals(true, auto.shouldChange());
+			assertEquals(0, motorOutput.left, EPSILON);
+			assertEquals(0, motorOutput.right, EPSILON);
+		}
 	}
 	
 	@Test
