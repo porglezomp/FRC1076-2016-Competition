@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1076.robot.controllers;
 
 import org.usfirst.frc.team1076.robot.IRobot;
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 import org.usfirst.frc.team1076.udp.SensorData;

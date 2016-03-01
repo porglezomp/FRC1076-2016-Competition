@@ -4,13 +4,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.usfirst.frc.team1076.robot.controllers.TeleopController;
-import org.usfirst.frc.team1076.test.mock.MockInput;
+import org.usfirst.frc.team1076.test.mock.MockDriverInput;
+import org.usfirst.frc.team1076.test.mock.MockOperatorInput;
 import org.usfirst.frc.team1076.test.mock.MockRobot;
 
 public class TeleopControllerTest {
 	private static final double EPSILON = 1e-10;
-	MockInput driverInput = new MockInput();
-	MockInput operatorInput = new MockInput();
+	MockDriverInput driverInput = new MockDriverInput();
+	MockOperatorInput operatorInput = new MockOperatorInput();
 	TeleopController controller = new TeleopController(
 			driverInput, operatorInput);
 	MockRobot robot = new MockRobot();

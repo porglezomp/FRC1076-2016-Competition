@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1076.robot.statemachine;
 
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 
 public class ForwardAutonomous extends AutoState {
 	int counter = 0; // replace with encoders or timer

@@ -3,7 +3,7 @@ package org.usfirst.frc.team1076.test.gamepad;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.usfirst.frc.team1076.robot.gamepad.IInput.IntakeRaiseState;
+import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput.IntakeRaiseState;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.test.mock.MockGamepad;
 
