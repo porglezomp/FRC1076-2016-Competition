@@ -28,18 +28,18 @@ public class DistanceAutonomousTest {
 	
 	@Test
 	public void testFixedDistanceTraveled() {
-		AutoState auto = new DistanceAutonomous(3, 0.8);
+		DistanceAutonomous auto = new DistanceAutonomous(1.5, 1);
 		MotorOutput motorOutput = auto.driveTrainSpeed();
 		
 		// We haven't driven far enough yet, so the robot should still be moving.
 		assertEquals(false, auto.shouldChange());
-		assertEquals(0.8, motorOutput.left, EPSILON);
-		assertEquals(0.8, motorOutput.right, EPSILON);
+		assertEquals(1, motorOutput.left, EPSILON);
+		assertEquals(1, motorOutput.right, EPSILON);
 		
 		
 		// Sleep for a few seconds to allow the robot to move forward.
 		try {
-		    Thread.sleep(4000);                
+		    Thread.sleep(1500);                
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
@@ -50,29 +50,24 @@ public class DistanceAutonomousTest {
 		assertEquals(true, auto.shouldChange());
 		assertEquals(0, motorOutput.left, EPSILON);
 		assertEquals(0, motorOutput.right, EPSILON);
+		assertEquals(1.5, auto.getDistanceTraveled(), 0.1);
 	}
 	
 	@Test
-	public void testVaribleDistance() {
-		for (double distance = 1.0; distance < 2.5; distance += 0.5) {
-			AutoState auto = new DistanceAutonomous(distance, 0.8);
+	public void testVaribleSpeed() {
+		for (double speed = 0.0; speed < 1.0; speed += 0.1) {
+			DistanceAutonomous auto = new DistanceAutonomous(1, speed);
 			MotorOutput motorOutput = auto.driveTrainSpeed();
 			
-			assertEquals(false, auto.shouldChange());
-			assertEquals(0.8, motorOutput.left, EPSILON);
-			assertEquals(0.8, motorOutput.right, EPSILON);
-			
 			try {
-			    Thread.sleep(3000);                
+			    Thread.sleep(1000);                
 			} catch(InterruptedException ex) {
 			    Thread.currentThread().interrupt();
 			}
 
 			motorOutput = auto.driveTrainSpeed();
 
-			assertEquals(true, auto.shouldChange());
-			assertEquals(0, motorOutput.left, EPSILON);
-			assertEquals(0, motorOutput.right, EPSILON);
+			assertEquals(speed, auto.getDistanceTraveled(), 0.1);
 		}
 	}
 	
