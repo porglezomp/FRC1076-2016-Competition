@@ -1,12 +1,14 @@
 package org.usfirst.frc.team1076.test.mock;
 
 import org.usfirst.frc.team1076.robot.IRobot;
+import org.usfirst.frc.team1076.udp.SensorData;
 
 public class MockRobot implements IRobot {
 
 	public double left, right, arm, intake;
 	public double lidarSpeed;
 	public boolean brakes;
+	// TODO: Add SensorData
 	
 	@Override
 	public void setLeftSpeed(double speed) {
@@ -36,6 +38,11 @@ public class MockRobot implements IRobot {
 	@Override
 	public void setLidarSpeed(double speed) {
 		lidarSpeed = speed;
+	}
+
+	public SensorData getSensorData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
