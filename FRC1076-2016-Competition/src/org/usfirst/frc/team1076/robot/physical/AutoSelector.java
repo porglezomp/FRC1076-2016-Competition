@@ -11,17 +11,15 @@ import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-//import edu.wpi.first.wpilibj.buttons.Button;
-//import edu.wpi.first.wpilibj.command.Command;
-
 public class AutoSelector implements IAutoSelector {
 	//Button button;
 	public AutoSelector() {
 		//button = new Button();
-		SmartDashboard.putNumber("Autonomous", 0);
+		SmartDashboard.putNumber("Autonomous", 1);
 	}
+
 	public AutoState getState() {
-		int chooser = (int) SmartDashboard.getNumber("Autonomous", 0);
+		int chooser = (int) SmartDashboard.getNumber("Autonomous", 1);
 		IChannel channel = new Channel(5880);
 		switch(chooser) {
 		// TODO: make the actual state chains

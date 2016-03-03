@@ -10,7 +10,6 @@ public class UDPAutonomous extends AutoState {
 	private IChannel channel;
 	private SensorData sensors;
 	private IAccelerometer accel;
-	private AutoState nextState = null;
 	
 	public UDPAutonomous(IChannel channel, FieldPosition position) {
 		this.channel = channel;
@@ -20,14 +19,12 @@ public class UDPAutonomous extends AutoState {
 	public void init() { }
 	
 	public boolean shouldChange() {
-		return false;
+		return true;
 	}
 	
 	public MotorOutput driveTrainSpeed() {
 		sensors.interpretData();
-		if (Math.abs(sensors.getHeading() - sensors.currentHeading()) > 1) {
-			return new MotorOutput(1, -1);
-		}
+		// TODO: Decide motion based on sensors
 		return new MotorOutput(1, 1);
 	}
 	

@@ -5,6 +5,7 @@ import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.controllers.AutoController;
 import org.usfirst.frc.team1076.robot.controllers.IRobotController;
 import org.usfirst.frc.team1076.robot.controllers.TeleopController;
+import org.usfirst.frc.team1076.robot.controllers.TestController;
 import org.usfirst.frc.team1076.robot.gamepad.IGamepad;
 import org.usfirst.frc.team1076.robot.gamepad.IInput;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
@@ -15,6 +16,8 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,11 +28,13 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public class Robot extends IterativeRobot implements IRobot {
 	static final int LEFT_INDEX = 0;
-	static final int LEFT_SLAVE_INDEX = LEFT_INDEX + 1;
+	static final int LEFT_SLAVE_INDEX = 1;
 	static final int RIGHT_INDEX = 2;
-	static final int RIGHT_SLAVE_INDEX = RIGHT_INDEX + 1;
+	static final int RIGHT_SLAVE_INDEX = 3;
 	static final int INTAKE_INDEX = 4;
 	static final int ARM_INDEX = 5;
+	
+	double MOTOR_POWER_FACTOR = 1.11;
 	
 	CANTalon leftMotor = new CANTalon(LEFT_INDEX);
 	CANTalon leftSlave = new CANTalon(LEFT_SLAVE_INDEX);
@@ -37,12 +42,18 @@ public class Robot extends IterativeRobot implements IRobot {
 	CANTalon rightSlave = new CANTalon(RIGHT_SLAVE_INDEX);
 	CANTalon intakeMotor = new CANTalon(INTAKE_INDEX);
 	CANTalon armMotor = new CANTalon(ARM_INDEX);
+	Servo lidarServo = new Servo(0);
 	
 	Compressor compressor = new Compressor(0);
 	DoubleSolenoid intakePneumatic = new DoubleSolenoid(0, 1);
 	
 	IRobotController teleopController;
 	IRobotController autoController;
+	IRobotController testController;
+	
+	double robotSpeed = 0.5;
+	double armSpeed = 0.5;
+	double intakeSpeed = 0.5;
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -50,14 +61,18 @@ public class Robot extends IterativeRobot implements IRobot {
      */
 	@Override
     public void robotInit() {
+    	SmartDashboard.putNumber("LIDAR Speed", 80);		
+//    	SmartDashboard.putNumber("Motor Tweak", MOTOR_POWER_FACTOR);
+		
 		// Initialize the physical components before the controllers,
 		// in case they depend on them.
-		rightSlave.changeControlMode(CANTalon.TalonControlMode.Follower);
-		rightSlave.set(RIGHT_INDEX);
+		// rightSlave.changeControlMode(TalonControlMode.Follower);
+		// rightSlave.set(RIGHT_INDEX);
+		rightSlave.setInverted(true);
 		rightMotor.setInverted(true);
 		
-		leftSlave.changeControlMode(CANTalon.TalonControlMode.Follower);
-		leftSlave.set(LEFT_INDEX);
+		// leftSlave.changeControlMode(TalonControlMode.Follower);
+		// leftSlave.set(LEFT_INDEX);
 		
 		compressor.setClosedLoopControl(true);
 		intakePneumatic.set(DoubleSolenoid.Value.kOff);
@@ -68,7 +83,8 @@ public class Robot extends IterativeRobot implements IRobot {
 		IInput operator = new OperatorInput(operatorGamepad);
 		teleopController = new TeleopController(driver, operator);
 		autoController = new AutoController(new NothingAutonomous());
-		
+		testController = new TestController(driverGamepad);
+
     	if (teleopController != null) {
     		teleopController.robotInit(this);
     	} else {
@@ -79,6 +95,12 @@ public class Robot extends IterativeRobot implements IRobot {
     		autoController.robotInit(this);
     	} else {
     		System.out.println("Autonomous Controller on Robot is null in robotInit()");
+    	}
+    	
+    	if (testController != null) {
+    		testController.robotInit(this);
+    	} else {
+    		System.out.println("Test Controller on Robot is null in robotInit()");
     	}
     }
     
@@ -105,6 +127,8 @@ public class Robot extends IterativeRobot implements IRobot {
      */
 	@Override
     public void autonomousPeriodic() {
+		commonPeriodic();
+		
     	if (autoController != null) {
     		autoController.autonomousPeriodic(this);
     	} else {
@@ -126,30 +150,81 @@ public class Robot extends IterativeRobot implements IRobot {
      */
     @Override
     public void teleopPeriodic() {
-        if (teleopController != null) {
+    	commonPeriodic();
+    	
+    	if (teleopController != null) {
         	teleopController.teleopPeriodic(this);
         } else {
-    		System.out.println("Teleop Controller on Robot is null in teleopPeriodic()");
+    		System.err.println("Teleop Controller on Robot is null in teleopPeriodic()");
+    	}
+    }
+    
+    @Override
+    public void testInit() {
+    	if (testController != null) {
+    		testController.testPeriodic(this);
+    	} else {
+    		System.err.println("Test Controller on Robot is null in testInit()");
+    	}
+    }
+    
+    @Override
+    public void testPeriodic() {
+    	commonPeriodic();
+    	
+    	if (testController != null) {
+    		testController.testPeriodic(this);
+    	} else {
+    		System.err.println("Test Controller on Robot is null in testInit()");
+    	}
+    }
+
+    public void commonPeriodic() {
+    	// MOTOR_POWER_FACTOR = SmartDashboard.getNumber("Motor Tweak");
+
+    	int left = leftMotor.getEncVelocity();
+    	int right = rightMotor.getEncVelocity();
+    	if (left != 0) {
+        	System.out.println("Left motor " + left);
+    	}
+    	if (right != 0) {
+    		System.out.println("Right motor " + right);
     	}
     }
 
 	@Override
 	public void setLeftSpeed(double speed) {
-		leftMotor.set(speed);
+		leftSlave.set(speed * MOTOR_POWER_FACTOR * robotSpeed);
+		leftMotor.set(speed * MOTOR_POWER_FACTOR * robotSpeed);
 	}
 
 	@Override
 	public void setRightSpeed(double speed) {
-		rightMotor.set(speed);
+		rightMotor.set(speed * robotSpeed);
+		rightSlave.set(speed * robotSpeed);
 	}
 	
 	@Override
 	public void setArmSpeed(double speed) {
-		armMotor.set(speed);
+		armMotor.set(speed * armSpeed);
+	}
+	
+	@Override
+	public void setIntakeSpeed(double speed) {
+		intakeMotor.set(speed * intakeSpeed);
 	}
 
 	@Override
-	public void setIntakeSpeed(double speed) {
-		intakeMotor.set(speed);
+	public void setLidarSpeed(double speed) {
+	    final double motorCenter = 92;
+    	lidarServo.setAngle(motorCenter - speed);
+	}
+	
+	@Override
+	public void setBreaks(boolean enabled) {
+		leftMotor.enableBrakeMode(enabled);
+		leftSlave.enableBrakeMode(enabled);
+		rightMotor.enableBrakeMode(enabled);
+		rightSlave.enableBrakeMode(enabled);
 	}
 }
