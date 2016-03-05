@@ -18,7 +18,7 @@ public class AngleAutonomous extends AutoState {
 	private double deltaAngle;
 	IGyro gyro; // TODO: Use SensorData instead of IGyro
 	
-	public AngleAutonomous(IGyro gyro, double angle, double speed) {
+	public AngleAutonomous(double angle, double speed, IGyro gyro) {
 		this.gyro = gyro;
 		this.deltaAngle = angle;
 		this.currAngle = gyro.getAngle();
@@ -31,9 +31,9 @@ public class AngleAutonomous extends AutoState {
 	@Override
 	public boolean shouldChange() {
 		if (deltaAngle > 0) { // clockwise
-			return currAngle > endAngle;
+			return currAngle >= endAngle;
 		} else { // counter-clockwise
-			return currAngle < endAngle;
+			return currAngle <= endAngle;
 		}
 	}
 	
