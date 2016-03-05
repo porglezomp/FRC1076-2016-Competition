@@ -14,7 +14,7 @@ public class AngleAutonomous extends AutoState {
 	double MOTOR_FACTOR = 1; // TODO: Find a reasonable value for this.
 
 	double angle;
-	double angleTurned;
+	double angleTurned = 0;
 	double speed;
 	
 	
@@ -29,9 +29,9 @@ public class AngleAutonomous extends AutoState {
 	@Override
 	public boolean shouldChange() {
 		if (angle > 0) { // clockwise
-			return angle > angleTurned;
+			return angleTurned > angle;
 		} else { // counter-clockwise
-			return angle < angleTurned;
+			return angleTurned < angle;
 		}
 	}
 
@@ -63,6 +63,10 @@ public class AngleAutonomous extends AutoState {
 		}
 	}
 
+	public double getAngleTurned() {
+		return angleTurned;
+	}
+	
 	@Override
 	public double armSpeed() {
 		return 0;
