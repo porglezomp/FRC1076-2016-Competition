@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1076.robot.statemachine;
 
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.sensors.IGyro;
 
 /**
  * AngleAutonomous takes an input angle and returns MotorOutputs
@@ -11,52 +12,42 @@ import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
  *
  */
 public class AngleAutonomous extends AutoState {
-	double MOTOR_FACTOR = 1; // TODO: Find a reasonable value for this.
-
-	double angle;
-	double angleTurned = 0;
 	double speed;
+	double currAngle;
+	double endAngle;
+	private double deltaAngle;
+	IGyro gyro; // TODO: Use SensorData instead of IGyro
 	
-	
-	public AngleAutonomous(double angle, double speed) {
-		this.angle = angle;
+	public AngleAutonomous(IGyro gyro, double angle, double speed) {
+		this.gyro = gyro;
+		this.deltaAngle = angle;
+		this.currAngle = gyro.getAngle();
+		this.endAngle = currAngle + angle;
 		this.speed = speed;
 	}
-
 
 	public void init() {  }
 
 	@Override
 	public boolean shouldChange() {
-		if (angle > 0) { // clockwise
-			return angleTurned > angle;
+		if (deltaAngle > 0) { // clockwise
+			return currAngle > endAngle;
 		} else { // counter-clockwise
-			return angleTurned < angle;
+			return currAngle < endAngle;
 		}
 	}
-
-	
-	private long lastFrameTime = 0;
 	
 	@Override
-	public MotorOutput driveTrainSpeed() { 
-		if (lastFrameTime == 0) {
-			lastFrameTime = System.nanoTime(); 
-		}
-		// Time since last time a MotorOutput was given.
-		double deltaTime = (System.nanoTime() - lastFrameTime) / 1e9;
-		lastFrameTime = System.nanoTime();
-
+	public MotorOutput driveTrainSpeed() {
+		currAngle = gyro.getAngle();
+		
 		if (shouldChange()) {
 			return new MotorOutput(0, 0);
 		}
 		
-		
-		if (angle > 0) { // clockwise
-			angleTurned += MOTOR_FACTOR * speed * deltaTime; 					
+		if (deltaAngle > 0) { // clockwise 					
 			return new MotorOutput(speed, -speed);
-		} else if (angle < 0) { // counter-clockwise
-			angleTurned -= MOTOR_FACTOR * speed * deltaTime; 					
+		} else if (deltaAngle < 0) { // counter-clockwise 					
 			return new MotorOutput(-speed, speed);
 		} else {
 			return new MotorOutput(0, 0);
@@ -64,7 +55,7 @@ public class AngleAutonomous extends AutoState {
 	}
 
 	public double getAngleTurned() {
-		return angleTurned;
+		return currAngle - endAngle;
 	}
 	
 	@Override
