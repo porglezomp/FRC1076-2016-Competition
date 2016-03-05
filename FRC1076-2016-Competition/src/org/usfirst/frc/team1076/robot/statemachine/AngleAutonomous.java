@@ -12,18 +12,21 @@ import org.usfirst.frc.team1076.robot.sensors.IGyro;
  *
  */
 public class AngleAutonomous extends AutoState {
+	IGyro gyro; // TODO: Use SensorData instead of IGyro
 	double speed;
 	double currAngle;
 	double endAngle;
 	private double deltaAngle;
-	IGyro gyro; // TODO: Use SensorData instead of IGyro
+
+	private static final double SLOW_FACTOR = 1.5;	
 	
 	public AngleAutonomous(double angle, double speed, IGyro gyro) {
 		this.gyro = gyro;
-		this.deltaAngle = angle;
+		
+		this.speed = speed;
 		this.currAngle = gyro.getAngle();
 		this.endAngle = currAngle + angle;
-		this.speed = speed;
+		this.deltaAngle = angle;
 	}
 
 	public void init() {  }
@@ -43,6 +46,11 @@ public class AngleAutonomous extends AutoState {
 		
 		if (shouldChange()) {
 			return new MotorOutput(0, 0);
+		}
+		
+		// Reduce turning speed to avoid overshooting.
+		if (Math.abs(currAngle - endAngle) < Math.PI/16) {
+			speed /= SLOW_FACTOR;
 		}
 		
 		if (deltaAngle > 0) { // clockwise 					
