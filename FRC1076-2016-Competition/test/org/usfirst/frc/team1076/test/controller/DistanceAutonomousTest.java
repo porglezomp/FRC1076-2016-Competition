@@ -55,7 +55,7 @@ public class DistanceAutonomousTest {
 	
 	@Test
 	public void testVaribleSpeed() {
-		for (double speed = 0.0; speed < 1.0; speed += 0.1) {
+		for (double speed = 0.0; speed < 1.0; speed += 0.3) {
 			DistanceAutonomous auto = new DistanceAutonomous(1, speed);
 			MotorOutput motorOutput = auto.driveTrainSpeed();
 			
