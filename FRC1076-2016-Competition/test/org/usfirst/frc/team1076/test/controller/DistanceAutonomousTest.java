@@ -57,7 +57,7 @@ public class DistanceAutonomousTest {
 	public void testVaribleSpeed() {
 		for (double speed = 0.0; speed < 1.0; speed += 0.3) {
 			DistanceAutonomous auto = new DistanceAutonomous(1, speed);
-			MotorOutput motorOutput = auto.driveTrainSpeed();
+			auto.driveTrainSpeed();
 			
 			try {
 			    Thread.sleep(1000);                
@@ -65,7 +65,7 @@ public class DistanceAutonomousTest {
 			    Thread.currentThread().interrupt();
 			}
 
-			motorOutput = auto.driveTrainSpeed();
+			auto.driveTrainSpeed();
 
 			assertEquals(speed, auto.getDistanceTraveled(), 0.1);
 		}

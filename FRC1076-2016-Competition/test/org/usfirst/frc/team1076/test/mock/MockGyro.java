@@ -18,14 +18,11 @@ public class MockGyro implements IGyro {
 
 	@Override
 	public double getRate() {
-		// TODO Auto-generated method stub
 		return gyroRate;
 	}
 
 	@Override
 	public void reset() {
 		initAngle = currAngle = 0;
-		
 	}
-
 }

@@ -12,7 +12,7 @@ import org.usfirst.frc.team1076.robot.sensors.IGyro;
  *
  */
 public class AngleAutonomous extends AutoState {
-	IGyro gyro; // TODO: Use SensorData instead of IGyro
+	IGyro gyro;
 	double speed;
 	double currAngle;
 	double endAngle;
@@ -22,14 +22,13 @@ public class AngleAutonomous extends AutoState {
 	
 	public AngleAutonomous(double angle, double speed, IGyro gyro) {
 		this.gyro = gyro;
-		
 		this.speed = speed;
 		this.currAngle = gyro.getAngle();
 		this.endAngle = currAngle + angle;
 		this.deltaAngle = angle;
 	}
 
-	public void init() {  }
+	public void init() { }
 
 	@Override
 	public boolean shouldChange() {
@@ -75,5 +74,4 @@ public class AngleAutonomous extends AutoState {
 	public double intakeSpeed() {
 		return 0;
 	}
-
 }
