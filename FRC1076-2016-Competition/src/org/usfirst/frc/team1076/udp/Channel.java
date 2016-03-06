@@ -1,11 +1,11 @@
 package org.usfirst.frc.team1076.udp;
+import java.io.IOException;
 import java.net.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Channel {
+public class Channel implements IChannel {
 	private int port;
-	private InetAddress receiverIP;
 	private DatagramSocket serverSocket;
 	private Thread receiveWorker;
 	private boolean doesReceive = true;
@@ -51,14 +51,6 @@ public class Channel {
 		this.receiveWorker.start();
 	}
 	
-	public InetAddress getIP() {
-		return this.receiverIP;
-	}
-	
-	public void setIP(InetAddress newIP) {
-		this.receiverIP = newIP;
-	}
-	
 	protected boolean getReceiveStatus() {
 		return doesReceive;
 	}
@@ -67,6 +59,7 @@ public class Channel {
 		doesReceive = receive;
 	}
 	
+	@Override
 	public UDPMessage popLatestMessage() {
 		if(queue.isEmpty()) {
 			return null;
@@ -74,20 +67,18 @@ public class Channel {
 		return queue.poll();
 	}
 
-	public void putMessage(UDPMessage str) {
-		queue.add(str);
+	public void putMessage(UDPMessage msg) {
+		queue.add(msg);
 	}
 	
+	@Override
 	public boolean hasMessage() {
 		return !queue.isEmpty();
 	}
 	
-	public void sendMessage(String message) {
-		try {
-			serverSocket.send(new UDPMessage(message, this.receiverIP).sendPacket(this.port));
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+	@Override
+	public void sendMessage(String message, InetAddress target) throws IOException {
+		serverSocket.send(new UDPMessage(message, target).sendPacket(this.port));
 	}
 	
 	public void close() {
