@@ -1,24 +1,27 @@
 package org.usfirst.frc.team1076.robot.physical;
 
 import org.usfirst.frc.team1076.robot.sensors.IGyro;
-import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.GyroBase;
 
 public class Gyro implements IGyro {
-	private AnalogGyro gyro;
+	GyroBase gyro;
 	
-	public Gyro() {
-		gyro = new AnalogGyro(0);
+	public Gyro(GyroBase gyro) {
+		this.gyro = gyro;
 	}
 	
-	public void calibrate() {
-		gyro.calibrate();
-	}
-	
+	@Override
 	public double getAngle() {
 		return gyro.getAngle();
 	}
 	
+	@Override
 	public double getRate() {
 		return gyro.getRate();
+	}
+
+	@Override
+	public void reset() {
+		gyro.reset();
 	}
 }

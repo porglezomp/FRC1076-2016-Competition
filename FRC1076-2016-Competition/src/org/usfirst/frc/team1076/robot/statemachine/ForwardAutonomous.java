@@ -1,8 +1,7 @@
 package org.usfirst.frc.team1076.robot.statemachine;
 
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import java.util.concurrent.TimeUnit;
-
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 
 public class ForwardAutonomous extends AutoState {
 	long timeStart;

@@ -3,7 +3,7 @@ package org.usfirst.frc.team1076.test.gamepad;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
 import org.usfirst.frc.team1076.test.mock.MockGamepad;
 
@@ -29,5 +29,16 @@ public class TankInputTest {
 						r, output.right, EPSILON);
 			}
 		}
+	}
+	
+	@Test
+	public void testBrakes() {
+		gamepad.reset();
+		gamepad.lt = 0;
+		assertEquals(false, input.brakesApplied());
+		gamepad.lt = 0.5;
+		assertEquals(true, input.brakesApplied());
+		gamepad.lt = 1;
+		assertEquals(true, input.brakesApplied());
 	}
 }

@@ -6,10 +6,11 @@ import org.usfirst.frc.team1076.robot.controllers.AutoController;
 import org.usfirst.frc.team1076.robot.controllers.IRobotController;
 import org.usfirst.frc.team1076.robot.controllers.TeleopController;
 import org.usfirst.frc.team1076.robot.controllers.TestController;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.gamepad.IGamepad;
 import org.usfirst.frc.team1076.robot.gamepad.IGamepad.GamepadButton;
-import org.usfirst.frc.team1076.robot.gamepad.IInput;
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
@@ -42,8 +43,6 @@ public class Robot extends IterativeRobot implements IRobot {
 	
 	double MOTOR_POWER_FACTOR = 1.11;
 	
-	
-	
 	CANTalon leftMotor = new CANTalon(LEFT_INDEX);
 	CANTalon leftSlave = new CANTalon(LEFT_SLAVE_INDEX);
 	CANTalon rightMotor = new CANTalon(RIGHT_INDEX);
@@ -58,9 +57,6 @@ public class Robot extends IterativeRobot implements IRobot {
 	IRobotController teleopController;
 	IRobotController autoController;
 	IRobotController testController;
-
-	IGamepad driverGamepad;
-	IGamepad operatorGamepad;
 	
 	double robotSpeed = 0.5;
 	double armSpeed = 0.5;
@@ -93,10 +89,10 @@ public class Robot extends IterativeRobot implements IRobot {
 		compressor.setClosedLoopControl(true);
 		intakePneumatic.set(DoubleSolenoid.Value.kOff);
 		
-		driverGamepad = new Gamepad(0);
-		operatorGamepad = new Gamepad(1);
-		IInput driver = new TankInput(driverGamepad);
-		IInput operator = new OperatorInput(operatorGamepad);
+		IGamepad driverGamepad = new Gamepad(0);
+		IGamepad operatorGamepad = new Gamepad(1);
+		IDriverInput driver = new TankInput(driverGamepad);
+		IOperatorInput operator = new OperatorInput(operatorGamepad);
 		teleopController = new TeleopController(driver, operator);
 		autoController = new AutoController(new NothingAutonomous());
 		testController = new TestController(driverGamepad);
@@ -213,13 +209,14 @@ public class Robot extends IterativeRobot implements IRobot {
     		System.out.println("Right motor " + right);
     	}
 
-    	if (driverGamepad.getButton(GamepadButton.A)) {
+    	// TODO: Add Driver Input methods "shiftHigh" and "shiftLow"
+    	/* if (driverGamepad.getButton(GamepadButton.A)) {
     		gearShifter.shiftHigh(this);
     	} else if (driverGamepad.getButton(GamepadButton.B)) {
     		gearShifter.shiftLow(this);
     	} else {
     		gearShifter.shiftAuto(this);
-    	}
+    	} */
     }
 
 	@Override
@@ -251,7 +248,7 @@ public class Robot extends IterativeRobot implements IRobot {
 	}
 	
 	@Override
-	public void setBreaks(boolean enabled) {
+	public void setBrakes(boolean enabled) {
 		leftMotor.enableBrakeMode(enabled);
 		leftSlave.enableBrakeMode(enabled);
 		rightMotor.enableBrakeMode(enabled);
@@ -272,5 +269,11 @@ public class Robot extends IterativeRobot implements IRobot {
 	public MotorOutput getMotorSpeed() {
 		MotorOutput currentOutput = new MotorOutput(leftMotor.getSpeed(), rightMotor.getSpeed());
 		return currentOutput;
+	}
+
+	@Override
+	public void setBreaks(boolean enabled) {
+		// TODO Auto-generated method stub
+		
 	}
 }

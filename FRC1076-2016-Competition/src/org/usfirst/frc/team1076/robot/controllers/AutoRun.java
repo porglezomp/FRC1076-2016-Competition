@@ -1,5 +1,5 @@
 package org.usfirst.frc.team1076.robot.controllers;
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 
 public interface AutoRun {
 	default void init() { }

@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1076.robot.sensors;
 
 import org.usfirst.frc.team1076.robot.IRobot;
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 
 public abstract class GearShiftStateManager {
 	public enum GearStates { High, Low; }

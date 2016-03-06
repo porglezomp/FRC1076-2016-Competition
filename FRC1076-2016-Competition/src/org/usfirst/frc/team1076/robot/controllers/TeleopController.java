@@ -1,14 +1,16 @@
 package org.usfirst.frc.team1076.robot.controllers;
 
 import org.usfirst.frc.team1076.robot.IRobot;
-import org.usfirst.frc.team1076.robot.gamepad.IInput;
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput;
 
 public class TeleopController implements IRobotController {
 
-	IInput driverInput, operatorInput;
+	IDriverInput driverInput;
+	IOperatorInput operatorInput;
 	
-	public TeleopController(IInput driverInput, IInput operatorInput) {
+	public TeleopController(IDriverInput driverInput, IOperatorInput operatorInput) {
 		this.driverInput = driverInput;
 		this.operatorInput = operatorInput;
 	}
@@ -31,7 +33,8 @@ public class TeleopController implements IRobotController {
 		robot.setIntakeSpeed(operatorInput.intakeSpeed());
 		MotorOutput drive = driverInput.driveTrainSpeed();
 		robot.setLeftSpeed(drive.left);
-		robot.setRightSpeed(drive.right);		
+		robot.setRightSpeed(drive.right);
+		robot.setBrakes(driverInput.brakesApplied());
 	}
 
 	@Override
