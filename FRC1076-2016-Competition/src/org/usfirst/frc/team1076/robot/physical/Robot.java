@@ -12,6 +12,10 @@ import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
+import org.usfirst.frc.team1076.udp.Channel;
+import org.usfirst.frc.team1076.udp.IChannel;
+import org.usfirst.frc.team1076.udp.SensorData;
+import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
@@ -55,6 +59,8 @@ public class Robot extends IterativeRobot implements IRobot {
 	double robotSpeed = 0.5;
 	double armSpeed = 0.5;
 	double intakeSpeed = 0.5;
+	
+	SensorData sensorData;
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -103,7 +109,9 @@ public class Robot extends IterativeRobot implements IRobot {
     	} else {
     		System.out.println("Test Controller on Robot is null in robotInit()");
     	}
-    }
+    	
+		IChannel channel = new Channel(5880);
+		sensorData = new SensorData(channel, FieldPosition.Right);    }
     
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select between different autonomous modes
@@ -227,5 +235,10 @@ public class Robot extends IterativeRobot implements IRobot {
 		leftSlave.enableBrakeMode(enabled);
 		rightMotor.enableBrakeMode(enabled);
 		rightSlave.enableBrakeMode(enabled);
+	}
+
+	@Override
+	public SensorData getSensorData() {
+		return sensorData;
 	}
 }

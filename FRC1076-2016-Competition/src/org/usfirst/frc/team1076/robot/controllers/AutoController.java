@@ -3,20 +3,13 @@ package org.usfirst.frc.team1076.robot.controllers;
 import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
-import org.usfirst.frc.team1076.udp.Channel;
-import org.usfirst.frc.team1076.udp.IChannel;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
-import org.usfirst.frc.team1076.udp.SensorData;
-import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
 public class AutoController implements IRobotController {
-	SensorData sensorData;
 	AutoState autoState;
 	
 	public AutoController(AutoState mode) {
 		this.autoState = mode;
-		IChannel channel = new Channel(5880);
-		sensorData = new SensorData(channel, FieldPosition.Right);
 	}
 	
 	@Override
@@ -36,8 +29,8 @@ public class AutoController implements IRobotController {
     private double motorSpeed = 7;
 	
 	@Override
-	public void autonomousPeriodic(IRobot robot) {		
-		sensorData.interpretData();
+	public void autonomousPeriodic(IRobot robot) {
+		robot.getSensorData().interpretData();
 		if (autoState.shouldChange()) {
 			autoState = autoState.next();
 			if (autoState == null) {
@@ -51,9 +44,9 @@ public class AutoController implements IRobotController {
 		robot.setLeftSpeed(drive.left);
 		robot.setRightSpeed(drive.right);		
 		
-	    if (sensorData.getLidarRpm() < RPM_MIN) {
+	    if (robot.getSensorData().getLidarRpm() < RPM_MIN) {
 	    	motorSpeed *= 1.01;
-	    } else if (sensorData.getLidarRpm() > RPM_MAX) {
+	    } else if (robot.getSensorData().getLidarRpm() > RPM_MAX) {
 	    	motorSpeed *= 0.99;
 	    }
 	    robot.setLidarSpeed(motorSpeed);
@@ -62,12 +55,10 @@ public class AutoController implements IRobotController {
 	@Override
 	public void testInit(IRobot robot) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void testPeriodic(IRobot robot) {
 		// TODO Auto-generated method stub
-		
 	}
 }

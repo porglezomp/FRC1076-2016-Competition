@@ -1,10 +1,13 @@
 package org.usfirst.frc.team1076.robot;
 
+import org.usfirst.frc.team1076.udp.SensorData;
+
 public interface IRobot {
-	public void setLeftSpeed(double speed);
-	public void setRightSpeed(double speed);
-	public void setArmSpeed(double speed);
-	public void setIntakeSpeed(double speed);
-	public void setBrakes(boolean enabled);
+	void setLeftSpeed(double speed);
+	void setRightSpeed(double speed);
+	void setArmSpeed(double speed);
+	void setIntakeSpeed(double speed);
+	void setBrakes(boolean enabled);
 	void setLidarSpeed(double speed);
+	SensorData getSensorData(); 
 }

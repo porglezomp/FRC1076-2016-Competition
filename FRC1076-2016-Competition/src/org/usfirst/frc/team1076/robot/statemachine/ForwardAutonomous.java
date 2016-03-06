@@ -1,14 +1,16 @@
 package org.usfirst.frc.team1076.robot.statemachine;
 
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
+import java.util.concurrent.TimeUnit;
 
 public class ForwardAutonomous extends AutoState {
-	int counter = 0; // replace with encoders or timer
-	int limit = 100;
+	long timeStart;
+	long timeLimit;
 	double speed = 1;
 	
 	public ForwardAutonomous(int millis, double speed) {
-		this.limit = millis / 20;
+		timeStart = System.nanoTime();
+		this.timeLimit = millis;
 		this.speed = speed;
 	}
 	
@@ -16,21 +18,29 @@ public class ForwardAutonomous extends AutoState {
 		this(millis, 1);
 	}
 	
+	@Override
 	public void init() { }
 	
+	@Override
 	public boolean shouldChange() {
-		return counter > limit;
+		return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - timeStart) > timeLimit;
 	}
 	
+	@Override
 	public MotorOutput driveTrainSpeed() {
-		counter++;
-		return new MotorOutput(speed, speed);
+		if (shouldChange()) {
+			return new MotorOutput(0, 0);
+		} else {
+			return new MotorOutput(speed, speed);
+		}
 	}
 	
+	@Override
 	public double armSpeed() {
 		return 0;
 	}
 	
+	@Override
 	public double intakeSpeed() {
 		return 0;
 	}
