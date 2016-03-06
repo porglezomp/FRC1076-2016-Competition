@@ -40,8 +40,6 @@ public class Robot extends IterativeRobot implements IRobot {
 	
 	double MOTOR_POWER_FACTOR = 1.11;
 	
-	
-	
 	CANTalon leftMotor = new CANTalon(LEFT_INDEX);
 	CANTalon leftSlave = new CANTalon(LEFT_SLAVE_INDEX);
 	CANTalon rightMotor = new CANTalon(RIGHT_INDEX);
