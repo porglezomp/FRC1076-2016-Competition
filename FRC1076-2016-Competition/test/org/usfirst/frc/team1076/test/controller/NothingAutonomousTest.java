@@ -3,7 +3,7 @@ package org.usfirst.frc.team1076.test.controller;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 

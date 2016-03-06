@@ -7,7 +7,7 @@ public interface IRobot {
 	void setRightSpeed(double speed);
 	void setArmSpeed(double speed);
 	void setIntakeSpeed(double speed);
-	void setBreaks(boolean enabled);
+	void setBrakes(boolean enabled);
 	void setLidarSpeed(double speed);
 	SensorData getSensorData(); 
 }

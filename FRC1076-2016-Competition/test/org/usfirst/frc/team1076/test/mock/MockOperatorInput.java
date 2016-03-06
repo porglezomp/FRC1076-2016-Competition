@@ -1,22 +1,17 @@
 package org.usfirst.frc.team1076.test.mock;
 
-import org.usfirst.frc.team1076.robot.gamepad.IInput;
+import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput;
 
-public class MockInput implements IInput {
+public class MockOperatorInput implements IOperatorInput {
 
-	public double left, right, arm, intake, extend;
+	public double arm, intake, extend;
 	public IntakeRaiseState raiseState = IntakeRaiseState.Neutral;
 	
 	public void reset() {
-		left = right = arm = intake = extend = 0;
+		arm = intake = extend = 0;
 		raiseState = IntakeRaiseState.Neutral;
 	}
 	
-	@Override
-	public MotorOutput driveTrainSpeed() {
-		return new MotorOutput(left, right);
-	}
-
 	@Override
 	public double armSpeed() {
 		return arm;

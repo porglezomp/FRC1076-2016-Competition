@@ -31,7 +31,7 @@ public class MockRobot implements IRobot {
 	}
 
 	@Override
-	public void setBreaks(boolean enabled) {
+	public void setBrakes(boolean enabled) {
 		brakes = enabled;
 	}
 

@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1076.robot.statemachine;
 
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.sensors.IGyro;
 
 /**

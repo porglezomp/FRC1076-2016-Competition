@@ -1,9 +1,9 @@
 package org.usfirst.frc.team1076.robot.controllers;
 
 import org.usfirst.frc.team1076.robot.IRobot;
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 
 public class AutoController implements IRobotController {
 	AutoState autoState;
@@ -55,12 +55,10 @@ public class AutoController implements IRobotController {
 	@Override
 	public void testInit(IRobot robot) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void testPeriodic(IRobot robot) {
 		// TODO Auto-generated method stub
-		
 	}
 }
