@@ -17,6 +17,7 @@ public class GearShiftTest {
 		gear = new MockGearShifter(0.2, 0.8);
 		robot = new MockRobot();
 	}
+	
 	@Test
 	public void testManualHigh() {
 		gear.shiftHigh(robot);

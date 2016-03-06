@@ -7,6 +7,7 @@ import org.usfirst.frc.team1076.robot.controllers.IRobotController;
 import org.usfirst.frc.team1076.robot.controllers.TeleopController;
 import org.usfirst.frc.team1076.robot.controllers.TestController;
 import org.usfirst.frc.team1076.robot.gamepad.IGamepad;
+import org.usfirst.frc.team1076.robot.gamepad.IGamepad.GamepadButton;
 import org.usfirst.frc.team1076.robot.gamepad.IInput;
 import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
@@ -57,12 +58,18 @@ public class Robot extends IterativeRobot implements IRobot {
 	IRobotController teleopController;
 	IRobotController autoController;
 	IRobotController testController;
+
+	IGamepad driverGamepad;
+	IGamepad operatorGamepad;
 	
 	double robotSpeed = 0.5;
 	double armSpeed = 0.5;
 	double intakeSpeed = 0.5;
+	double upperGearThreshold = 0.6;
+	double lowerGearThreshold = 0.4;
 	
 	SensorData sensorData;
+	GearShifter gearShifter;
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -71,7 +78,7 @@ public class Robot extends IterativeRobot implements IRobot {
 	@Override
     public void robotInit() {
     	SmartDashboard.putNumber("LIDAR Speed", 80);		
-//    	SmartDashboard.putNumber("Motor Tweak", MOTOR_POWER_FACTOR);
+    	// SmartDashboard.putNumber("Motor Tweak", MOTOR_POWER_FACTOR);
 		
 		// Initialize the physical components before the controllers,
 		// in case they depend on them.
@@ -86,8 +93,8 @@ public class Robot extends IterativeRobot implements IRobot {
 		compressor.setClosedLoopControl(true);
 		intakePneumatic.set(DoubleSolenoid.Value.kOff);
 		
-		IGamepad driverGamepad = new Gamepad(0);
-		IGamepad operatorGamepad = new Gamepad(1);
+		driverGamepad = new Gamepad(0);
+		operatorGamepad = new Gamepad(1);
 		IInput driver = new TankInput(driverGamepad);
 		IInput operator = new OperatorInput(operatorGamepad);
 		teleopController = new TeleopController(driver, operator);
@@ -112,8 +119,12 @@ public class Robot extends IterativeRobot implements IRobot {
     		System.out.println("Test Controller on Robot is null in robotInit()");
     	}
     	
+    	
 		IChannel channel = new Channel(5880);
-		sensorData = new SensorData(channel, FieldPosition.Right);    }
+		sensorData = new SensorData(channel, FieldPosition.Right);
+		
+		gearShifter = new GearShifter();
+	}
     
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select between different autonomous modes
@@ -200,6 +211,14 @@ public class Robot extends IterativeRobot implements IRobot {
     	}
     	if (right != 0) {
     		System.out.println("Right motor " + right);
+    	}
+
+    	if (driverGamepad.getButton(GamepadButton.A)) {
+    		gearShifter.shiftHigh(this);
+    	} else if (driverGamepad.getButton(GamepadButton.B)) {
+    		gearShifter.shiftLow(this);
+    	} else {
+    		gearShifter.shiftAuto(this);
     	}
     }
 
