@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1076.robot.statemachine;
 
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
-import org.usfirst.frc.team1076.robot.physical.Encoder;
 import org.usfirst.frc.team1076.robot.sensors.IEncoder;
 
 // TODO: Actually use SensorData to change motor output
@@ -28,7 +27,7 @@ public class DistanceAutonomous extends AutoState {
 
 	@Override
 	public boolean shouldChange() {
-		return encoder.getDistance() > distance;
+		return encoder.getDistance() >= distance;
 	}
 		
 	@Override
