@@ -10,7 +10,6 @@ import org.usfirst.frc.team1076.robot.controllers.TestController;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.gamepad.IGamepad;
-import org.usfirst.frc.team1076.robot.gamepad.IGamepad.GamepadButton;
 import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
@@ -34,12 +33,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot implements IRobot {
-	static final int LEFT_INDEX = 0;
-	static final int LEFT_SLAVE_INDEX = 1;
-	static final int RIGHT_INDEX = 2;
-	static final int RIGHT_SLAVE_INDEX = 3;
-	static final int INTAKE_INDEX = 4;
-	static final int ARM_INDEX = 5;
+	static final int LEFT_INDEX = 3;
+	static final int LEFT_SLAVE_INDEX = 4;
+	static final int RIGHT_INDEX = 1;
+	static final int RIGHT_SLAVE_INDEX = 2;
+	static final int INTAKE_INDEX = 5;
+	static final int ARM_INDEX = 6;
 	
 	double MOTOR_POWER_FACTOR = 1.11;
 	
@@ -59,9 +58,9 @@ public class Robot extends IterativeRobot implements IRobot {
 	IRobotController autoController;
 	IRobotController testController;
 	
-	double robotSpeed = 0.5;
-	double armSpeed = 0.5;
-	double intakeSpeed = 0.5;
+	double robotSpeed = 1;
+	double armSpeed = 1;
+	double intakeSpeed = 1;
 	double upperGearThreshold = 0.6;
 	double lowerGearThreshold = 0.4;
 	
@@ -81,8 +80,8 @@ public class Robot extends IterativeRobot implements IRobot {
 		// in case they depend on them.
 		// rightSlave.changeControlMode(TalonControlMode.Follower);
 		// rightSlave.set(RIGHT_INDEX);
-		rightSlave.setInverted(true);
-		rightMotor.setInverted(true);
+		leftSlave.setInverted(true);
+		leftMotor.setInverted(true);
 		
 		// leftSlave.changeControlMode(TalonControlMode.Follower);
 		// leftSlave.set(LEFT_INDEX);
