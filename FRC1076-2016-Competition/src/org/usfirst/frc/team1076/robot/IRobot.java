@@ -13,5 +13,4 @@ public interface IRobot {
 	SensorData getSensorData(); 
 	void setGear(SolenoidValue value);
 	MotorOutput getMotorSpeed();
-	void setBreaks(boolean enabled);
 }

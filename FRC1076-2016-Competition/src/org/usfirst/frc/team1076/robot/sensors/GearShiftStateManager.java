@@ -7,7 +7,6 @@ public abstract class GearShiftStateManager {
 	public enum GearStates { High, Low; }
 	private double shiftUpSpeed = 1;
 	private double shiftDownSpeed = 0;
-	private GearStates gearState = GearStates.Low;
 
 	public GearShiftStateManager() { }
 	public GearShiftStateManager(double upShift, double downShift) {

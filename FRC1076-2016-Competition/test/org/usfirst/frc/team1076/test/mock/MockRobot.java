@@ -42,7 +42,7 @@ public class MockRobot implements IRobot {
 	}
 	
 	@Override
-	public void setBreaks(boolean enabled) {
+	public void setBrakes(boolean enabled) {
 		brakes = enabled;
 	}
 
@@ -52,7 +52,7 @@ public class MockRobot implements IRobot {
 	}
 
 	public SensorData getSensorData() {
-		// TODO Auto-generated method stub
+		// Should this return something else?
 		return null;
 	}
 

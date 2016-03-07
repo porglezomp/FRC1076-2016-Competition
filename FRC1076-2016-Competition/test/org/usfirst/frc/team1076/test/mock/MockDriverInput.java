@@ -21,4 +21,14 @@ public class MockDriverInput implements IDriverInput {
 	public boolean brakesApplied() {
 		return brakes;
 	}
+
+	@Override
+	public boolean shiftHigh() {
+		return false;
+	}
+
+	@Override
+	public boolean shiftLow() {
+		return false;
+	}
 }

@@ -12,4 +12,6 @@ public interface IDriverInput {
 	
 	MotorOutput driveTrainSpeed();
 	boolean brakesApplied();
+	boolean shiftHigh();
+	boolean shiftLow();
 }

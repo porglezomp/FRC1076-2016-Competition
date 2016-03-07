@@ -208,15 +208,6 @@ public class Robot extends IterativeRobot implements IRobot {
     	if (right != 0) {
     		System.out.println("Right motor " + right);
     	}
-
-    	// TODO: Add Driver Input methods "shiftHigh" and "shiftLow"
-    	/* if (driverGamepad.getButton(GamepadButton.A)) {
-    		gearShifter.shiftHigh(this);
-    	} else if (driverGamepad.getButton(GamepadButton.B)) {
-    		gearShifter.shiftLow(this);
-    	} else {
-    		gearShifter.shiftAuto(this);
-    	} */
     }
 
 	@Override
@@ -269,11 +260,5 @@ public class Robot extends IterativeRobot implements IRobot {
 	public MotorOutput getMotorSpeed() {
 		MotorOutput currentOutput = new MotorOutput(leftMotor.getSpeed(), rightMotor.getSpeed());
 		return currentOutput;
-	}
-
-	@Override
-	public void setBreaks(boolean enabled) {
-		// TODO Auto-generated method stub
-		
 	}
 }
