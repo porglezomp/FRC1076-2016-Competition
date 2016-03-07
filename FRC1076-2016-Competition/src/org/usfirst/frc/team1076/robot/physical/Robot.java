@@ -52,7 +52,8 @@ public class Robot extends IterativeRobot implements IRobot {
 	Servo lidarServo = new Servo(0);
 	
 	Compressor compressor = new Compressor(0);
-	DoubleSolenoid intakePneumatic = new DoubleSolenoid(0, 1);
+	DoubleSolenoid intakePneumatic = new DoubleSolenoid(2, 3);
+	DoubleSolenoid shifterPneumatic = new DoubleSolenoid(0, 1);
 	
 	IRobotController teleopController;
 	IRobotController autoController;
@@ -253,7 +254,18 @@ public class Robot extends IterativeRobot implements IRobot {
 
 	@Override
 	public void setGear(SolenoidValue value) {
-		// TODO: Actually add in the double solenoid
+		switch (value) {
+		case Forward:
+			shifterPneumatic.set(DoubleSolenoid.Value.kForward);
+			break;
+		case Reverse:
+			shifterPneumatic.set(DoubleSolenoid.Value.kReverse);
+			break;
+		case Off:
+		default:
+			shifterPneumatic.set(DoubleSolenoid.Value.kOff);
+			break;
+		}
 	}
 
 	@Override
