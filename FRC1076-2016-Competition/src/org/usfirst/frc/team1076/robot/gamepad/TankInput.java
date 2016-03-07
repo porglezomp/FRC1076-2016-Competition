@@ -24,11 +24,11 @@ public class TankInput implements IDriverInput {
 
 	@Override
 	public boolean shiftHigh() {
-		return gamepad.getButton(GamepadButton.A);
+		return gamepad.getButton(GamepadButton.LB);
 	}
 
 	@Override
 	public boolean shiftLow() {
-		return gamepad.getButton(GamepadButton.B);
+		return gamepad.getButton(GamepadButton.RB);
 	}
 }
