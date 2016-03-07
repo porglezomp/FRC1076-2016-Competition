@@ -35,7 +35,7 @@ public class TeleopControllerTest {
 	}
 	
 	@Test
-	public void testArmStationary() {
+	public void testArmMotion() {
 		operatorInput.reset();
 		for (int i = -100; i <= 100; i++) {
 			double value = i / 100.0;
@@ -51,10 +51,10 @@ public class TeleopControllerTest {
 		operatorInput.reset();
 		for (int i = -100; i <= 100; i++) {
 			double value = i / 100.0;
-			operatorInput.arm = value;
+			operatorInput.intake = value;
 			controller.teleopPeriodic(robot);
 			assertEquals("The arm motion should match the arm input",
-					value, robot.arm, EPSILON);
+					value, robot.intake, EPSILON);
 		}
 	}
 	
