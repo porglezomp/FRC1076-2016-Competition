@@ -7,14 +7,18 @@ import org.junit.Test;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.DistanceAutonomous;
+import org.usfirst.frc.team1076.test.mock.MockEncoder;
 
 public class DistanceAutonomousTest {
 
 	private static final double EPSILON = 1e-12;
+	MockEncoder encoder = new MockEncoder();
+	
 	
 	@Test
 	public void testNext() {
-		AutoState auto = new DistanceAutonomous(1000, 10);
+		encoder.reset();
+		AutoState auto = new DistanceAutonomous(1000, 10, encoder);
 		assertSame(null, auto.next());
 		auto.setNext(auto);
 		assertSame(auto, auto.next());
@@ -22,13 +26,15 @@ public class DistanceAutonomousTest {
 	
 	@Test
 	public void testShouldNotChange() {
-		AutoState auto = new DistanceAutonomous(1000, 10);
+		encoder.reset();
+		AutoState auto = new DistanceAutonomous(1000, 10, encoder);
 		assertEquals(false, auto.shouldChange());
 	}
 	
 	@Test
 	public void testFixedDistanceTraveled() {
-		DistanceAutonomous auto = new DistanceAutonomous(1, 1);
+		encoder.reset();
+		DistanceAutonomous auto = new DistanceAutonomous(1.5, 1, encoder);
 		MotorOutput motorOutput = auto.driveTrainSpeed();
 		
 		// We haven't driven far enough yet, so the robot should still be moving.
@@ -36,13 +42,7 @@ public class DistanceAutonomousTest {
 		assertEquals(1, motorOutput.left, EPSILON);
 		assertEquals(1, motorOutput.right, EPSILON);
 		
-		
-		// Sleep for a few seconds to allow the robot to move forward.
-		try {
-		    Thread.sleep(1500);                
-		} catch(InterruptedException ex) {
-		    Thread.currentThread().interrupt();
-		}
+		encoder.distance = 1.5;
 
 		motorOutput = auto.driveTrainSpeed();
 		
@@ -56,14 +56,11 @@ public class DistanceAutonomousTest {
 	@Test
 	public void testVaribleSpeed() {
 		for (double speed = 0.0; speed < 1.0; speed += 0.3) {
-			DistanceAutonomous auto = new DistanceAutonomous(1, speed);
+			encoder.reset();
+			DistanceAutonomous auto = new DistanceAutonomous(1, speed, encoder);
 			auto.driveTrainSpeed();
 			
-			try {
-			    Thread.sleep(1000);                
-			} catch(InterruptedException ex) {
-			    Thread.currentThread().interrupt();
-			}
+			encoder.distance = speed;
 
 			auto.driveTrainSpeed();
 
@@ -72,14 +69,34 @@ public class DistanceAutonomousTest {
 	}
 	
 	@Test
+	public void testRepeatedMotion() {
+		encoder.reset();
+		
+		DistanceAutonomous auto = new DistanceAutonomous(1.5, 1, encoder);
+		MotorOutput motorOutput = auto.driveTrainSpeed();
+		assertEquals(false, auto.shouldChange());
+		encoder.distance = 1.5;
+		assertEquals(true, auto.shouldChange());
+		
+		auto = new DistanceAutonomous(1.5, 1, encoder);
+		motorOutput = auto.driveTrainSpeed();
+		assertEquals(false, auto.shouldChange());
+		encoder.distance = 3;
+		motorOutput = auto.driveTrainSpeed();
+		assertEquals(true, auto.shouldChange());
+	}
+	
+	@Test
 	public void testNoArmMotion() {
-		AutoState auto = new DistanceAutonomous(100, 10);
+		encoder.reset();
+		AutoState auto = new DistanceAutonomous(100, 10, encoder);
 		assertEquals(0, auto.armSpeed(), EPSILON);
 	}
 	
 	@Test
 	public void testNoIntakeMotion() {
-		AutoState auto = new DistanceAutonomous(100, 10);
+		encoder.reset();
+		AutoState auto = new DistanceAutonomous(100, 10, encoder);
 		assertEquals(0, auto.intakeSpeed(), EPSILON);
 	}
 

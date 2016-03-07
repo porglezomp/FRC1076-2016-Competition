@@ -6,3 +6,4 @@ dist/
 sysProps.xml
 .metadata/
 !lib/
+/bin/
