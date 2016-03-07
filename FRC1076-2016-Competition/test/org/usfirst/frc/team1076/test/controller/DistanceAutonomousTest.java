@@ -69,6 +69,24 @@ public class DistanceAutonomousTest {
 	}
 	
 	@Test
+	public void testRepeatedMotion() {
+		encoder.reset();
+		
+		DistanceAutonomous auto = new DistanceAutonomous(1.5, 1, encoder);
+		MotorOutput motorOutput = auto.driveTrainSpeed();
+		assertEquals(false, auto.shouldChange());
+		encoder.distance = 1.5;
+		assertEquals(true, auto.shouldChange());
+		
+		auto = new DistanceAutonomous(1.5, 1, encoder);
+		motorOutput = auto.driveTrainSpeed();
+		assertEquals(false, auto.shouldChange());
+		encoder.distance = 3;
+		motorOutput = auto.driveTrainSpeed();
+		assertEquals(true, auto.shouldChange());
+	}
+	
+	@Test
 	public void testNoArmMotion() {
 		encoder.reset();
 		AutoState auto = new DistanceAutonomous(100, 10, encoder);
