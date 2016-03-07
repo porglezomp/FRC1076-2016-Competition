@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team1076.robot.physical;
 
+import org.usfirst.frc.team1076.robot.AbstractSolenoid;
 import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.controllers.AutoController;
 import org.usfirst.frc.team1076.robot.controllers.IRobotController;
@@ -21,7 +22,6 @@ import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -52,8 +52,8 @@ public class Robot extends IterativeRobot implements IRobot {
 	Servo lidarServo = new Servo(0);
 	
 	Compressor compressor = new Compressor(0);
-	DoubleSolenoid intakePneumatic = new DoubleSolenoid(2, 3);
-	DoubleSolenoid shifterPneumatic = new DoubleSolenoid(0, 1);
+	AbstractSolenoid intakePneumatic = new OneSolenoid(1);
+	AbstractSolenoid shifterPneumatic = new OneSolenoid(0);
 	
 	IRobotController teleopController;
 	IRobotController autoController;
@@ -88,7 +88,7 @@ public class Robot extends IterativeRobot implements IRobot {
 		// leftSlave.set(LEFT_INDEX);
 		
 		compressor.setClosedLoopControl(true);
-		intakePneumatic.set(DoubleSolenoid.Value.kOff);
+		intakePneumatic.setNeutral();
 		
 		IGamepad driverGamepad = new Gamepad(0);
 		IGamepad operatorGamepad = new Gamepad(1);
@@ -256,14 +256,14 @@ public class Robot extends IterativeRobot implements IRobot {
 	public void setGear(SolenoidValue value) {
 		switch (value) {
 		case Forward:
-			shifterPneumatic.set(DoubleSolenoid.Value.kForward);
+			shifterPneumatic.setForward();
 			break;
 		case Reverse:
-			shifterPneumatic.set(DoubleSolenoid.Value.kReverse);
+			shifterPneumatic.setReverse();
 			break;
 		case Off:
 		default:
-			shifterPneumatic.set(DoubleSolenoid.Value.kOff);
+			shifterPneumatic.setNeutral();
 			break;
 		}
 	}
