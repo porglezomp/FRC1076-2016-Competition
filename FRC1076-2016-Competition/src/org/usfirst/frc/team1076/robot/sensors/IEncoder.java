@@ -4,5 +4,4 @@ public interface IEncoder {
 	double getDistance();
 	double getRate();
 	void reset();
-	  
 }

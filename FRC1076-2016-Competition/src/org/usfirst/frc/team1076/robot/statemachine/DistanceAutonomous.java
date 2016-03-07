@@ -13,13 +13,15 @@ import org.usfirst.frc.team1076.robot.sensors.IEncoder;
  * */
 public class DistanceAutonomous extends AutoState {
 	IEncoder encoder;
+	double encoderZeroPoint;
 	double speed;
 	double distance;
-	
+
 	public DistanceAutonomous(double distance, double speed, IEncoder encoder) {
-		this.encoder = encoder;
 		this.distance = distance;
 		this.speed = speed;
+		this.encoder = encoder;
+		this.encoderZeroPoint = encoder.getDistance(); 
 	}
 	
 	@Override
@@ -27,7 +29,7 @@ public class DistanceAutonomous extends AutoState {
 
 	@Override
 	public boolean shouldChange() {
-		return encoder.getDistance() >= distance;
+		return getDistanceTraveled() >= distance;
 	}
 		
 	@Override
@@ -40,9 +42,9 @@ public class DistanceAutonomous extends AutoState {
 	}
 	
 	public double getDistanceTraveled() {
-		return encoder.getDistance();
+		return encoder.getDistance() - encoderZeroPoint;
 	}
-
+	
 	@Override
 	public double armSpeed() {
 		return 0;

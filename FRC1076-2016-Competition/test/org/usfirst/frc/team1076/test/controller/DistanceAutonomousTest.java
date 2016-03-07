@@ -55,8 +55,8 @@ public class DistanceAutonomousTest {
 	
 	@Test
 	public void testVaribleSpeed() {
-		encoder.reset();
 		for (double speed = 0.0; speed < 1.0; speed += 0.3) {
+			encoder.reset();
 			DistanceAutonomous auto = new DistanceAutonomous(1, speed, encoder);
 			auto.driveTrainSpeed();
 			
