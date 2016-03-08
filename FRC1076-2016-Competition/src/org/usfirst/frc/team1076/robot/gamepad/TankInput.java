@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1076.robot.gamepad;
 
 import org.usfirst.frc.team1076.robot.gamepad.IGamepad.GamepadAxis;
+import org.usfirst.frc.team1076.robot.gamepad.IGamepad.GamepadButton;
 
 public class TankInput implements IDriverInput {
 	IGamepad gamepad;
@@ -19,5 +20,15 @@ public class TankInput implements IDriverInput {
 	@Override
 	public boolean brakesApplied() {
 		return gamepad.getAxis(GamepadAxis.LeftTrigger) > 0.25;
+	}
+
+	@Override
+	public boolean shiftHigh() {
+		return gamepad.getButton(GamepadButton.RB);
+	}
+
+	@Override
+	public boolean shiftLow() {
+		return gamepad.getButton(GamepadButton.LB);
 	}
 }

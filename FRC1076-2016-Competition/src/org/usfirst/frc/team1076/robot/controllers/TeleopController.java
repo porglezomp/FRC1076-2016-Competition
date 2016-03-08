@@ -4,15 +4,18 @@ import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput;
+import org.usfirst.frc.team1076.robot.physical.GearShifter;
 
 public class TeleopController implements IRobotController {
-
 	IDriverInput driverInput;
 	IOperatorInput operatorInput;
+	
+	GearShifter gearShifter;
 	
 	public TeleopController(IDriverInput driverInput, IOperatorInput operatorInput) {
 		this.driverInput = driverInput;
 		this.operatorInput = operatorInput;
+		gearShifter = new GearShifter();
 	}
 	
 	@Override
@@ -35,14 +38,19 @@ public class TeleopController implements IRobotController {
 		robot.setLeftSpeed(drive.left);
 		robot.setRightSpeed(drive.right);
 		robot.setBrakes(driverInput.brakesApplied());
+
+    	if (driverInput.shiftHigh()) {
+    		gearShifter.shiftHigh(robot);
+    	} else if (driverInput.shiftLow()) {
+    		gearShifter.shiftLow(robot);
+    	} else {
+    		gearShifter.shiftAuto(robot);
+    	}
 	}
 
 	@Override
-	public void testInit(IRobot robot) {
-	}
+	public void testInit(IRobot robot) { }
 
 	@Override
-	public void testPeriodic(IRobot robot) {
-	}
-
+	public void testPeriodic(IRobot robot) { }
 }
