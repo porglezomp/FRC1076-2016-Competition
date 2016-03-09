@@ -34,6 +34,7 @@ public class TeleopController implements IRobotController {
 	public void teleopPeriodic(IRobot robot) {
 		robot.setArmSpeed(operatorInput.armSpeed());
 		robot.setIntakeSpeed(operatorInput.intakeSpeed());
+		robot.setIntakeElevation(operatorInput.intakeRaiseState());
 		MotorOutput drive = driverInput.driveTrainSpeed();
 		robot.setLeftSpeed(drive.left);
 		robot.setRightSpeed(drive.right);
