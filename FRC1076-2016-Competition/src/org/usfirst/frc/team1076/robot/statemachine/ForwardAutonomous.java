@@ -19,9 +19,6 @@ public class ForwardAutonomous extends AutoState {
 	}
 	
 	@Override
-	public void init() { }
-	
-	@Override
 	public boolean shouldChange() {
 		return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - timeStart) > timeLimit;
 	}
@@ -33,15 +30,5 @@ public class ForwardAutonomous extends AutoState {
 		} else {
 			return new MotorOutput(speed, speed);
 		}
-	}
-	
-	@Override
-	public double armSpeed() {
-		return 0;
-	}
-	
-	@Override
-	public double intakeSpeed() {
-		return 0;
 	}
 }

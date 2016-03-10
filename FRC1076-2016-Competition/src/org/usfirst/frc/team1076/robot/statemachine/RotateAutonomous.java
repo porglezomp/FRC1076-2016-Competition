@@ -20,9 +20,6 @@ public class RotateAutonomous extends AutoState {
 	public RotateAutonomous(int millis, TurnDirection turnDirection) {
 		this(millis, 1, turnDirection);
 	}
-	
-	@Override
-	public void init() { }
 
 	@Override
 	public boolean shouldChange() {
@@ -44,15 +41,4 @@ public class RotateAutonomous extends AutoState {
 			}
 		}
 	}
-
-	@Override
-	public double armSpeed() {
-		return 0;
-	}
-
-	@Override
-	public double intakeSpeed() {
-		return 0;
-	}
-
 }

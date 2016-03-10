@@ -17,9 +17,19 @@ public abstract class AutoState {
 		return nextState;
 	}
 
-	public abstract void init();
+	public void init() { }
+	
 	public abstract boolean shouldChange();
-	public abstract MotorOutput driveTrainSpeed();
-	public abstract double armSpeed();
-	public abstract double intakeSpeed();
+	
+	public MotorOutput driveTrainSpeed() {
+		return new MotorOutput(0, 0);
+	}
+	
+	public double armSpeed() {
+		return 0;
+	}
+	
+	public double intakeSpeed() {
+		return 0;
+	}
 }
