@@ -12,6 +12,7 @@ import org.usfirst.frc.team1076.robot.gamepad.IDriverInput;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.gamepad.IGamepad;
 import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput;
+import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput.IntakeRaiseState;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
@@ -273,5 +274,21 @@ public class Robot extends IterativeRobot implements IRobot {
 	public MotorOutput getMotorSpeed() {
 		MotorOutput currentOutput = new MotorOutput(leftMotor.getSpeed(), rightMotor.getSpeed());
 		return currentOutput;
+	}
+
+	@Override
+	public void setIntakeElevation(IntakeRaiseState state) {
+		switch (state) {
+		case Lowered:
+			intakePneumatic.setForward();
+			break;
+		case Raised:
+			intakePneumatic.setReverse();
+			break;
+		case Neutral:
+		default:
+			intakePneumatic.setNeutral();
+			break;
+		}
 	}
 }
