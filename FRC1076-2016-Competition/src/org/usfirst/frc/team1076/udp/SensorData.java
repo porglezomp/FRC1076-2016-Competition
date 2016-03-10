@@ -4,7 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class SensorData {
+public class SensorData implements ISensorData {
 	public enum FieldPosition { Right, Left; }
 	private IChannel receiver;
 	private double heading;
