@@ -8,7 +8,7 @@ public class MockRobot implements IRobot {
 	public double left, right, arm, intake;
 	public double lidarSpeed;
 	public boolean brakes;
-	// TODO: Add SensorData
+	public SensorData sensorData;
 	
 	@Override
 	public void setLeftSpeed(double speed) {
@@ -41,8 +41,7 @@ public class MockRobot implements IRobot {
 	}
 
 	public SensorData getSensorData() {
-		// TODO Auto-generated method stub
-		return null;
+		return sensorData;
 	}
 
 }
