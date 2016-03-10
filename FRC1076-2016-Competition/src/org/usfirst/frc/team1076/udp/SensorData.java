@@ -3,6 +3,7 @@ package org.usfirst.frc.team1076.udp;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.usfirst.frc.team1076.robot.sensors.IGyro;
 
 public class SensorData {
 	public enum FieldPosition { Right, Left; }
@@ -11,12 +12,14 @@ public class SensorData {
 	private double distance;
 	private FieldPosition position;
 	private JSONParser parser = new JSONParser();
+	private IGyro gyro;
 	
 	private double lidarRpm = 250;
 	private double leftSideBack, rightSideBack, leftSideFront, rightSideFront;
 	private double leftFront, rightFront;	
 	
-	public SensorData(IChannel channel, FieldPosition position) {
+	public SensorData(IChannel channel, FieldPosition position, IGyro gyro) {
+		this.gyro = gyro; // Should we change this to be a different method?
 		this.position = position;
 		receiver = channel;
 	}
@@ -127,6 +130,8 @@ public class SensorData {
 		this.heading = h;
 		this.distance = d;
 	}
+	
+	public IGyro getGyro() { return gyro; }
 	
 	public FieldPosition getFieldPosition() { return position; }
 	public void setFieldPosition(FieldPosition pos) { position = pos; }

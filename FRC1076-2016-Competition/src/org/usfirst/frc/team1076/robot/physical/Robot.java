@@ -1,7 +1,7 @@
 
 package org.usfirst.frc.team1076.robot.physical;
 
-import org.usfirst.frc.team1076.robot.AbstractSolenoid;
+import org.usfirst.frc.team1076.robot.ISolenoid;
 import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.controllers.AutoController;
 import org.usfirst.frc.team1076.robot.controllers.IRobotController;
@@ -20,8 +20,10 @@ import org.usfirst.frc.team1076.udp.IChannel;
 import org.usfirst.frc.team1076.udp.SensorData;
 import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -52,8 +54,8 @@ public class Robot extends IterativeRobot implements IRobot {
 	Servo lidarServo = new Servo(0);
 	
 	Compressor compressor = new Compressor(0);
-	AbstractSolenoid intakePneumatic = new OneSolenoid(1);
-	AbstractSolenoid shifterPneumatic = new OneSolenoid(0);
+	ISolenoid intakePneumatic = new OneSolenoid(1);
+	ISolenoid shifterPneumatic = new OneSolenoid(0);
 	
 	IRobotController teleopController;
 	IRobotController autoController;
@@ -118,7 +120,8 @@ public class Robot extends IterativeRobot implements IRobot {
     	
     	
 		IChannel channel = new Channel(5880);
-		sensorData = new SensorData(channel, FieldPosition.Right);
+		sensorData = new SensorData(channel, FieldPosition.Right, new Gyro(new AnalogGyro(0)));
+		// TODO: Figure out what analog input channel we'll be using.
 		
 		gearShifter = new GearShifter();
 	}

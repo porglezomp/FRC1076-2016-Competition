@@ -8,7 +8,7 @@ public class NothingAutonomous extends AutoState {
 	
 	@Override
 	public boolean shouldChange() {
-		return false;
+		return nextState != null;
 	}
 	
 	@Override

@@ -1,6 +1,8 @@
 package org.usfirst.frc.team1076.robot.physical;
 
+import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.sensors.IAutoSelector;
+import org.usfirst.frc.team1076.robot.statemachine.AngleAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
@@ -16,26 +18,34 @@ public class AutoSelector implements IAutoSelector {
 	public AutoSelector() {
 		//button = new Button();
 		SmartDashboard.putNumber("Autonomous", 1);
+		SmartDashboard.putBoolean("Autonomous Backwards", false);
 	}
 
-	public AutoState getState() {
+	public AutoState getState(IRobot robot) {
 		int chooser = (int) SmartDashboard.getNumber("Autonomous", 1);
-		IChannel channel = new Channel(5880);
+		boolean backwards = SmartDashboard.getBoolean("Autonomous Backwards", false);
+		AutoState chain = new NothingAutonomous();
 		switch(chooser) {
 		// TODO: make the actual state chains
 		case 1:
-			return new UDPAutonomous(channel, FieldPosition.Left)
-				.setNext(new ForwardAutonomous(100, 0.2));
+			if (!backwards) {
+				chain.setNext(new ForwardAutonomous(100, 0.2))
+					.setNext(new AngleAutonomous(0.0, 0.0, robot.getSensorData().getGyro()));
+			} else {
+				chain.setNext(new ForwardAutonomous(100, 0.2));
+			}
+			
 		case 2:
-			return new UDPAutonomous(channel, FieldPosition.Left);
+			new UDPAutonomous(robot.getSensorData(), FieldPosition.Left);
 		case 3:
-			return new UDPAutonomous(channel, FieldPosition.Left);
+			new UDPAutonomous(robot.getSensorData(), FieldPosition.Left);
 		case 4:
-			return new UDPAutonomous(channel, FieldPosition.Right);
+			new UDPAutonomous(robot.getSensorData(), FieldPosition.Right);
 		case 5:
-			return new UDPAutonomous(channel, FieldPosition.Right);
+			new UDPAutonomous(robot.getSensorData(), FieldPosition.Right);
 		default:
-			return new NothingAutonomous();
+			// Just nothing
 		}
+		return chain;
 	}
 }
