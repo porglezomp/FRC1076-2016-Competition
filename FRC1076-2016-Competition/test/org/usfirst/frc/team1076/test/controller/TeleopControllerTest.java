@@ -12,8 +12,7 @@ public class TeleopControllerTest {
 	private static final double EPSILON = 1e-10;
 	MockDriverInput driverInput = new MockDriverInput();
 	MockOperatorInput operatorInput = new MockOperatorInput();
-	TeleopController controller = new TeleopController(
-			driverInput, operatorInput);
+	TeleopController controller = new TeleopController(driverInput, operatorInput, driverInput, driverInput);
 	MockRobot robot = new MockRobot();
 	
 	@Test

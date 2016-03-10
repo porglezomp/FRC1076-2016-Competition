@@ -7,15 +7,18 @@ import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput;
 import org.usfirst.frc.team1076.robot.physical.GearShifter;
 
 public class TeleopController implements IRobotController {
-	public IDriverInput tankInput, arcadeInput;
+	IDriverInput tankInput, arcadeInput;
 	IDriverInput driverInput;
 	IOperatorInput operatorInput;
 	
 	GearShifter gearShifter;
 	
-	public TeleopController(IDriverInput driverInput, IOperatorInput operatorInput) {
+	public TeleopController(IDriverInput driverInput, IOperatorInput operatorInput,
+			IDriverInput tankInput, IDriverInput arcadeInput) {
 		this.driverInput = driverInput;
 		this.operatorInput = operatorInput;
+		this.tankInput = tankInput;
+		this.driverInput = driverInput;
 		gearShifter = new GearShifter();
 	}
 	
