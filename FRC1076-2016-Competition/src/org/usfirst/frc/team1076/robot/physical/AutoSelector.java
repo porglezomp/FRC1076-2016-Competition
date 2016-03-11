@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoSelector implements IAutoSelector {
 	//Button button;
+	private double speed = 0.8;
 	public AutoSelector() {
 		//button = new Button();
 		SmartDashboard.putNumber("Autonomous", 1);
@@ -26,11 +27,11 @@ public class AutoSelector implements IAutoSelector {
 		switch(chooser) {
 		// TODO: Refine and test the state chains.
 		case 1:
-			if (!backwards) {
-				chain.setNext(new ForwardAutonomous(100, 0.2))
+			if (backwards) {
+				chain.setNext(new ForwardAutonomous(1000, -speed))
 					.setNext(new AngleAutonomous(180.0, 0.0, robot.getSensorData().getGyro()));
 			} else {
-				chain.setNext(new ForwardAutonomous(100, 0.2));
+				chain.setNext(new ForwardAutonomous(1000, speed));
 			}
 			chain.setNext(new UDPAutonomous(robot.getSensorData(), FieldPosition.Left))
 				.setNext(new AngleAutonomous(90.0, 0.0, robot.getSensorData().getGyro()))
@@ -38,42 +39,42 @@ public class AutoSelector implements IAutoSelector {
 				.setNext(null); 
 				// TODO: Replace with an Autonomous that drives forward until it reaches the goal.
 		case 2:
-			if (!backwards) {
-				chain.setNext(new ForwardAutonomous(100, 0.2))
+			if (backwards) {
+				chain.setNext(new ForwardAutonomous(1000, -speed))
 					.setNext(new AngleAutonomous(180.0, 0.0, robot.getSensorData().getGyro()));
 			} else {
-				chain.setNext(new ForwardAutonomous(100, 0.2));
+				chain.setNext(new ForwardAutonomous(1000, speed));
 			}
 			chain.setNext(new UDPAutonomous(robot.getSensorData(), FieldPosition.Left))
 				.setNext(new AngleAutonomous(90.0, 0.0, robot.getSensorData().getGyro()))
 				.setNext(null);
 		case 3:
-			if (!backwards) {
-				chain.setNext(new ForwardAutonomous(100, 0.2))
+			if (backwards) {
+				chain.setNext(new ForwardAutonomous(1000, -speed))
 					.setNext(new AngleAutonomous(180.0, 0.0, robot.getSensorData().getGyro()));
 			} else {
-				chain.setNext(new ForwardAutonomous(100, 0.2));
+				chain.setNext(new ForwardAutonomous(1000, speed));
 			}
 			chain.setNext(new UDPAutonomous(robot.getSensorData(), FieldPosition.Left))
 				.setNext(new AngleAutonomous(90.0, 0.0, robot.getSensorData().getGyro()))
 				.setNext(null);
 		case 4:
 			// This is right in front of the tower. What is our procedure for this?
-			if (!backwards) {
-				chain.setNext(new ForwardAutonomous(100, 0.2))
+			if (backwards) {
+				chain.setNext(new ForwardAutonomous(1000, -speed))
 					.setNext(new AngleAutonomous(180.0, 0.0, robot.getSensorData().getGyro()));
 			} else {
-				chain.setNext(new ForwardAutonomous(100, 0.2));
+				chain.setNext(new ForwardAutonomous(1000, speed));
 			}
 			chain.setNext(new UDPAutonomous(robot.getSensorData(), FieldPosition.Right))
 				.setNext(new AngleAutonomous(-90.0, 0.0, robot.getSensorData().getGyro()))
 				.setNext(null);
 		case 5:
-			if (!backwards) {
-				chain.setNext(new ForwardAutonomous(100, 0.2))
+			if (backwards) {
+				chain.setNext(new ForwardAutonomous(1000, -speed))
 					.setNext(new AngleAutonomous(180.0, 0.0, robot.getSensorData().getGyro()));
 			} else {
-				chain.setNext(new ForwardAutonomous(100, 0.2));
+				chain.setNext(new ForwardAutonomous(1000, speed));
 			}
 			chain.setNext(new UDPAutonomous(robot.getSensorData(), FieldPosition.Right))
 				.setNext(new AngleAutonomous(-90.0, 0.0, robot.getSensorData().getGyro()))
