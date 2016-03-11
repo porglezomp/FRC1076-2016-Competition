@@ -22,9 +22,6 @@ public class DistanceAutonomous extends AutoState {
 	}
 	
 	@Override
-	public void init() { }
-
-	@Override
 	public boolean shouldChange() {
 		return getDistanceTraveled() >= distance;
 	}
@@ -41,15 +38,4 @@ public class DistanceAutonomous extends AutoState {
 	public double getDistanceTraveled() {
 		return encoder.getDistance() - encoderZeroPoint;
 	}
-	
-	@Override
-	public double armSpeed() {
-		return 0;
-	}
-
-	@Override
-	public double intakeSpeed() {
-		return 0;
-	}
-
 }

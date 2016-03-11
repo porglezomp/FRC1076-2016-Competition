@@ -1,13 +1,16 @@
 package org.usfirst.frc.team1076.test.mock;
 
 import org.usfirst.frc.team1076.robot.IRobot;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput.IntakeRaiseState;
 import org.usfirst.frc.team1076.udp.ISensorData;
 
 public class MockRobot implements IRobot {
-
 	public double left, right, arm, intake;
 	public double lidarSpeed;
 	public boolean brakes;
+	public IntakeRaiseState intakeRaiseState = IntakeRaiseState.Neutral;
+	public SolenoidValue gear = SolenoidValue.Off;
 	public ISensorData sensorData;
 	
 	@Override
@@ -31,6 +34,16 @@ public class MockRobot implements IRobot {
 	}
 
 	@Override
+	public void setGear(SolenoidValue value) {
+		gear = value;
+	}
+
+	@Override
+	public MotorOutput getMotorSpeed() {
+		return new MotorOutput(left, right);
+	}
+	
+	@Override
 	public void setBrakes(boolean enabled) {
 		brakes = enabled;
 	}
@@ -43,6 +56,11 @@ public class MockRobot implements IRobot {
 	@Override
 	public ISensorData getSensorData() {
 		return sensorData;
+	}
+	
+	@Override
+	public void setIntakeElevation(IntakeRaiseState state) {
+		this.intakeRaiseState = state;
 	}
 
 }
