@@ -20,12 +20,13 @@ public class ForwardAutonomous extends AutoState {
 	
 	@Override
 	public void init() {
+		started = true;
 		timeStart = System.nanoTime();
 	}
 	
 	@Override
 	public boolean shouldChange() {
-		return started &&  TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - timeStart) > timeLimit;
+		return started && TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - timeStart) > timeLimit;
 	}
 	
 	@Override
