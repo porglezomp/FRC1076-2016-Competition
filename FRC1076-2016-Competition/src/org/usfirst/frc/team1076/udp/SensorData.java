@@ -3,24 +3,28 @@ package org.usfirst.frc.team1076.udp;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.usfirst.frc.team1076.robot.sensors.IGyro;
 
-public class SensorData {
+public class SensorData implements ISensorData {
 	public enum FieldPosition { Right, Left; }
 	private IChannel receiver;
 	private double visionHeading, visionRange;
 	private double lidarHeading, lidarRange;
 	private FieldPosition position;
 	private JSONParser parser = new JSONParser();
+	private IGyro gyro;
 	
 	private double lidarRpm = 250;
 	private double leftSideBack, rightSideBack, leftSideFront, rightSideFront;
 	private double leftFront, rightFront;	
 	
-	public SensorData(IChannel channel, FieldPosition position) {
+	public SensorData(IChannel channel, FieldPosition position, IGyro gyro) {
+		this.gyro = gyro; // Should we change this to be a different method?
 		this.position = position;
 		receiver = channel;
 	}
-	
+
+	@Override
 	public void interpretData() {
 		while (receiver.hasMessage()) {
 			UDPMessage latest = receiver.popLatestMessage();
@@ -128,29 +132,33 @@ public class SensorData {
 		}
 	}
 	
+	@Override
 	public void setVision(double h, double r) {
 		this.visionHeading = h;
 		this.visionRange = r;
 	}
 	
+	@Override
 	public void setLidar(double h, double r) {
 		this.lidarHeading = h;
 		this.lidarRange = r;
 	}
 	
-	public FieldPosition getFieldPosition() { return position; }
-	public void setFieldPosition(FieldPosition pos) { position = pos; }
+	@Override public IGyro getGyro() { return gyro; }
 	
-	public double getLidarRpm() { return lidarRpm; }
-	public double getLidarHeading() { return lidarHeading; }
-	public double getLidarRange() { return lidarRange; }
-	public double getVisionHeading() { return visionHeading; }
-	public double getVisionRange() { return visionRange; }
-	public IChannel getChannel() { return receiver; }
-	public double getLeftSideBack() { return leftSideBack; }
-	public double getRightSideBack() { return rightSideBack; }
-	public double getLeftSideFront() { return leftSideFront; }
-	public double getRightSideFront() { return rightSideFront; }
-	public double getLeftFront() { return leftFront; }
-	public double getRightFront() { return rightFront; }
+	@Override public FieldPosition getFieldPosition() { return position; }
+	@Override public void setFieldPosition(FieldPosition pos) { position = pos; }
+	
+	@Override public double getLidarRpm() { return lidarRpm; }
+	@Override public double getLidarHeading() { return lidarHeading; }
+	@Override public double getLidarRange() { return lidarRange; }
+	@Override public double getVisionHeading() { return visionHeading; }
+	@Override public double getVisionRange() { return visionRange; }
+	@Override public IChannel getChannel() { return receiver; }
+	@Override public double getLeftSideBack() { return leftSideBack; }
+	@Override public double getRightSideBack() { return rightSideBack; }
+	@Override public double getLeftSideFront() { return leftSideFront; }
+	@Override public double getRightSideFront() { return rightSideFront; }
+	@Override public double getLeftFront() { return leftFront; }
+	@Override public double getRightFront() { return rightFront; }
 }
