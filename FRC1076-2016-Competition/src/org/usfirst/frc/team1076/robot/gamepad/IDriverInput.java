@@ -14,4 +14,7 @@ public interface IDriverInput {
 	boolean brakesApplied();
 	boolean shiftHigh();
 	boolean shiftLow();
+	
+	enum ControlSide { Left, Right, Current }
+	ControlSide controlSide();
 }

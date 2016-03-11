@@ -3,9 +3,6 @@ package org.usfirst.frc.team1076.robot.statemachine;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.sensors.IEncoder;
 
-// TODO: Actually use SensorData to change motor output
-// import org.usfirst.frc.team1076.udp.SensorData;
-
 /**
  * DistanceAutonomous takes a distance and speed parameter and outputs
  * MotorOutputs until the distance has been traveled. It currently uses an
@@ -25,9 +22,6 @@ public class DistanceAutonomous extends AutoState {
 	}
 	
 	@Override
-	public void init() { }
-
-	@Override
 	public boolean shouldChange() {
 		return getDistanceTraveled() >= distance;
 	}
@@ -44,15 +38,4 @@ public class DistanceAutonomous extends AutoState {
 	public double getDistanceTraveled() {
 		return encoder.getDistance() - encoderZeroPoint;
 	}
-	
-	@Override
-	public double armSpeed() {
-		return 0;
-	}
-
-	@Override
-	public double intakeSpeed() {
-		return 0;
-	}
-
 }

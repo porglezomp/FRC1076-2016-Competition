@@ -7,6 +7,7 @@ import org.usfirst.frc.team1076.robot.controllers.AutoController;
 import org.usfirst.frc.team1076.robot.controllers.IRobotController;
 import org.usfirst.frc.team1076.robot.controllers.TeleopController;
 import org.usfirst.frc.team1076.robot.controllers.TestController;
+import org.usfirst.frc.team1076.robot.gamepad.ArcadeInput;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.gamepad.IGamepad;
@@ -94,9 +95,10 @@ public class Robot extends IterativeRobot implements IRobot {
 		
 		IGamepad driverGamepad = new Gamepad(0);
 		IGamepad operatorGamepad = new Gamepad(1);
-		IDriverInput driver = new TankInput(driverGamepad);
+		IDriverInput tank = new TankInput(driverGamepad);
+		IDriverInput arcade = new ArcadeInput(driverGamepad);
 		IOperatorInput operator = new OperatorInput(operatorGamepad);
-		teleopController = new TeleopController(driver, operator);
+		teleopController = new TeleopController(arcade, operator, tank, arcade);
 		autoController = new AutoController(new NothingAutonomous());
 		testController = new TestController(driverGamepad);
 

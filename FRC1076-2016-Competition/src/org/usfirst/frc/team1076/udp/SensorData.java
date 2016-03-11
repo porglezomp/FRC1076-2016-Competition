@@ -5,7 +5,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.usfirst.frc.team1076.robot.sensors.IGyro;
 
-public class SensorData {
+public class SensorData implements ISensorData {
 	public enum FieldPosition { Right, Left; }
 	private IChannel receiver;
 	private double heading;

@@ -11,7 +11,7 @@ import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 public class SensorDataTest {
 	private static final double EPSILON = 1e-12;
 	MockChannel channel;
-	SensorData data;
+	ISensorData data;
 	
 	@Before
 	public void setupChannelAndData() {

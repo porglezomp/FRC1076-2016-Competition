@@ -28,8 +28,6 @@ public class AngleAutonomous extends AutoState {
 		this.deltaAngle = angle;
 	}
 
-	public void init() { }
-
 	@Override
 	public boolean shouldChange() {
 		if (deltaAngle > 0) { // clockwise
@@ -63,15 +61,5 @@ public class AngleAutonomous extends AutoState {
 
 	public double getAngleTurned() {
 		return currAngle - endAngle;
-	}
-	
-	@Override
-	public double armSpeed() {
-		return 0;
-	}
-
-	@Override
-	public double intakeSpeed() {
-		return 0;
 	}
 }
