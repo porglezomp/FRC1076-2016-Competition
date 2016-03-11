@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1076.test.mock;
 
+import org.usfirst.frc.team1076.robot.sensors.IGyro;
 import org.usfirst.frc.team1076.udp.IChannel;
 import org.usfirst.frc.team1076.udp.ISensorData;
 import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
@@ -8,6 +9,7 @@ public class MockSensorData implements ISensorData {
 	public double heading, distance;
 	public double lidarRPM;
 	public double leftSideBack, rightSideBack, leftSideFront, rightSideFront, leftFront, rightFront;
+	public IGyro gyro;
 	public IChannel channel;
 	public FieldPosition position;
 	
@@ -33,4 +35,7 @@ public class MockSensorData implements ISensorData {
 	public double getRightSideFront() { return rightSideFront; }
 	public double getLeftFront() { return leftFront; }
 	public double getRightFront() { return rightFront; }
+
+	@Override
+	public IGyro getGyro() { return gyro; }
 }

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1076.udp;
 
+import org.usfirst.frc.team1076.robot.sensors.IGyro;
 import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
 public interface ISensorData {
@@ -18,4 +19,5 @@ public interface ISensorData {
 	double getRightSideFront();
 	double getLeftFront();
 	double getRightFront();
+	IGyro getGyro();
 }

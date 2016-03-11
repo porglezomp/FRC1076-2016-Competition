@@ -1,10 +1,10 @@
 package org.usfirst.frc.team1076.robot.physical;
 
-import org.usfirst.frc.team1076.robot.AbstractSolenoid;
+import org.usfirst.frc.team1076.robot.ISolenoid;
 
 import edu.wpi.first.wpilibj.Solenoid;
 
-public class OneSolenoid extends AbstractSolenoid {
+public class OneSolenoid implements ISolenoid {
 	Solenoid solenoid;
 	boolean state = false;
 	

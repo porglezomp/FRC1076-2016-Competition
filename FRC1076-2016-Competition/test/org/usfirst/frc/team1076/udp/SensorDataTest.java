@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.usfirst.frc.team1076.test.mock.MockChannel;
+import org.usfirst.frc.team1076.test.mock.MockGyro;
 import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
 public class SensorDataTest {
@@ -15,7 +16,7 @@ public class SensorDataTest {
 	@Before
 	public void setupChannelAndData() {
 		channel = new MockChannel();
-		data = new SensorData(channel, FieldPosition.Left);
+		data = new SensorData(channel, FieldPosition.Left, new MockGyro());
 	}
 	
 	@Test

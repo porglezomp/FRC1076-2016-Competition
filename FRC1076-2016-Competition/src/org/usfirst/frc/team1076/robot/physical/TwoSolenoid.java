@@ -1,10 +1,10 @@
 package org.usfirst.frc.team1076.robot.physical;
 
-import org.usfirst.frc.team1076.robot.AbstractSolenoid;
+import org.usfirst.frc.team1076.robot.ISolenoid;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
-public class TwoSolenoid extends AbstractSolenoid {
+public class TwoSolenoid implements ISolenoid {
 	DoubleSolenoid solenoid;
 	
 	public TwoSolenoid(DoubleSolenoid solenoid) {

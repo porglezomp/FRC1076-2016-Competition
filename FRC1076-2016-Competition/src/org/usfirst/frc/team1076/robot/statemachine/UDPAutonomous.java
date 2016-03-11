@@ -1,15 +1,15 @@
 package org.usfirst.frc.team1076.robot.statemachine;
 
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
-import org.usfirst.frc.team1076.udp.IChannel;
 import org.usfirst.frc.team1076.udp.ISensorData;
 import org.usfirst.frc.team1076.udp.SensorData;
 import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
 public class UDPAutonomous extends AutoState {
 	private ISensorData sensors;
-	public UDPAutonomous(IChannel channel, FieldPosition position) {
-		sensors = new SensorData(channel, position); 
+	
+	public UDPAutonomous(ISensorData sensorData, FieldPosition position) {
+		sensors = sensorData; 
 	}
 
 	@Override
