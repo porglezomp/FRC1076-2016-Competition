@@ -42,7 +42,8 @@ public class AutoController implements IRobotController {
 		robot.setIntakeSpeed(autoState.intakeSpeed());
 		MotorOutput drive = autoState.driveTrainSpeed();
 		robot.setLeftSpeed(drive.left);
-		robot.setRightSpeed(drive.right);		
+		robot.setRightSpeed(drive.right);
+		robot.setIntakeElevation(autoState.intakeRaiseState());
 		
 	    if (robot.getSensorData().getLidarRpm() < RPM_MIN) {
 	    	motorSpeed *= 1.01;

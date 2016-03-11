@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1076.robot.statemachine;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput.IntakeRaiseState;
 
 public abstract class AutoState {
 	AutoState nextState = null;
@@ -17,9 +18,23 @@ public abstract class AutoState {
 		return nextState;
 	}
 
-	public abstract void init();
+	public void init() { }
+	
 	public abstract boolean shouldChange();
-	public abstract MotorOutput driveTrainSpeed();
-	public abstract double armSpeed();
-	public abstract double intakeSpeed();
+	
+	public MotorOutput driveTrainSpeed() {
+		return new MotorOutput(0, 0);
+	}
+	
+	public double armSpeed() {
+		return 0;
+	}
+	
+	public double intakeSpeed() {
+		return 0;
+	}
+
+	public IntakeRaiseState intakeRaiseState() {
+		return IntakeRaiseState.Neutral;
+	}
 }

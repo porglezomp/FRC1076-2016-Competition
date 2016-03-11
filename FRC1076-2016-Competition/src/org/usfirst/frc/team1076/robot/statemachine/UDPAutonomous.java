@@ -16,23 +16,16 @@ public class UDPAutonomous extends AutoState {
 		sensors = new SensorData(channel, position); 
 	}
 
-	public void init() { }
-	
+	@Override
 	public boolean shouldChange() {
+		// TODO: This seems wrong
 		return true;
 	}
 	
+	@Override
 	public MotorOutput driveTrainSpeed() {
 		sensors.interpretData();
 		// TODO: Decide motion based on sensors
 		return new MotorOutput(1, 1);
-	}
-	
-	public double armSpeed() {
-		return 0;
-	}
-	
-	public double intakeSpeed() {
-		return 0;
 	}
 }

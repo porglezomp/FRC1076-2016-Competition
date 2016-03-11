@@ -23,9 +23,6 @@ public class DistanceAutonomous extends AutoState {
 		this.encoder = encoder;
 		this.encoderZeroPoint = encoder.getDistance(); 
 	}
-	
-	@Override
-	public void init() { }
 
 	@Override
 	public boolean shouldChange() {
@@ -44,15 +41,4 @@ public class DistanceAutonomous extends AutoState {
 	public double getDistanceTraveled() {
 		return encoder.getDistance() - encoderZeroPoint;
 	}
-	
-	@Override
-	public double armSpeed() {
-		return 0;
-	}
-
-	@Override
-	public double intakeSpeed() {
-		return 0;
-	}
-
 }
