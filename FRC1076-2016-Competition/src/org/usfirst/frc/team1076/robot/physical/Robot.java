@@ -15,6 +15,7 @@ import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput.IntakeRaiseState;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
+import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 import org.usfirst.frc.team1076.udp.Channel;
 import org.usfirst.frc.team1076.udp.IChannel;
@@ -24,7 +25,6 @@ import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,19 +44,19 @@ public class Robot extends IterativeRobot implements IRobot {
 	static final int INTAKE_INDEX = 5;
 	static final int ARM_INDEX = 6;
 	
-	double MOTOR_POWER_FACTOR = 1.11;
+	double MOTOR_POWER_FACTOR = 0.9;
 	
 	CANTalon leftMotor = new CANTalon(LEFT_INDEX);
 	CANTalon leftSlave = new CANTalon(LEFT_SLAVE_INDEX);
 	CANTalon rightMotor = new CANTalon(RIGHT_INDEX);
 	CANTalon rightSlave = new CANTalon(RIGHT_SLAVE_INDEX);
 	CANTalon intakeMotor = new CANTalon(INTAKE_INDEX);
-	CANTalon armMotor = new CANTalon(ARM_INDEX);
+	// CANTalon armMotor = new CANTalon(ARM_INDEX);
 	Servo lidarServo = new Servo(0);
 	
 	Compressor compressor = new Compressor(0);
-	ISolenoid intakePneumatic = new OneSolenoid(1);
-	ISolenoid shifterPneumatic = new OneSolenoid(0);
+	ISolenoid intakePneumatic = new TwoSolenoid(2, 3);
+	ISolenoid shifterPneumatic = new TwoSolenoid(0, 1);
 	
 	IRobotController teleopController;
 	IRobotController autoController;
@@ -99,7 +99,8 @@ public class Robot extends IterativeRobot implements IRobot {
 		IDriverInput arcade = new ArcadeInput(driverGamepad);
 		IOperatorInput operator = new OperatorInput(operatorGamepad);
 		teleopController = new TeleopController(arcade, operator, tank, arcade);
-		autoController = new AutoController(new NothingAutonomous());
+		autoController = new AutoController(new ForwardAutonomous(5000, -0.5)
+				.addNext(new NothingAutonomous()));
 		testController = new TestController(driverGamepad);
 
     	if (teleopController != null) {
@@ -230,7 +231,7 @@ public class Robot extends IterativeRobot implements IRobot {
 	
 	@Override
 	public void setArmSpeed(double speed) {
-		armMotor.set(speed * armSpeed);
+		// armMotor.set(speed * armSpeed);
 	}
 	
 	@Override
