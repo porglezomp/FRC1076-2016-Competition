@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1076.robot;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
 import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput.IntakeRaiseState;
-import org.usfirst.frc.team1076.udp.SensorData;
+import org.usfirst.frc.team1076.udp.ISensorData;
 
 public interface IRobot {
 	enum SolenoidValue { Off, Forward, Reverse; }
@@ -12,7 +12,7 @@ public interface IRobot {
 	void setIntakeElevation(IntakeRaiseState state);
 	void setBrakes(boolean enabled);
 	void setLidarSpeed(double speed);
-	SensorData getSensorData(); 
+	ISensorData getSensorData(); 
 	void setGear(SolenoidValue value);
 	MotorOutput getMotorSpeed();
 }
