@@ -18,7 +18,11 @@ public class DistanceAutonomous extends AutoState {
 		this.distance = distance;
 		this.speed = speed;
 		this.encoder = encoder;
-		this.encoderZeroPoint = encoder.getDistance(); 
+	}
+	
+	@Override
+	public void init(){
+		this.encoderZeroPoint = encoder.getDistance(); 		
 	}
 	
 	@Override

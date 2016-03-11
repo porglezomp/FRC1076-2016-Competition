@@ -22,12 +22,14 @@ public class ForwardAutonomousTest {
 	@Test
 	public void testShouldNotChange() {
 		AutoState auto = new ForwardAutonomous(1000);
+		auto.init();
 		assertEquals(false, auto.shouldChange());
 	}
 	
 	@Test
 	public void testForwardMotion() {
 		AutoState auto = new ForwardAutonomous(1000);
+		auto.init();
 		MotorOutput motorOutput = auto.driveTrainSpeed();
 		assertEquals(1, motorOutput.left, EPSILON);
 		assertEquals(1, motorOutput.right, EPSILON);

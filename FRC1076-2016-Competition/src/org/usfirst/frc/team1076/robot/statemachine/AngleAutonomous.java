@@ -23,11 +23,15 @@ public class AngleAutonomous extends AutoState {
 	public AngleAutonomous(double angle, double speed, IGyro gyro) {
 		this.gyro = gyro;
 		this.speed = speed;
-		this.currAngle = gyro.getAngle();
-		this.endAngle = currAngle + angle;
 		this.deltaAngle = angle;
 	}
 
+	@Override
+	public void init() {
+		this.currAngle = gyro.getAngle();
+		this.endAngle = currAngle + deltaAngle;
+	}
+	
 	@Override
 	public boolean shouldChange() {
 		if (deltaAngle > 0) { // clockwise

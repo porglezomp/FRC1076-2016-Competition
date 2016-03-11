@@ -9,9 +9,12 @@ public class ForwardAutonomous extends AutoState {
 	double speed = 1;
 	
 	public ForwardAutonomous(int millis, double speed) {
-		timeStart = System.nanoTime();
 		this.timeLimit = millis;
 		this.speed = speed;
+	}
+	
+	public void init() {
+		timeStart = System.nanoTime();
 	}
 	
 	public ForwardAutonomous(int millis) {
