@@ -47,9 +47,9 @@ public class ForwardAutonomous extends AutoState {
 		if (shouldChange()) {
 			return new MotorOutput(0, 0);
 		} else if(rate > TOLERANCE) {
-			return new MotorOutput(speed, speed * getCorrectionFactor(rate));
-		} else if(rate < -TOLERANCE) {
 			return new MotorOutput(speed * getCorrectionFactor(rate), speed);
+		} else if(rate < -TOLERANCE) {
+			return new MotorOutput(speed, speed * getCorrectionFactor(rate));
 		} else {
 			return new MotorOutput(speed, speed);
 		}
