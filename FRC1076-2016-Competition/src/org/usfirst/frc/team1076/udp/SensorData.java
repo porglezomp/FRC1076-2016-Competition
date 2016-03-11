@@ -8,8 +8,8 @@ import org.usfirst.frc.team1076.robot.sensors.IGyro;
 public class SensorData implements ISensorData {
 	public enum FieldPosition { Right, Left; }
 	private IChannel receiver;
-	private double heading;
-	private double distance;
+	private double visionHeading, visionRange;
+	private double lidarHeading, lidarRange;
 	private FieldPosition position;
 	private JSONParser parser = new JSONParser();
 	private IGyro gyro;
@@ -23,7 +23,8 @@ public class SensorData implements ISensorData {
 		this.position = position;
 		receiver = channel;
 	}
-	
+
+	@Override
 	public void interpretData() {
 		while (receiver.hasMessage()) {
 			UDPMessage latest = receiver.popLatestMessage();
@@ -84,16 +85,16 @@ public class SensorData implements ISensorData {
 			switch (status) {
 			case "left":
 				if (position == FieldPosition.Left) {
-					set(heading, range);
+					setVision(heading, range);
 				}
 				break;
 			case "right":
 				if (position == FieldPosition.Right) {
-					set(heading, range);
+					setVision(heading, range);
 				}
 				break;
 			case "ok":
-				set(heading, range);
+				setVision(heading, range);
 				break;
 			default:
 			}
@@ -106,12 +107,17 @@ public class SensorData implements ISensorData {
 	private void handleLidarMessage(JSONObject msg) {
 		double heading, range;
 		String message = (String) msg.get("message");
+		// TODO: Handle errors more specifically
+		if (msg.get("status").equals("ok")) {
+			System.err.println("Error: " + msg);
+			return;
+		}
 		switch (message.toLowerCase()) {
-		case "range and heading":
+		case "wall":
 			heading = ((Number) msg.get("heading")).doubleValue();
 			range = ((Number) msg.get("range")).doubleValue();
-			this.heading = heading;
-			this.distance = range;
+			this.lidarHeading = heading;
+			this.lidarRange = range;
 			break;
 		case "range at heading":
 			heading = ((Number) msg.get("heading")).doubleValue();
@@ -126,24 +132,33 @@ public class SensorData implements ISensorData {
 		}
 	}
 	
-	public void set(double h, double d) {
-		this.heading = h;
-		this.distance = d;
+	@Override
+	public void setVision(double h, double r) {
+		this.visionHeading = h;
+		this.visionRange = r;
 	}
 	
-	public IGyro getGyro() { return gyro; }
+	@Override
+	public void setLidar(double h, double r) {
+		this.lidarHeading = h;
+		this.lidarRange = r;
+	}
 	
-	public FieldPosition getFieldPosition() { return position; }
-	public void setFieldPosition(FieldPosition pos) { position = pos; }
+	@Override public IGyro getGyro() { return gyro; }
 	
-	public double getLidarRpm() { return lidarRpm; }
-	public double getHeading() { return heading; }
-	public double getDistance() { return distance; }
-	public IChannel getChannel() { return receiver; }
-	public double getLeftSideBack() { return leftSideBack; }
-	public double getRightSideBack() { return rightSideBack; }
-	public double getLeftSideFront() { return leftSideFront; }
-	public double getRightSideFront() { return rightSideFront; }
-	public double getLeftFront() { return leftFront; }
-	public double getRightFront() { return rightFront; }
+	@Override public FieldPosition getFieldPosition() { return position; }
+	@Override public void setFieldPosition(FieldPosition pos) { position = pos; }
+	
+	@Override public double getLidarRpm() { return lidarRpm; }
+	@Override public double getLidarHeading() { return lidarHeading; }
+	@Override public double getLidarRange() { return lidarRange; }
+	@Override public double getVisionHeading() { return visionHeading; }
+	@Override public double getVisionRange() { return visionRange; }
+	@Override public IChannel getChannel() { return receiver; }
+	@Override public double getLeftSideBack() { return leftSideBack; }
+	@Override public double getRightSideBack() { return rightSideBack; }
+	@Override public double getLeftSideFront() { return leftSideFront; }
+	@Override public double getRightSideFront() { return rightSideFront; }
+	@Override public double getLeftFront() { return leftFront; }
+	@Override public double getRightFront() { return rightFront; }
 }

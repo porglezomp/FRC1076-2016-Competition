@@ -49,8 +49,8 @@ public class SensorDataTest {
 		channel.addMessage(message);
 		data.interpretData();
 		
-		assertEquals(42, data.getHeading(), EPSILON);
-		assertEquals(12, data.getDistance(), EPSILON);
+		assertEquals(42, data.getVisionHeading(), EPSILON);
+		assertEquals(12, data.getVisionRange(), EPSILON);
 	}	
 	
 	@Test
@@ -70,15 +70,15 @@ public class SensorDataTest {
 		channel.addMessage(rightMessage);
 		data.interpretData();
 		
-		assertEquals(1, data.getHeading(), EPSILON);
-		assertEquals(2, data.getDistance(), EPSILON);
+		assertEquals(1, data.getVisionHeading(), EPSILON);
+		assertEquals(2, data.getVisionRange(), EPSILON);
 	
 		data.setFieldPosition(FieldPosition.Right);
 		channel.addMessage(leftMessage);
 		channel.addMessage(rightMessage);
 		data.interpretData();
 		
-		assertEquals(3, data.getHeading(), EPSILON);
-		assertEquals(4, data.getDistance(), EPSILON);
+		assertEquals(3, data.getVisionHeading(), EPSILON);
+		assertEquals(4, data.getVisionRange(), EPSILON);
 	}
 }

@@ -19,7 +19,7 @@ public class AngleAutonomousTest {
 		gyro.reset();
 		AutoState auto = new AngleAutonomous(0, 1, gyro);
 		assertSame(null, auto.next());
-		auto.setNext(auto);
+		auto.addNext(auto);
 		assertSame(auto, auto.next());
 	}
 	

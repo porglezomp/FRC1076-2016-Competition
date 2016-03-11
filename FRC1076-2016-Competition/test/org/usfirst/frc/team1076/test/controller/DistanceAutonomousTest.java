@@ -20,7 +20,7 @@ public class DistanceAutonomousTest {
 		encoder.reset();
 		AutoState auto = new DistanceAutonomous(1000, 10, encoder);
 		assertSame(null, auto.next());
-		auto.setNext(auto);
+		auto.addNext(auto);
 		assertSame(auto, auto.next());
 	}
 	
