@@ -22,7 +22,11 @@ public class AutoController implements IRobotController {
 	public void teleopPeriodic(IRobot robot) { }
 
 	@Override
-	public void autonomousInit(IRobot robot) { }
+	public void autonomousInit(IRobot robot) {
+		if (autoState != null) {
+			autoState.init();
+		}
+	}
 	
 	private final double RPM_MIN = 240;
 	private final double RPM_MAX = 280;

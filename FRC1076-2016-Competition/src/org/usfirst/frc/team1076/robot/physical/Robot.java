@@ -16,6 +16,7 @@ import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput.IntakeRaiseState;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
 import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
+import org.usfirst.frc.team1076.robot.statemachine.IntakeElevationAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 import org.usfirst.frc.team1076.udp.Channel;
 import org.usfirst.frc.team1076.udp.IChannel;
@@ -71,14 +72,19 @@ public class Robot extends IterativeRobot implements IRobot {
 	SensorData sensorData;
 	GearShifter gearShifter;
 	
+	@Override
+	public void disabledInit() {
+		SmartDashboard.putBoolean("Low Bar", false);
+	}
+	
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
 	@Override
     public void robotInit() {
-    	SmartDashboard.putNumber("LIDAR Speed", 80);		
-    	// SmartDashboard.putNumber("Motor Tweak", MOTOR_POWER_FACTOR);
+    	SmartDashboard.putNumber("LIDAR Speed", 80);
+    	SmartDashboard.putNumber("Motor Tweak", MOTOR_POWER_FACTOR);
 		
 		// Initialize the physical components before the controllers,
 		// in case they depend on them.
@@ -99,7 +105,7 @@ public class Robot extends IterativeRobot implements IRobot {
 		IDriverInput arcade = new ArcadeInput(driverGamepad);
 		IOperatorInput operator = new OperatorInput(operatorGamepad);
 		teleopController = new TeleopController(arcade, operator, tank, arcade);
-		autoController = new AutoController(new ForwardAutonomous(10000, -0.5)
+		autoController = new AutoController(new ForwardAutonomous(8000, -0.6)
 				.addNext(new NothingAutonomous()));
 		testController = new TestController(driverGamepad);
 
@@ -140,6 +146,13 @@ public class Robot extends IterativeRobot implements IRobot {
 	 */
 	@Override
     public void autonomousInit() {
+		if (SmartDashboard.getBoolean("Low Bar")) {
+			autoController = new AutoController(new IntakeElevationAutonomous(IntakeRaiseState.Lowered)
+					.addNext(new ForwardAutonomous(4000, -0.6))
+					.addNext(new IntakeElevationAutonomous(IntakeRaiseState.Raised))
+					.addNext(new ForwardAutonomous(2000, -0.6)));
+		}
+		
     	if (autoController != null) {
     		autoController.autonomousInit(this);
     	} else {
@@ -207,6 +220,7 @@ public class Robot extends IterativeRobot implements IRobot {
     public void commonPeriodic() {
     	// MOTOR_POWER_FACTOR = SmartDashboard.getNumber("Motor Tweak");
 
+    	/*
     	int left = leftMotor.getEncVelocity();
     	int right = rightMotor.getEncVelocity();
     	if (left != 0) {
@@ -215,6 +229,7 @@ public class Robot extends IterativeRobot implements IRobot {
     	if (right != 0) {
     		System.out.println("Right motor " + right);
     	}
+    	*/
     }
 
 	@Override
