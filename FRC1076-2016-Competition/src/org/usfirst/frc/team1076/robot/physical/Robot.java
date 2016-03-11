@@ -105,8 +105,7 @@ public class Robot extends IterativeRobot implements IRobot {
 		IDriverInput arcade = new ArcadeInput(driverGamepad);
 		IOperatorInput operator = new OperatorInput(operatorGamepad);
 		teleopController = new TeleopController(arcade, operator, tank, arcade);
-		autoController = new AutoController(new ForwardAutonomous(8000, -0.6)
-				.addNext(new NothingAutonomous()));
+		autoController = new AutoController(new ForwardAutonomous(6000, -0.6));
 		testController = new TestController(driverGamepad);
 
     	if (teleopController != null) {
