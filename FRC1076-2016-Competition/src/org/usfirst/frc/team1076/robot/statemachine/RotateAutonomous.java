@@ -11,10 +11,14 @@ public class RotateAutonomous extends AutoState {
 	TurnDirection turnDirection;
 
 	public RotateAutonomous(int millis, double speed, TurnDirection turnDirection) {
-		timeStart = System.nanoTime();
 		this.timeLimit = millis;
 		this.speed = speed;
 		this.turnDirection = turnDirection;
+	}
+	
+	public void init() {
+		timeStart = System.nanoTime();
+
 	}
 	
 	public RotateAutonomous(int millis, TurnDirection turnDirection) {

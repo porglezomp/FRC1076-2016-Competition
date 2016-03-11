@@ -27,9 +27,11 @@ public class AngleAutonomousTest {
 	public void testShouldNotChange() {
 		gyro.reset();
 		AutoState autoClock = new AngleAutonomous(2*PI, 0.1, gyro);
+		autoClock.init();
 		assertEquals(false, autoClock.shouldChange());
 		
 		AutoState autoCounterclock = new AngleAutonomous(-2*PI, 0.1, gyro);
+		autoCounterclock.init();
 		assertEquals(false, autoCounterclock.shouldChange());
 	}
 	
@@ -37,7 +39,7 @@ public class AngleAutonomousTest {
 	public void testClockwiseRotation() {
 		gyro.reset();
 		AngleAutonomous auto = new AngleAutonomous(PI/4, 1, gyro);
-		
+		auto.init();
 		auto.driveTrainSpeed();
 		gyro.currAngle = PI/4;
 		auto.driveTrainSpeed();
@@ -50,7 +52,7 @@ public class AngleAutonomousTest {
 	public void testCounterClockwiseRotation() {
 		gyro.reset();
 		AngleAutonomous auto = new AngleAutonomous(-PI/4, 1, gyro);
-
+		auto.init();
 		auto.driveTrainSpeed();
 		gyro.currAngle = -PI/4;
 		auto.driveTrainSpeed();

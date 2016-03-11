@@ -35,6 +35,7 @@ public class DistanceAutonomousTest {
 	public void testFixedDistanceTraveled() {
 		encoder.reset();
 		DistanceAutonomous auto = new DistanceAutonomous(1.5, 1, encoder);
+		auto.init();
 		MotorOutput motorOutput = auto.driveTrainSpeed();
 		
 		// We haven't driven far enough yet, so the robot should still be moving.
@@ -58,6 +59,7 @@ public class DistanceAutonomousTest {
 		for (double speed = 0.0; speed < 1.0; speed += 0.3) {
 			encoder.reset();
 			DistanceAutonomous auto = new DistanceAutonomous(1, speed, encoder);
+			auto.init();
 			auto.driveTrainSpeed();
 			
 			encoder.distance = speed;
@@ -73,12 +75,14 @@ public class DistanceAutonomousTest {
 		encoder.reset();
 		
 		DistanceAutonomous auto = new DistanceAutonomous(1.5, 1, encoder);
+		auto.init();
 		auto.driveTrainSpeed();
 		assertEquals(false, auto.shouldChange());
 		encoder.distance = 1.5;
 		assertEquals(true, auto.shouldChange());
 		
 		auto = new DistanceAutonomous(1.5, 1, encoder);
+		auto.init();
 		auto.driveTrainSpeed();
 		assertEquals(false, auto.shouldChange());
 		encoder.distance = 3;
