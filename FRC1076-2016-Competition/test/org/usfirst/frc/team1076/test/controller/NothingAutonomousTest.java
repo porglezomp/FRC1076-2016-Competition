@@ -14,7 +14,7 @@ public class NothingAutonomousTest {
 	public void testNext() {
 		AutoState auto = new NothingAutonomous();
 		assertSame(null, auto.next());
-		auto.setNext(auto);
+		auto.addNext(auto);
 		assertSame(auto, auto.next());
 	}
 	
@@ -49,7 +49,7 @@ public class NothingAutonomousTest {
 		AutoState state1 = new NothingAutonomous();
 		AutoState state2 = new NothingAutonomous();
 		AutoState state3 = new NothingAutonomous();
-		state1.setNext(state3);
+		state1.addNext(state3);
 		assertSame(state1.next(), state3);
 		state1.insertNext(state2);
 		assertSame(state1.next(), state2);

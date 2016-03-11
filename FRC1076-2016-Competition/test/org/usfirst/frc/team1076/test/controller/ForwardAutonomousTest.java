@@ -15,7 +15,7 @@ public class ForwardAutonomousTest {
 	public void testNext() {
 		AutoState auto = new ForwardAutonomous(1000);
 		assertSame(null, auto.next());
-		auto.setNext(auto);
+		auto.addNext(auto);
 		assertSame(auto, auto.next());
 	}
 	

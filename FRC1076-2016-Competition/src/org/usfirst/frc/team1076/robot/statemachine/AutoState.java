@@ -5,17 +5,17 @@ import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput.IntakeRaiseState;
 public abstract class AutoState {
 	AutoState nextState = null;
 
-	public AutoState setNext(AutoState nextState) {
+	public AutoState addNext(AutoState nextState) {
 		if (this.nextState == null) {
 			this.nextState = nextState;
 		} else {
-			this.nextState.setNext(nextState);
+			this.nextState.addNext(nextState);
 		}
 		return this;
 	}
 	
 	public AutoState insertNext(AutoState nextState) {
-		nextState.setNext(this.nextState);
+		nextState.addNext(this.nextState);
 		this.nextState = nextState;
 		return this;
 	}
