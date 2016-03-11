@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1076.robot;
 
-import org.usfirst.frc.team1076.udp.SensorData;
+import org.usfirst.frc.team1076.udp.ISensorData;
 
 public interface IRobot {
 	void setLeftSpeed(double speed);
@@ -9,5 +9,5 @@ public interface IRobot {
 	void setIntakeSpeed(double speed);
 	void setBrakes(boolean enabled);
 	void setLidarSpeed(double speed);
-	SensorData getSensorData(); 
+	ISensorData getSensorData(); 
 }
