@@ -43,4 +43,16 @@ public class NothingAutonomousTest {
 		AutoState auto = new NothingAutonomous();
 		assertEquals(0, auto.intakeSpeed(), EPSILON);
 	}
+	
+	@Test
+	public void testInsert() {
+		AutoState state1 = new NothingAutonomous();
+		AutoState state2 = new NothingAutonomous();
+		AutoState state3 = new NothingAutonomous();
+		state1.setNext(state3);
+		assertSame(state1.next(), state3);
+		state1.insertNext(state2);
+		assertSame(state1.next(), state2);
+		assertSame(state1.next().next(), state3);
+	}
 }

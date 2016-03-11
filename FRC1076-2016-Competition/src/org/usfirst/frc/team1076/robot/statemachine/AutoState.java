@@ -13,6 +13,12 @@ public abstract class AutoState {
 		}
 		return this;
 	}
+	
+	public AutoState insertNext(AutoState nextState) {
+		nextState.setNext(this.nextState);
+		this.nextState = nextState;
+		return this;
+	}
 
 	public AutoState next() {
 		return nextState;
