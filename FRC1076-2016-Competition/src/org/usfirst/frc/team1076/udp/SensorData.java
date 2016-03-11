@@ -7,8 +7,8 @@ import org.json.simple.parser.ParseException;
 public class SensorData {
 	public enum FieldPosition { Right, Left; }
 	private IChannel receiver;
-	private double heading;
-	private double distance;
+	private double visionHeading, visionRange;
+	private double lidarHeading, lidarRange;
 	private FieldPosition position;
 	private JSONParser parser = new JSONParser();
 	
@@ -81,16 +81,16 @@ public class SensorData {
 			switch (status) {
 			case "left":
 				if (position == FieldPosition.Left) {
-					set(heading, range);
+					setVision(heading, range);
 				}
 				break;
 			case "right":
 				if (position == FieldPosition.Right) {
-					set(heading, range);
+					setVision(heading, range);
 				}
 				break;
 			case "ok":
-				set(heading, range);
+				setVision(heading, range);
 				break;
 			default:
 			}
@@ -103,12 +103,17 @@ public class SensorData {
 	private void handleLidarMessage(JSONObject msg) {
 		double heading, range;
 		String message = (String) msg.get("message");
+		// TODO: Handle errors more specifically
+		if (msg.get("status").equals("ok")) {
+			System.err.println("Error: " + msg);
+			return;
+		}
 		switch (message.toLowerCase()) {
-		case "range and heading":
+		case "wall":
 			heading = ((Number) msg.get("heading")).doubleValue();
 			range = ((Number) msg.get("range")).doubleValue();
-			this.heading = heading;
-			this.distance = range;
+			this.lidarHeading = heading;
+			this.lidarRange = range;
 			break;
 		case "range at heading":
 			heading = ((Number) msg.get("heading")).doubleValue();
@@ -123,17 +128,24 @@ public class SensorData {
 		}
 	}
 	
-	public void set(double h, double d) {
-		this.heading = h;
-		this.distance = d;
+	public void setVision(double h, double r) {
+		this.visionHeading = h;
+		this.visionRange = r;
+	}
+	
+	public void setLidar(double h, double r) {
+		this.lidarHeading = h;
+		this.lidarRange = r;
 	}
 	
 	public FieldPosition getFieldPosition() { return position; }
 	public void setFieldPosition(FieldPosition pos) { position = pos; }
 	
 	public double getLidarRpm() { return lidarRpm; }
-	public double getHeading() { return heading; }
-	public double getDistance() { return distance; }
+	public double getLidarHeading() { return lidarHeading; }
+	public double getLidarRange() { return lidarRange; }
+	public double getVisionHeading() { return visionHeading; }
+	public double getVisionRange() { return visionRange; }
 	public IChannel getChannel() { return receiver; }
 	public double getLeftSideBack() { return leftSideBack; }
 	public double getRightSideBack() { return rightSideBack; }
