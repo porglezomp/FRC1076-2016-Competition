@@ -74,7 +74,6 @@ public class Robot extends IterativeRobot implements IRobot {
 	
 	@Override
 	public void disabledInit() {
-		SmartDashboard.putBoolean("Low Bar", false);
 	}
 	
     /**
@@ -83,6 +82,8 @@ public class Robot extends IterativeRobot implements IRobot {
      */
 	@Override
     public void robotInit() {
+		SmartDashboard.putBoolean("Low Bar", false);
+		SmartDashboard.putBoolean("Backwards", false);		
     	SmartDashboard.putNumber("LIDAR Speed", 80);
     	SmartDashboard.putNumber("Motor Tweak", MOTOR_POWER_FACTOR);
 		
@@ -97,7 +98,7 @@ public class Robot extends IterativeRobot implements IRobot {
 		// leftSlave.set(LEFT_INDEX);
 		
 		compressor.setClosedLoopControl(true);
-		intakePneumatic.setNeutral();
+		setIntakeElevation(IntakeRaiseState.Raised);
 		
 		IGamepad driverGamepad = new Gamepad(0);
 		IGamepad operatorGamepad = new Gamepad(1);
@@ -147,9 +148,9 @@ public class Robot extends IterativeRobot implements IRobot {
     public void autonomousInit() {
 		if (SmartDashboard.getBoolean("Low Bar")) {
 			autoController = new AutoController(new IntakeElevationAutonomous(IntakeRaiseState.Lowered)
-					.addNext(new ForwardAutonomous(4000, -0.6))
-					.addNext(new IntakeElevationAutonomous(IntakeRaiseState.Raised))
-					.addNext(new ForwardAutonomous(2000, -0.6)));
+					.addNext(new ForwardAutonomous(6000, -0.6)));
+		} else if (SmartDashboard.getBoolean("Backwards")) {
+			autoController = new AutoController(new ForwardAutonomous(6000, 0.6));
 		}
 		
     	if (autoController != null) {
@@ -298,10 +299,10 @@ public class Robot extends IterativeRobot implements IRobot {
 	public void setIntakeElevation(IntakeRaiseState state) {
 		switch (state) {
 		case Lowered:
-			intakePneumatic.setForward();
+			intakePneumatic.setReverse();
 			break;
 		case Raised:
-			intakePneumatic.setReverse();
+			intakePneumatic.setForward();
 			break;
 		case Neutral:
 		default:
