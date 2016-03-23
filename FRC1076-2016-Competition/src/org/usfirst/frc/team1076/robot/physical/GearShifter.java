@@ -5,6 +5,8 @@ import org.usfirst.frc.team1076.robot.IRobot.SolenoidValue;
 import org.usfirst.frc.team1076.robot.sensors.GearShiftStateManager;
 
 public class GearShifter extends GearShiftStateManager {
+	
+	@Override
 	public void shiftGear(GearStates newState, IRobot robot) {
 		if(newState == GearStates.High) {
 			robot.setGear(SolenoidValue.Forward);
