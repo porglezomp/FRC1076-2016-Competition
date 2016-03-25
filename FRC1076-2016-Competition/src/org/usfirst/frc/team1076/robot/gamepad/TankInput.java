@@ -1,8 +1,9 @@
 package org.usfirst.frc.team1076.robot.gamepad;
 
 import org.usfirst.frc.team1076.robot.gamepad.IGamepad.GamepadAxis;
+import org.usfirst.frc.team1076.robot.gamepad.IGamepad.GamepadButton;
 
-public class TankInput implements IInput {
+public class TankInput implements IDriverInput {
 	IGamepad gamepad;
 
 	public TankInput(IGamepad gamepad) {
@@ -17,12 +18,28 @@ public class TankInput implements IInput {
 	}
 
 	@Override
-	public double armSpeed() {
-		return 0;
+	public boolean brakesApplied() {
+		return gamepad.getAxis(GamepadAxis.LeftTrigger) > 0.25;
 	}
 
 	@Override
-	public double intakeSpeed() {
-		return 0;
+	public boolean shiftHigh() {
+		return gamepad.getButton(GamepadButton.RB);
+	}
+
+	@Override
+	public boolean shiftLow() {
+		return gamepad.getButton(GamepadButton.LB);
+	}
+	
+	@Override
+	public ControlSide controlSide() {
+		if (gamepad.getButton(GamepadButton.Back)) {
+			return ControlSide.Left;
+		} else if (gamepad.getButton(GamepadButton.Start)) {
+			return ControlSide.Right;
+		} else {
+			return ControlSide.Current;
+		}
 	}
 }

@@ -4,15 +4,15 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.usfirst.frc.team1076.robot.controllers.TeleopController;
-import org.usfirst.frc.team1076.test.mock.MockInput;
+import org.usfirst.frc.team1076.test.mock.MockDriverInput;
+import org.usfirst.frc.team1076.test.mock.MockOperatorInput;
 import org.usfirst.frc.team1076.test.mock.MockRobot;
 
 public class TeleopControllerTest {
 	private static final double EPSILON = 1e-10;
-	MockInput driverInput = new MockInput();
-	MockInput operatorInput = new MockInput();
-	TeleopController controller = new TeleopController(
-			driverInput, operatorInput);
+	MockDriverInput driverInput = new MockDriverInput();
+	MockOperatorInput operatorInput = new MockOperatorInput();
+	TeleopController controller = new TeleopController(driverInput, operatorInput, driverInput, driverInput);
 	MockRobot robot = new MockRobot();
 	
 	@Test
@@ -34,7 +34,7 @@ public class TeleopControllerTest {
 	}
 	
 	@Test
-	public void testArmStationary() {
+	public void testArmMotion() {
 		operatorInput.reset();
 		for (int i = -100; i <= 100; i++) {
 			double value = i / 100.0;
@@ -50,10 +50,22 @@ public class TeleopControllerTest {
 		operatorInput.reset();
 		for (int i = -100; i <= 100; i++) {
 			double value = i / 100.0;
-			operatorInput.arm = value;
+			operatorInput.intake = value;
 			controller.teleopPeriodic(robot);
 			assertEquals("The arm motion should match the arm input",
-					value, robot.arm, EPSILON);
+					value, robot.intake, EPSILON);
 		}
-	}	
+	}
+	
+	@Test
+	public void testBrakes() {
+		driverInput.reset();
+		driverInput.brakes = true;
+		controller.teleopPeriodic(robot);
+		assertEquals(true, robot.brakes);
+		
+		driverInput.brakes = false;
+		controller.teleopPeriodic(robot);
+		assertEquals(false, robot.brakes);
+	}
 }

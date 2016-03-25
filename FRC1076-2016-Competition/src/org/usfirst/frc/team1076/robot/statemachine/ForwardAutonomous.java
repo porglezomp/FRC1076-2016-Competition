@@ -1,37 +1,65 @@
 package org.usfirst.frc.team1076.robot.statemachine;
 
-import org.usfirst.frc.team1076.robot.gamepad.IInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.sensors.IGyro;
+
+import java.util.concurrent.TimeUnit;
 
 public class ForwardAutonomous extends AutoState {
-	int counter = 0; // replace with encoders or timer
-	int limit = 100;
+	private static final double TOLERANCE = 0.05;
+	private static final double CORRECTION_FACTOR_CONST = 10.0;
+	long timeStart;
+	long timeLimit;
+	boolean started = false;
 	double speed = 1;
+	private IGyro gyro;
+	
+	public ForwardAutonomous(int millis, double speed, IGyro gyro) {
+		this.timeLimit = millis;
+		this.speed = speed;
+		this.gyro = gyro;
+	}
 	
 	public ForwardAutonomous(int millis, double speed) {
-		this.limit = millis / 20;
-		this.speed = speed;
+		this(millis, speed, null);
 	}
 	
 	public ForwardAutonomous(int millis) {
 		this(millis, 1);
 	}
 	
-	public void init() { }
+	@Override
+	public void init() {
+		started = true;
+		timeStart = System.nanoTime();
+	}
 	
+	@Override
 	public boolean shouldChange() {
-		return counter > limit;
+		return started && TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - timeStart) > timeLimit;
 	}
 	
+	@Override
 	public MotorOutput driveTrainSpeed() {
-		counter++;
-		return new MotorOutput(speed, speed);
+		double rate;
+		if (gyro != null) {
+			rate = gyro.getRate();
+		} else {
+			rate = 0;
+		}
+		if (shouldChange()) {
+			return new MotorOutput(0, 0);
+		} else if(rate > TOLERANCE) {
+			return new MotorOutput(speed * getCorrectionFactor(rate), speed);
+		} else if(rate < -TOLERANCE) {
+			return new MotorOutput(speed, speed * getCorrectionFactor(rate));
+		} else {
+			return new MotorOutput(speed, speed);
+		}
 	}
 	
-	public double armSpeed() {
-		return 0;
-	}
-	
-	public double intakeSpeed() {
-		return 0;
+	// TODO: Find a reasonable function for this.
+	public double getCorrectionFactor(double rate) {
+		return CORRECTION_FACTOR_CONST / (CORRECTION_FACTOR_CONST + Math.abs(rate));
 	}
 }

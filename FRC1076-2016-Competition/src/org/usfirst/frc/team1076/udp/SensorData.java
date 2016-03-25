@@ -3,23 +3,28 @@ package org.usfirst.frc.team1076.udp;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.usfirst.frc.team1076.robot.sensors.IGyro;
 
-public class SensorData {
+public class SensorData implements ISensorData {
 	public enum FieldPosition { Right, Left; }
 	private IChannel receiver;
-	private double heading;
-	private double distance;
+	private double visionHeading, visionRange;
+	private double lidarHeading, lidarRange;
 	private FieldPosition position;
 	private JSONParser parser = new JSONParser();
+	private IGyro gyro;
 	
+	private double lidarRpm = 250;
 	private double leftSideBack, rightSideBack, leftSideFront, rightSideFront;
 	private double leftFront, rightFront;	
 	
-	public SensorData(IChannel channel, FieldPosition position) {
+	public SensorData(IChannel channel, FieldPosition position, IGyro gyro) {
+		this.gyro = gyro; // Should we change this to be a different method?
 		this.position = position;
 		receiver = channel;
 	}
-	
+
+	@Override
 	public void interpretData() {
 		while (receiver.hasMessage()) {
 			UDPMessage latest = receiver.popLatestMessage();
@@ -30,8 +35,10 @@ public class SensorData {
 				e.printStackTrace();
 				continue;
 			}
+			System.out.println("Object: " + obj);
 			
-			switch (((String) obj.get("sender")).toLowerCase()) {
+			String sender = (String) obj.get("sender");
+			switch (sender.toLowerCase()) {
 			case "lidar":
 				handleLidarMessage(obj);
 				break;
@@ -42,6 +49,7 @@ public class SensorData {
 				handleSonarMessage(obj);
 				break;
 			default:
+				System.err.println("Error, unexpected message sender \"" + sender + "\"");
 			}
 		}
 	}
@@ -68,55 +76,89 @@ public class SensorData {
 	}
 	
 	private void handleVisionMessage(JSONObject msg) {
-		String status = (String) msg.get("status");
-		double heading = ((Number) msg.get("heading")).doubleValue();
-		double range = ((Number) msg.get("range")).doubleValue();
-		switch (status.toLowerCase()) {
-		case "left":
-			if (position == FieldPosition.Left) {
-				set(heading, range);
+		String message = (String) msg.get("message");
+		switch (message.toLowerCase()) {
+		case "heading and range":
+			String status = (String) msg.get("status");
+			double heading = ((Number) msg.get("heading")).doubleValue();
+			double range = ((Number) msg.get("range")).doubleValue();
+			switch (status) {
+			case "left":
+				if (position == FieldPosition.Left) {
+					setVision(heading, range);
+				}
+				break;
+			case "right":
+				if (position == FieldPosition.Right) {
+					setVision(heading, range);
+				}
+				break;
+			case "ok":
+				setVision(heading, range);
+				break;
+			default:
 			}
-			break;
-		case "right":
-			if (position == FieldPosition.Right) {
-				set(heading, range);
-			}
-			break;
-		case "ok":
-			set(heading, range);
 			break;
 		default:
+			System.err.println("Error, unexpected vision message \"" + message + "\"");
 		}
 	}
 	
 	private void handleLidarMessage(JSONObject msg) {
+		double heading, range;
 		String message = (String) msg.get("message");
-		switch (message) {
-		case "range and heading":
-			double heading = ((Number) msg.get("heading")).doubleValue();
-			double range = ((Number) msg.get("range")).doubleValue();
-			this.heading = heading;
-			this.distance = range;
+		// TODO: Handle errors more specifically
+		if (msg.get("status").equals("ok")) {
+			System.err.println("Error: " + msg);
+			return;
+		}
+		switch (message.toLowerCase()) {
+		case "wall":
+			heading = ((Number) msg.get("heading")).doubleValue();
+			range = ((Number) msg.get("range")).doubleValue();
+			this.lidarHeading = heading;
+			this.lidarRange = range;
+			break;
+		case "range at heading":
+			heading = ((Number) msg.get("heading")).doubleValue();
+			range = ((Number) msg.get("range")).doubleValue();
+			System.out.println("Range " + range + " at " + heading);
+		case "periodic":
+			double rpm = ((Number) msg.get("rpm")).doubleValue();
+			this.lidarRpm = rpm;
 			break;
 		default:
+			System.err.println("Error, unexpected LIDAR message \"" + message + "\"");
 		}
 	}
 	
-	public void set(double h, double d) {
-		this.heading = h;
-		this.distance = d;
+	@Override
+	public void setVision(double h, double r) {
+		this.visionHeading = h;
+		this.visionRange = r;
 	}
 	
-	public FieldPosition getFieldPosition() { return position; }
-	public void setFieldPosition(FieldPosition pos) { position = pos; }
+	@Override
+	public void setLidar(double h, double r) {
+		this.lidarHeading = h;
+		this.lidarRange = r;
+	}
 	
-	public double getHeading() { return heading; }
-	public double getDistance() { return distance; }
-	public IChannel getChannel() { return receiver; }
-	public double getLeftSideBack() { return leftSideBack; }
-	public double getRightSideBack() { return rightSideBack; }
-	public double getLeftSideFront() { return leftSideFront; }
-	public double getRightSideFront() { return rightSideFront; }
-	public double getLeftFront() { return leftFront; }
-	public double getRightFront() { return rightFront; }
+	@Override public IGyro getGyro() { return gyro; }
+	
+	@Override public FieldPosition getFieldPosition() { return position; }
+	@Override public void setFieldPosition(FieldPosition pos) { position = pos; }
+	
+	@Override public double getLidarRpm() { return lidarRpm; }
+	@Override public double getLidarHeading() { return lidarHeading; }
+	@Override public double getLidarRange() { return lidarRange; }
+	@Override public double getVisionHeading() { return visionHeading; }
+	@Override public double getVisionRange() { return visionRange; }
+	@Override public IChannel getChannel() { return receiver; }
+	@Override public double getLeftSideBack() { return leftSideBack; }
+	@Override public double getRightSideBack() { return rightSideBack; }
+	@Override public double getLeftSideFront() { return leftSideFront; }
+	@Override public double getRightSideFront() { return rightSideFront; }
+	@Override public double getLeftFront() { return leftFront; }
+	@Override public double getRightFront() { return rightFront; }
 }

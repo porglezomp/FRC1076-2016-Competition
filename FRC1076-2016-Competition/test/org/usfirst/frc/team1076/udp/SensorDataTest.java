@@ -5,17 +5,18 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.usfirst.frc.team1076.test.mock.MockChannel;
+import org.usfirst.frc.team1076.test.mock.MockGyro;
 import org.usfirst.frc.team1076.udp.SensorData.FieldPosition;
 
 public class SensorDataTest {
 	private static final double EPSILON = 1e-12;
 	MockChannel channel;
-	SensorData data;
+	ISensorData data;
 	
 	@Before
 	public void setupChannelAndData() {
 		channel = new MockChannel();
-		data = new SensorData(channel, FieldPosition.Left);
+		data = new SensorData(channel, FieldPosition.Left, new MockGyro());
 	}
 	
 	@Test
@@ -48,8 +49,8 @@ public class SensorDataTest {
 		channel.addMessage(message);
 		data.interpretData();
 		
-		assertEquals(42, data.getHeading(), EPSILON);
-		assertEquals(12, data.getDistance(), EPSILON);
+		assertEquals(42, data.getVisionHeading(), EPSILON);
+		assertEquals(12, data.getVisionRange(), EPSILON);
 	}	
 	
 	@Test
@@ -69,15 +70,15 @@ public class SensorDataTest {
 		channel.addMessage(rightMessage);
 		data.interpretData();
 		
-		assertEquals(1, data.getHeading(), EPSILON);
-		assertEquals(2, data.getDistance(), EPSILON);
+		assertEquals(1, data.getVisionHeading(), EPSILON);
+		assertEquals(2, data.getVisionRange(), EPSILON);
 	
 		data.setFieldPosition(FieldPosition.Right);
 		channel.addMessage(leftMessage);
 		channel.addMessage(rightMessage);
 		data.interpretData();
 		
-		assertEquals(3, data.getHeading(), EPSILON);
-		assertEquals(4, data.getDistance(), EPSILON);
+		assertEquals(3, data.getVisionHeading(), EPSILON);
+		assertEquals(4, data.getVisionRange(), EPSILON);
 	}
 }
