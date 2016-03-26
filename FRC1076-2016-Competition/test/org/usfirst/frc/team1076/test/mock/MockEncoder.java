@@ -24,6 +24,7 @@ public class MockEncoder implements IEncoder {
 	@Override
 	public void reset() {
 		distance = 0;
+		rawCount = 0;
 	}
 
 	@Override
