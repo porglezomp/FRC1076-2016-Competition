@@ -1,11 +1,13 @@
 package org.usfirst.frc.team1076.robot.statemachine;
 
+import java.util.concurrent.TimeUnit;
+
 public class IntakeAutonomous extends AutoState {
 	private long duration, startTime;
 	private double intakeSpeed;
 
 	public IntakeAutonomous(int durationMilliseconds, double intakeSpeed) {
-		this.duration = durationMilliseconds * 1000 * 1000;
+		this.duration = TimeUnit.MILLISECONDS.toNanos(durationMilliseconds);
 		this.intakeSpeed = intakeSpeed;
 	}
 
@@ -16,7 +18,7 @@ public class IntakeAutonomous extends AutoState {
 
 	@Override
 	public boolean shouldChange() {
-		return (startTime - System.nanoTime()) > duration;
+		return (System.nanoTime() - startTime) > duration;
 	}
 
 	@Override
