@@ -34,9 +34,9 @@ public class OperatorInput implements IOperatorInput {
 		if (up && down) {
 			return IntakeRaiseState.Neutral;
 		} else if (up) {
-			return IntakeRaiseState.Raised;
-		} else if (down) {
 			return IntakeRaiseState.Lowered;
+		} else if (down) {
+			return IntakeRaiseState.Raised;
 		}		
 		return IntakeRaiseState.Neutral;
 	}

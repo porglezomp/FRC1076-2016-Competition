@@ -10,6 +10,7 @@ public class ForwardAutonomous extends AutoState {
 	private static final double CORRECTION_FACTOR_CONST = 10.0;
 	long timeStart;
 	long timeLimit;
+	boolean started = false;
 	double speed = 1;
 	private IGyro gyro;
 	
@@ -23,17 +24,19 @@ public class ForwardAutonomous extends AutoState {
 		this(millis, speed, null);
 	}
 	
-	public void init() {
-		timeStart = System.nanoTime();
-	}
-	
 	public ForwardAutonomous(int millis) {
 		this(millis, 1);
 	}
 	
 	@Override
+	public void init() {
+		started = true;
+		timeStart = System.nanoTime();
+	}
+	
+	@Override
 	public boolean shouldChange() {
-		return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - timeStart) > timeLimit;
+		return started && TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - timeStart) > timeLimit;
 	}
 	
 	@Override
