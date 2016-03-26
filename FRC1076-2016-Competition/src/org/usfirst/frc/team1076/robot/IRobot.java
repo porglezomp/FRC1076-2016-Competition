@@ -8,6 +8,7 @@ public interface IRobot {
 	void setLeftSpeed(double speed);
 	void setRightSpeed(double speed);
 	void setArmSpeed(double speed);
+	void setArmExtendSpeed(double speed);
 	void setIntakeSpeed(double speed);
 	void setIntakeElevation(IntakeRaiseState state);
 	void setBrakes(boolean enabled);

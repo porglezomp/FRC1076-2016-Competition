@@ -6,7 +6,7 @@ import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput.IntakeRaiseState;
 import org.usfirst.frc.team1076.udp.ISensorData;
 
 public class MockRobot implements IRobot {
-	public double left, right, arm, intake;
+	public double left, right, arm, intake, extend;
 	public double lidarSpeed;
 	public boolean brakes;
 	public IntakeRaiseState intakeRaiseState = IntakeRaiseState.Neutral;
@@ -61,6 +61,11 @@ public class MockRobot implements IRobot {
 	@Override
 	public void setIntakeElevation(IntakeRaiseState state) {
 		this.intakeRaiseState = state;
+	}
+
+	@Override
+	public void setArmExtendSpeed(double speed) {
+		this.extend = speed;
 	}
 
 }
