@@ -133,6 +133,7 @@ public class Robot extends IterativeRobot implements IRobot {
 		// TODO: Figure out what analog input channel we'll be using.
 		
 		gearShifter = new GearShifter();
+		gearShifter.shiftLow(this);
 	}
     
 	/**
