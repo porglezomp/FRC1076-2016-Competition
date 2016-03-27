@@ -1,23 +1,32 @@
 package org.usfirst.frc.team1076.test.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.sensors.DistanceEncoder;
 import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.DistanceAutonomous;
 import org.usfirst.frc.team1076.test.mock.MockEncoder;
+import org.usfirst.frc.team1076.test.mock.MockGearShifter;
+import org.usfirst.frc.team1076.test.mock.MockRobot;
 
 public class DistanceAutonomousTest {
-
 	private static final double EPSILON = 1e-12;
 	MockEncoder encoder = new MockEncoder();
-	
+	MockRobot robot = new MockRobot();
+	MockGearShifter gear = new MockGearShifter(0, 1);
+	DistanceEncoder distanceEncoder = new DistanceEncoder(encoder, gear);
+
+	@Before
+	public void testSetUp() {
+		encoder.reset();
+		distanceEncoder.reset();
+	}
 	
 	@Test
 	public void testNext() {
-		encoder.reset();
 		AutoState auto = new DistanceAutonomous(1000, 10, encoder);
 		assertSame(null, auto.next());
 		auto.addNext(auto);
@@ -26,14 +35,12 @@ public class DistanceAutonomousTest {
 	
 	@Test
 	public void testShouldNotChange() {
-		encoder.reset();
 		AutoState auto = new DistanceAutonomous(1000, 10, encoder);
 		assertEquals(false, auto.shouldChange());
 	}
 	
 	@Test
 	public void testFixedDistanceTraveled() {
-		encoder.reset();
 		DistanceAutonomous auto = new DistanceAutonomous(1.5, 1, encoder);
 		auto.init();
 		MotorOutput motorOutput = auto.driveTrainSpeed();
@@ -72,36 +79,87 @@ public class DistanceAutonomousTest {
 	
 	@Test
 	public void testRepeatedMotion() {
-		encoder.reset();
-		
 		DistanceAutonomous auto = new DistanceAutonomous(1.5, 1, encoder);
 		auto.init();
 		auto.driveTrainSpeed();
 		assertEquals(false, auto.shouldChange());
-		encoder.distance = 1.5;
+		encoder.distance += 1.5;
 		assertEquals(true, auto.shouldChange());
 		
 		auto = new DistanceAutonomous(1.5, 1, encoder);
 		auto.init();
 		auto.driveTrainSpeed();
 		assertEquals(false, auto.shouldChange());
-		encoder.distance = 3;
+		encoder.distance += 1.5;
 		auto.driveTrainSpeed();
 		assertEquals(true, auto.shouldChange());
 	}
 	
 	@Test
 	public void testNoArmMotion() {
-		encoder.reset();
 		AutoState auto = new DistanceAutonomous(100, 10, encoder);
 		assertEquals(0, auto.armSpeed(), EPSILON);
 	}
 	
 	@Test
 	public void testNoIntakeMotion() {
-		encoder.reset();
 		AutoState auto = new DistanceAutonomous(100, 10, encoder);
 		assertEquals(0, auto.intakeSpeed(), EPSILON);
 	}
-
+	
+	// DistanceEncoder tests.
+	
+	@Test
+	public void testHighGear() {
+		gear.shiftHigh(robot);
+		AutoState auto = new DistanceAutonomous(120, 10, distanceEncoder);
+		encoder.rawCount += 120 * 34.0/40.0 * 4096 * 6 * Math.PI;
+		distanceEncoder.updateDistance();
+		
+		auto.driveTrainSpeed();
+		assertTrue(auto.shouldChange());
+	}
+	
+	@Test
+	public void testLowGear() {
+		gear.shiftLow(robot);
+		AutoState auto = new DistanceAutonomous(110, 10, distanceEncoder);
+		encoder.rawCount += 110 * 14.0/60.0 * 4096 * 6 * Math.PI;
+		distanceEncoder.updateDistance();
+		
+		auto.driveTrainSpeed();
+		assertTrue(auto.shouldChange());
+	}
+	
+	@Test
+	public void testLowToHighGear() {
+		AutoState auto = new DistanceAutonomous(46, 10, distanceEncoder);
+		
+		gear.shiftLow(robot);
+		encoder.rawCount += 43 * 14.0/60.0 * 4096 * 6 * Math.PI;
+		distanceEncoder.updateDistance();
+		
+		gear.shiftHigh(robot);
+		encoder.rawCount += 3 * 34.0/40.0 * 4096 * 6 * Math.PI;
+		distanceEncoder.updateDistance();
+		
+		auto.driveTrainSpeed();
+		assertTrue(auto.shouldChange());		
+	}
+	
+	@Test
+	public void testHighToLowGear() {
+		AutoState auto = new DistanceAutonomous(17, 10, distanceEncoder);
+		
+		gear.shiftHigh(robot);
+		encoder.rawCount += 7 * 34.0/40.0 * 4096 * 6 * Math.PI;
+		distanceEncoder.updateDistance();
+		
+		gear.shiftLow(robot);
+		encoder.rawCount += 10 * 14.0/60.0 * 4096 * 6 * Math.PI;
+		distanceEncoder.updateDistance();
+		
+		auto.driveTrainSpeed();
+		assertTrue(auto.shouldChange());		
+	}
 }
