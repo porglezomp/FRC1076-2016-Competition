@@ -35,7 +35,6 @@ public class SensorData implements ISensorData {
 				e.printStackTrace();
 				continue;
 			}
-			System.out.println("Object: " + obj);
 			
 			String sender = (String) obj.get("sender");
 			switch (sender.toLowerCase()) {
@@ -122,7 +121,6 @@ public class SensorData implements ISensorData {
 		case "range at heading":
 			heading = ((Number) msg.get("heading")).doubleValue();
 			range = ((Number) msg.get("range")).doubleValue();
-			System.out.println("Range " + range + " at " + heading);
 		case "periodic":
 			double rpm = ((Number) msg.get("rpm")).doubleValue();
 			this.lidarRpm = rpm;

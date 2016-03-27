@@ -7,14 +7,16 @@ public abstract class GearShiftStateManager {
 	public enum GearStates { High, Low; }
 	private double shiftUpSpeed = 1;
 	private double shiftDownSpeed = 0;
-
+	private GearStates currentState;
+	
 	public GearShiftStateManager() { }
+	
 	public GearShiftStateManager(double upShift, double downShift) {
 		this.shiftUpSpeed = upShift;
 		this.shiftDownSpeed = downShift;
 	}
 	
-	abstract public void shiftGear(GearStates newState, IRobot robot);
+	abstract protected void shiftGear(GearStates newState, IRobot robot);
 	
 	public void shiftAuto(IRobot robot) {
 		MotorOutput motorSpeeds = robot.getMotorSpeed();
@@ -27,11 +29,31 @@ public abstract class GearShiftStateManager {
 		}
 	}
 	
+	public void shiftTo(GearStates newState, IRobot robot) {
+		currentState = newState;
+		switch (newState) {
+		case High:
+			shiftHigh(robot);
+			break;
+		case Low:
+			shiftLow(robot);
+			break;
+		}	
+	}
+	
 	public void shiftHigh(IRobot robot) {
+		currentState = GearStates.High;
 		shiftGear(GearStates.High, robot);
 	}
 	
 	public void shiftLow(IRobot robot) {
+		currentState = GearStates.Low;
 		shiftGear(GearStates.Low, robot);
 	}
+	
+	public GearStates getGearState(){
+		return currentState;
+	}
 }
+
+	

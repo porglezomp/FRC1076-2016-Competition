@@ -54,7 +54,6 @@ public class ForwardAutonomousTest {
 		AutoState auto = new ForwardAutonomous(1000, 1, gyro);
 		auto.init();
 		MotorOutput motorOutput = auto.driveTrainSpeed();
-		System.out.println(motorOutput.left);
 		assertEquals(motorOutput.left, 1, EPSILON);
 		assertEquals(motorOutput.right, 5.0 / 6.0, EPSILON);
 	}
