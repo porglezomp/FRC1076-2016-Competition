@@ -11,9 +11,8 @@ public class DistanceEncoder implements IEncoder {
 	
 	public static final double MOTOR_PERIOD = 4096; // Number of encoder counts per motor rotation.
 	// Number of motor rotations per wheel rotation.
-	public static final double HIGH_GEAR_CONSTANT = 34.0/40.0;
-	public static final double LOW_GEAR_CONSTANT = 14.0/60.0;
-	public static final double FALLBACK_GEAR_CONSTANT = 99999; //TODO: change back to zero
+	public static final double HIGH_GEAR_RATIO = 34.0/40.0;
+	public static final double LOW_GEAR_RATIO = 14.0/60.0;
 	public static final double WHEEL_CIRCUMFRENCE = 6 * Math.PI; // Value is in inches
 	
 	public DistanceEncoder(IEncoder encoder, GearShiftStateManager gearShifter) {
@@ -28,25 +27,20 @@ public class DistanceEncoder implements IEncoder {
 		double deltaDistance = deltaCount * MOTOR_PERIOD * WHEEL_CIRCUMFRENCE;
 		currentGear = gearShifter.getGearState();
 		countAccumulator = getRaw();
-		// First time doing updateDistance
-		if (currentGear == null) {
-			currentGear = gearShifter.getGearState();
-		}
 		
 		// Add the distance traveled since last time we checked.
 		switch (currentGear) {
 		case High:
-			totalDistance += deltaDistance * HIGH_GEAR_CONSTANT;
+			totalDistance += deltaDistance * HIGH_GEAR_RATIO;
 			break;
 		case Low:
-			totalDistance += deltaDistance * LOW_GEAR_CONSTANT;
+			totalDistance += deltaDistance * LOW_GEAR_RATIO;
 			break;
 		default:
-			totalDistance += deltaDistance * FALLBACK_GEAR_CONSTANT;
 			break;
 		}
 	}
-
+	
 	@Override
 	public double getDistance() {
 		return totalDistance;
@@ -68,5 +62,13 @@ public class DistanceEncoder implements IEncoder {
 	@Override
 	public double getRaw() {
 		return encoder.getRaw();
+	}
+	
+	public double getHighGearCountsPerInch() {
+		return HIGH_GEAR_RATIO * MOTOR_PERIOD * WHEEL_CIRCUMFRENCE;
+	}
+	
+	public double getLowGearCountsPerInch() {
+		return LOW_GEAR_RATIO * MOTOR_PERIOD * WHEEL_CIRCUMFRENCE;
 	}
 }

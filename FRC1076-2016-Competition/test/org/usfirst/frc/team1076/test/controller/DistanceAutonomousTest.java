@@ -14,11 +14,17 @@ import org.usfirst.frc.team1076.test.mock.MockRobot;
 
 public class DistanceAutonomousTest {
 	private static final double EPSILON = 1e-12;
+	
 	MockEncoder encoder = new MockEncoder();
 	MockRobot robot = new MockRobot();
 	MockGearShifter gear = new MockGearShifter(0, 1);
 	DistanceEncoder distanceEncoder = new DistanceEncoder(encoder, gear);
+	
+	private final double LOW_GEAR_COUNTS_PER_INCH = distanceEncoder.getLowGearCountsPerInch();
+	private final double HIGH_GEAR_COUNTS_PER_INCH = distanceEncoder.getHighGearCountsPerInch();
+	
 
+	
 	@Before
 	public void testSetUp() {
 		encoder.reset();
@@ -111,9 +117,10 @@ public class DistanceAutonomousTest {
 	
 	@Test
 	public void testHighGear() {
-		gear.shiftHigh(robot);
 		AutoState auto = new DistanceAutonomous(120, 10, distanceEncoder);
-		encoder.rawCount += 120 * 34.0/40.0 * 4096 * 6 * Math.PI;
+		gear.shiftHigh(robot);
+		
+		encoder.rawCount += 120 * HIGH_GEAR_COUNTS_PER_INCH;
 		distanceEncoder.updateDistance();
 		
 		auto.driveTrainSpeed();
@@ -124,7 +131,8 @@ public class DistanceAutonomousTest {
 	public void testLowGear() {
 		gear.shiftLow(robot);
 		AutoState auto = new DistanceAutonomous(110, 10, distanceEncoder);
-		encoder.rawCount += 110 * 14.0/60.0 * 4096 * 6 * Math.PI;
+		
+		encoder.rawCount += 110 * LOW_GEAR_COUNTS_PER_INCH;
 		distanceEncoder.updateDistance();
 		
 		auto.driveTrainSpeed();
@@ -134,13 +142,14 @@ public class DistanceAutonomousTest {
 	@Test
 	public void testLowToHighGear() {
 		AutoState auto = new DistanceAutonomous(46, 10, distanceEncoder);
+		assertEquals(false, auto.shouldChange());
 		
 		gear.shiftLow(robot);
-		encoder.rawCount += 43 * 14.0/60.0 * 4096 * 6 * Math.PI;
+		encoder.rawCount += 43 * LOW_GEAR_COUNTS_PER_INCH;
 		distanceEncoder.updateDistance();
 		
 		gear.shiftHigh(robot);
-		encoder.rawCount += 3 * 34.0/40.0 * 4096 * 6 * Math.PI;
+		encoder.rawCount += 3 * HIGH_GEAR_COUNTS_PER_INCH;
 		distanceEncoder.updateDistance();
 		
 		auto.driveTrainSpeed();
@@ -150,13 +159,14 @@ public class DistanceAutonomousTest {
 	@Test
 	public void testHighToLowGear() {
 		AutoState auto = new DistanceAutonomous(17, 10, distanceEncoder);
+		assertEquals(false, auto.shouldChange());
 		
 		gear.shiftHigh(robot);
-		encoder.rawCount += 7 * 34.0/40.0 * 4096 * 6 * Math.PI;
+		encoder.rawCount += 7 * HIGH_GEAR_COUNTS_PER_INCH;
 		distanceEncoder.updateDistance();
 		
 		gear.shiftLow(robot);
-		encoder.rawCount += 10 * 14.0/60.0 * 4096 * 6 * Math.PI;
+		encoder.rawCount += 10 * LOW_GEAR_COUNTS_PER_INCH;
 		distanceEncoder.updateDistance();
 		
 		auto.driveTrainSpeed();
