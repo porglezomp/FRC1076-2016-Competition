@@ -56,8 +56,8 @@ public class Robot extends IterativeRobot implements IRobot {
 	Servo lidarServo = new Servo(0);
 	
 	Compressor compressor = new Compressor(0);
-	ISolenoid intakePneumatic = new TwoSolenoid(2, 3);
-	ISolenoid shifterPneumatic = new TwoSolenoid(0, 1);
+	ISolenoid intakePneumatic = new OneSolenoid(1);
+	ISolenoid shifterPneumatic = new OneSolenoid(0);
 	
 	IRobotController teleopController;
 	IRobotController autoController;
@@ -221,9 +221,9 @@ public class Robot extends IterativeRobot implements IRobot {
     public void commonPeriodic() {
     	// MOTOR_POWER_FACTOR = SmartDashboard.getNumber("Motor Tweak");
 
-    	/*
     	int left = leftMotor.getEncVelocity();
-    	int right = rightMotor.getEncVelocity();
+    	// int right = rightMotor.getEncVelocity();
+    	/*
     	if (left != 0) {
         	System.out.println("Left motor " + left);
     	}
@@ -278,10 +278,14 @@ public class Robot extends IterativeRobot implements IRobot {
 	public void setGear(SolenoidValue value) {
 		switch (value) {
 		case Forward:
-			shifterPneumatic.setForward();
+			// TODO: These functions may need to be swapped between
+			// the practice and competition robots.
+			// shifterPneumatic.setForward();
+			shifterPneumatic.setReverse();
 			break;
 		case Reverse:
-			shifterPneumatic.setReverse();
+			// shifterPneumatic.setReverse();
+			shifterPneumatic.setForward();
 			break;
 		case Off:
 		default:
