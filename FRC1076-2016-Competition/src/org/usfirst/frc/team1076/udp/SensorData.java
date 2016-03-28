@@ -77,7 +77,7 @@ public class SensorData implements ISensorData {
 	private void handleVisionMessage(JSONObject msg) {
 		String message = (String) msg.get("message");
 		switch (message.toLowerCase()) {
-		case "heading and range":
+		case "range and heading":
 			String status = (String) msg.get("status");
 			double heading = ((Number) msg.get("heading")).doubleValue();
 			double range = ((Number) msg.get("range")).doubleValue();
@@ -95,6 +95,12 @@ public class SensorData implements ISensorData {
 			case "ok":
 				setVision(heading, range);
 				break;
+			case "error":
+				System.err.println("Unknown error in vision status.");
+				break;
+			case "no target":
+			case "too many targets":
+				System.out.println("Status of \"" + status + "\" in vision message.");
 			default:
 			}
 			break;
