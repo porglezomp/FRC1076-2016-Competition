@@ -2,39 +2,37 @@ package org.usfirst.frc.team1076.robot.sensors;
 
 import org.usfirst.frc.team1076.robot.sensors.GearShiftStateManager.GearStates;
 
-public class DistanceEncoder implements IEncoder {	
+public class DistanceEncoder implements IDistanceEncoder {	
 	IEncoder encoder;
 	GearShiftStateManager gearShifter;
-	GearStates currentGear;
 	double countAccumulator = 0; 
 	double totalDistance = 0;
 	
-	public static final double MOTOR_PERIOD = 4096; // Number of encoder counts per motor rotation.
+	public static final double COUNTS_PER_MOTOR_ROTATION = 4096; // Number of encoder counts per motor rotation.
 	// Number of motor rotations per wheel rotation.
 	public static final double HIGH_GEAR_RATIO = 34.0/40.0;
 	public static final double LOW_GEAR_RATIO = 14.0/60.0;
-	public static final double WHEEL_CIRCUMFRENCE = 6 * Math.PI; // Value is in inches
+	// This is just the circumference.
+	public static final double INCHES_PER_WHEEL_ROTATION = 6 * Math.PI;
 	
 	public DistanceEncoder(IEncoder encoder, GearShiftStateManager gearShifter) {
 		this.encoder = encoder;
 		this.gearShifter = gearShifter;
-		this.currentGear = gearShifter.getGearState();
 	}
 	
 	public void updateDistance() {
 		// This function should be called often.
 		double deltaCount = getRaw() - countAccumulator;
-		double deltaDistance = deltaCount * MOTOR_PERIOD * WHEEL_CIRCUMFRENCE;
-		currentGear = gearShifter.getGearState();
+		GearStates currentGear = gearShifter.getGearState();
 		countAccumulator = getRaw();
 		
 		// Add the distance traveled since last time we checked.
 		switch (currentGear) {
 		case High:
-			totalDistance += deltaDistance * HIGH_GEAR_RATIO;
+			totalDistance += highGearCountsToInches(deltaCount);
 			break;
 		case Low:
-			totalDistance += deltaDistance * LOW_GEAR_RATIO;
+			totalDistance += lowGearCountsToInches(deltaCount);
 			break;
 		default:
 			break;
@@ -43,6 +41,7 @@ public class DistanceEncoder implements IEncoder {
 	
 	@Override
 	public double getDistance() {
+		updateDistance();
 		return totalDistance;
 	}
 	
@@ -51,7 +50,6 @@ public class DistanceEncoder implements IEncoder {
 		encoder.reset();
 		countAccumulator = 0;
 		totalDistance = 0;
-		currentGear = null;
 	}
 
 	@Override
@@ -64,11 +62,28 @@ public class DistanceEncoder implements IEncoder {
 		return encoder.getRaw();
 	}
 	
-	public double getHighGearCountsPerInch() {
-		return HIGH_GEAR_RATIO * MOTOR_PERIOD * WHEEL_CIRCUMFRENCE;
+	public double highGearCountsToInches(double counts) {
+		return counts / COUNTS_PER_MOTOR_ROTATION 
+				/ HIGH_GEAR_RATIO * INCHES_PER_WHEEL_ROTATION;
 	}
 	
-	public double getLowGearCountsPerInch() {
-		return LOW_GEAR_RATIO * MOTOR_PERIOD * WHEEL_CIRCUMFRENCE;
+	public double lowGearCountsToInches(double counts) {
+		// Counts -> Motor Rotations -> Wheel Rotations -> Inches
+		return counts / COUNTS_PER_MOTOR_ROTATION 
+				/ LOW_GEAR_RATIO * INCHES_PER_WHEEL_ROTATION;
+	}
+	
+	public double highGearInchesToCounts(double inches) {
+		// This should convert in the following order:
+		// Inches -> Wheel Rotations -> Motor Rotations -> Counts
+		return inches / INCHES_PER_WHEEL_ROTATION 
+				* HIGH_GEAR_RATIO *  COUNTS_PER_MOTOR_ROTATION;
+	}
+	
+	public double lowGearInchesToCounts(double inches) {
+		// This should convert in the following order:
+		// Inches -> Wheel Rotations -> Motor Rotations -> Counts
+		return inches / INCHES_PER_WHEEL_ROTATION
+			* LOW_GEAR_RATIO * COUNTS_PER_MOTOR_ROTATION;
 	}
 }
