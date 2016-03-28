@@ -32,4 +32,7 @@ public class MockEncoder implements IDistanceEncoder {
 		return rawCount;
 	}
 
+	@Override
+	public void updateDistance() { }
+
 }

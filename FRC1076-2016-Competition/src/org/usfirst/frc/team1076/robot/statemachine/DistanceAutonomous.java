@@ -31,7 +31,7 @@ public class DistanceAutonomous extends AutoState {
 	}
 		
 	@Override
-	public MotorOutput driveTrainSpeed() {
+	public MotorOutput driveTrainSpeed() { 
 		if (shouldChange()) {
 			return new MotorOutput(0, 0);
 		} else {

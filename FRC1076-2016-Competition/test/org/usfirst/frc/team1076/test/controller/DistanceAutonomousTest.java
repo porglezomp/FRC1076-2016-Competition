@@ -20,8 +20,8 @@ public class DistanceAutonomousTest {
 	MockGearShifter gear = new MockGearShifter(0, 1);
 	DistanceEncoder distanceEncoder = new DistanceEncoder(encoder, gear);
 	
-	private final double LOW_GEAR_COUNTS_PER_INCH = distanceEncoder.getLowGearCountsPerInch();
-	private final double HIGH_GEAR_COUNTS_PER_INCH = distanceEncoder.getHighGearCountsPerInch();
+	private final double LOW_GEAR_COUNTS_PER_INCH = distanceEncoder.lowGearInchesToCounts(1);
+	private final double HIGH_GEAR_COUNTS_PER_INCH = distanceEncoder.highGearInchesToCounts(1);
 	
 
 	
@@ -119,57 +119,58 @@ public class DistanceAutonomousTest {
 	public void testHighGear() {
 		AutoState auto = new DistanceAutonomous(120, 10, distanceEncoder);
 		gear.shiftHigh(robot);
-		
+		assertFalse("Shouldn't change without moving!", auto.shouldChange());
 		encoder.rawCount += 120 * HIGH_GEAR_COUNTS_PER_INCH;
 		distanceEncoder.updateDistance();
-		
+		assertTrue("distance is:" + distanceEncoder.getDistance(), auto.shouldChange());
+
 		auto.driveTrainSpeed();
-		assertTrue(auto.shouldChange());
+		assertTrue("distance is:" + encoder.getDistance(), auto.shouldChange());
 	}
 	
 	@Test
 	public void testLowGear() {
-		gear.shiftLow(robot);
 		AutoState auto = new DistanceAutonomous(110, 10, distanceEncoder);
 		
+		gear.shiftLow(robot);
+		assertFalse("Shouldn't change without moving!", auto.shouldChange());
 		encoder.rawCount += 110 * LOW_GEAR_COUNTS_PER_INCH;
-		distanceEncoder.updateDistance();
-		
+		assertTrue("Should change after incrementing encoder", auto.shouldChange());
 		auto.driveTrainSpeed();
-		assertTrue(auto.shouldChange());
+		assertTrue("Should change even after driveTrainSpeed()", auto.shouldChange());
 	}
 	
 	@Test
 	public void testLowToHighGear() {
-		AutoState auto = new DistanceAutonomous(46, 10, distanceEncoder);
-		assertEquals(false, auto.shouldChange());
+		AutoState auto = new DistanceAutonomous(17, 10, distanceEncoder);
 		
 		gear.shiftLow(robot);
-		encoder.rawCount += 43 * LOW_GEAR_COUNTS_PER_INCH;
-		distanceEncoder.updateDistance();
+		assertFalse("Shouldn't change without moving!", auto.shouldChange());
+		encoder.rawCount += 10 * LOW_GEAR_COUNTS_PER_INCH;
 		
+		assertFalse("Shouldn't change before done!", auto.shouldChange());
 		gear.shiftHigh(robot);
-		encoder.rawCount += 3 * HIGH_GEAR_COUNTS_PER_INCH;
-		distanceEncoder.updateDistance();
-		
+		assertFalse("Shouldn't change because of shifting!", auto.shouldChange());
+		encoder.rawCount += 7 * HIGH_GEAR_COUNTS_PER_INCH;
+		assertTrue("Should change after incrementing encoder", auto.shouldChange());
 		auto.driveTrainSpeed();
-		assertTrue(auto.shouldChange());		
+		assertTrue("Should change even after driveTrainSpeed()", auto.shouldChange());		
 	}
 	
 	@Test
 	public void testHighToLowGear() {
 		AutoState auto = new DistanceAutonomous(17, 10, distanceEncoder);
-		assertEquals(false, auto.shouldChange());
 		
 		gear.shiftHigh(robot);
+		assertFalse("Shouldn't change without moving!", auto.shouldChange());
 		encoder.rawCount += 7 * HIGH_GEAR_COUNTS_PER_INCH;
-		distanceEncoder.updateDistance();
 		
+		assertFalse("Shouldn't change before done!", auto.shouldChange());
 		gear.shiftLow(robot);
+		assertFalse("Shouldn't change because of shifting!", auto.shouldChange());
 		encoder.rawCount += 10 * LOW_GEAR_COUNTS_PER_INCH;
-		distanceEncoder.updateDistance();
-		
+		assertTrue("Should change but didn't.", auto.shouldChange());
 		auto.driveTrainSpeed();
-		assertTrue(auto.shouldChange());		
+		assertTrue("Should change even after driveTrainSpeed()", auto.shouldChange());		
 	}
 }
