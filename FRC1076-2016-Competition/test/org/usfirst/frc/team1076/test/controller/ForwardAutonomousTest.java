@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1076.test.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class ForwardAutonomousTest {
 	public void testShouldNotChange() {
 		AutoState auto = new ForwardAutonomous(1000);
 		auto.init();
-		assertEquals(false, auto.shouldChange());
+		assertFalse(auto.shouldChange());
 	}
 	
 	@Test

@@ -12,20 +12,19 @@ import org.usfirst.frc.team1076.udp.ISensorData;
  * It does not use range data. 
  *  */
 public class VisionAutonomous extends AutoState {
+	private final static double TOLERANCE = 10; // In degrees (?).
+	private final static double SPEED_DIFFERENCE = 0.75;
 	ISensorData sensorData;
 	double currentHeading;
-	double headingTolerance = 10; // In degrees (?).
 	double speed;
-	double speedDifference;
 	long timeLimit;
 	long timeStart;
 	boolean started = false;
 	
-	
-	public VisionAutonomous(int millis, double speed, double speedDifference, ISensorData sensorData) {
+	// TODO: Make LIDAR work so we can drive based off of LIDAR range instead of constant time.
+	public VisionAutonomous(int millis, double speed, ISensorData sensorData) {
 		this.sensorData = sensorData;
 		this.speed = speed;
-		this.speed = speedDifference;
 		this.timeLimit = millis;
 	}
 	
@@ -39,11 +38,12 @@ public class VisionAutonomous extends AutoState {
 	@Override
 	public MotorOutput driveTrainSpeed() {
 		currentHeading = sensorData.getVisionHeading();
-		if (currentHeading > headingTolerance) {
-			// Drive left towards heading.
-			return new MotorOutput(speed - speedDifference, speed);
-		} else if (currentHeading < -headingTolerance) {
-			return new MotorOutput(speed, speed - speedDifference);
+		
+		if (currentHeading > TOLERANCE) {
+			// Drive leftwards.
+			return new MotorOutput(speed * SPEED_DIFFERENCE, speed);
+		} else if (currentHeading < -TOLERANCE) {
+			return new MotorOutput(speed, speed * SPEED_DIFFERENCE);
 		} else {
 			return new MotorOutput(speed, speed);
 		}
@@ -52,6 +52,14 @@ public class VisionAutonomous extends AutoState {
 	@Override
 	public boolean shouldChange() {
 		return started && TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - timeStart) > timeLimit;
+	}
+	
+	public double getTolerance() {
+		return TOLERANCE;
+	}
+	
+	public double getSpeedDifference() {
+		return SPEED_DIFFERENCE;
 	}
 
 }
