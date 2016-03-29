@@ -10,9 +10,9 @@ public class GearShifter extends GearShiftStateManager {
 	@Override
 	protected void shiftGear(GearStates newState, IRobot robot) {
 		currentGear = newState;
-		if(newState == GearStates.High) {
+		if (newState == GearStates.High) {
 			robot.setGear(SolenoidValue.Forward);
-		} else if(newState == GearStates.Low) {
+		} else if (newState == GearStates.Low) {
 			robot.setGear(SolenoidValue.Reverse);
 		} 
 	}

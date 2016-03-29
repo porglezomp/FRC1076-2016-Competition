@@ -21,16 +21,9 @@ public class TeleopController implements IRobotController {
 		this.arcadeInput = arcadeInput;
 		gearShifter = new GearShifter();
 	}
-	
-	@Override
-	public void robotInit(IRobot robot) {
-		gearShifter.shiftLow(robot);
-	}
 
 	@Override
-	public void autonomousInit(IRobot robot) {
-		gearShifter.shiftLow(robot);
-	}
+	public void autonomousInit(IRobot robot) { }
 
 	@Override
 	public void autonomousPeriodic(IRobot robot) { }
@@ -67,7 +60,8 @@ public class TeleopController implements IRobotController {
     	} else if (driverInput.shiftLow()) {
     		gearShifter.shiftLow(robot);
     	} else {
-    		gearShifter.shiftAuto(robot);
+    		gearShifter.shiftLow(robot);
+    		// gearShifter.shiftAuto(robot);
     	}
 	}
 

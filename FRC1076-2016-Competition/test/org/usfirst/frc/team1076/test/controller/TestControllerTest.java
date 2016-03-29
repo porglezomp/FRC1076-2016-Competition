@@ -25,7 +25,6 @@ public class TestControllerTest {
 		
 		gamepad.y = true;
 		gamepad.a = false;
-		controller.robotInit(robot);
 		controller.testInit(robot);
 		controller.testPeriodic(robot);
 		assertEquals("The test periodic should run forward after the Y button is pressed",
@@ -40,7 +39,6 @@ public class TestControllerTest {
 		
 		gamepad.y = true;
 		gamepad.a = false;
-		controller.robotInit(robot);
 		controller.testInit(robot);
 		controller.testPeriodic(robot);
 		assertEquals(1, robot.left, EPSILON);

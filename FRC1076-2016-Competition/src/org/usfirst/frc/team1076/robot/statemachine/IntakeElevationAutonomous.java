@@ -17,7 +17,6 @@ public class IntakeElevationAutonomous extends AutoState {
 	
 	@Override
 	public IntakeRaiseState intakeRaiseState() {
-		System.out.println("Request " + raiseState);
 		workDone = true;
 		return raiseState;
 	}

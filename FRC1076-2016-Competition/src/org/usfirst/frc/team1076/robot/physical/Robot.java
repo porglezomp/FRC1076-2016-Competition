@@ -15,9 +15,9 @@ import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput.IntakeRaiseState;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
-import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
-import org.usfirst.frc.team1076.robot.statemachine.IntakeElevationAutonomous;
-import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
+import org.usfirst.frc.team1076.robot.sensors.DistanceEncoder;
+import org.usfirst.frc.team1076.robot.sensors.IDistanceEncoder;
+import org.usfirst.frc.team1076.robot.statemachine.DistanceAutonomous;
 import org.usfirst.frc.team1076.udp.Channel;
 import org.usfirst.frc.team1076.udp.IChannel;
 import org.usfirst.frc.team1076.udp.SensorData;
@@ -58,6 +58,7 @@ public class Robot extends IterativeRobot implements IRobot {
 	Compressor compressor = new Compressor(0);
 	ISolenoid intakePneumatic = new OneSolenoid(1);
 	ISolenoid shifterPneumatic = new OneSolenoid(0);
+	IDistanceEncoder encoder;
 	
 	IRobotController teleopController;
 	IRobotController autoController;
@@ -69,8 +70,11 @@ public class Robot extends IterativeRobot implements IRobot {
 	double upperGearThreshold = 0.6;
 	double lowerGearThreshold = 0.4;
 	
+	double autoDriveDistance = 156;
+	double initialLidarSpeed = 7;
+	
 	SensorData sensorData;
-	GearShifter gearShifter;
+	GearShifter gearShifter = new GearShifter();
 	
 	@Override
 	public void disabledInit() {
@@ -86,7 +90,9 @@ public class Robot extends IterativeRobot implements IRobot {
 		SmartDashboard.putBoolean("Backwards", false);		
     	SmartDashboard.putNumber("LIDAR Speed", 80);
     	SmartDashboard.putNumber("Motor Tweak", MOTOR_POWER_FACTOR);
-		
+		SmartDashboard.putNumber("Distance", autoDriveDistance);
+		SmartDashboard.putNumber("Initial Lidar Speed", initialLidarSpeed);
+    	
 		// Initialize the physical components before the controllers,
 		// in case they depend on them.
 		// rightSlave.changeControlMode(TalonControlMode.Follower);
@@ -99,6 +105,7 @@ public class Robot extends IterativeRobot implements IRobot {
 		
 		compressor.setClosedLoopControl(true);
 		setIntakeElevation(IntakeRaiseState.Raised);
+		gearShifter.shiftLow(this);
 		
 		IGamepad driverGamepad = new Gamepad(0);
 		IGamepad operatorGamepad = new Gamepad(1);
@@ -106,34 +113,13 @@ public class Robot extends IterativeRobot implements IRobot {
 		IDriverInput arcade = new ArcadeInput(driverGamepad);
 		IOperatorInput operator = new OperatorInput(operatorGamepad);
 		teleopController = new TeleopController(arcade, operator, tank, arcade);
-		autoController = new AutoController(new ForwardAutonomous(6000, -0.6));
+		encoder = new DistanceEncoder(new MotorEncoder(leftMotor), gearShifter);
+		autoController = new AutoController(new DistanceAutonomous(156, -0.5, encoder));
 		testController = new TestController(driverGamepad);
-
-    	if (teleopController != null) {
-    		teleopController.robotInit(this);
-    	} else {
-    		System.out.println("Teleop Controller on Robot is null in robotInit()");
-    	}
-    	
-    	if (autoController != null) {
-    		autoController.robotInit(this);
-    	} else {
-    		System.out.println("Autonomous Controller on Robot is null in robotInit()");
-    	}
-    	
-    	if (testController != null) {
-    		testController.robotInit(this);
-    	} else {
-    		System.out.println("Test Controller on Robot is null in robotInit()");
-    	}
-    	
     	
 		IChannel channel = new Channel(5880);
 		sensorData = new SensorData(channel, FieldPosition.Right, new Gyro(new AnalogGyro(0)));
 		// TODO: Figure out what analog input channel we'll be using.
-		
-		gearShifter = new GearShifter();
-		gearShifter.shiftLow(this);
 	}
     
 	/**
@@ -147,12 +133,18 @@ public class Robot extends IterativeRobot implements IRobot {
 	 */
 	@Override
     public void autonomousInit() {
-		if (SmartDashboard.getBoolean("Low Bar")) {
+		/*
+		if (SmartDashboard.getBoolean("Low Bar")) { 
 			autoController = new AutoController(new IntakeElevationAutonomous(IntakeRaiseState.Lowered)
 					.addNext(new ForwardAutonomous(6000, -0.6)));
 		} else if (SmartDashboard.getBoolean("Backwards")) {
 			autoController = new AutoController(new ForwardAutonomous(6000, 0.6));
 		}
+		*/
+		autoDriveDistance = SmartDashboard.getNumber("Distance");
+		AutoController controller = new AutoController(new DistanceAutonomous(autoDriveDistance, -0.5, encoder));
+		controller.motorSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
+		autoController = controller;
 		
     	if (autoController != null) {
     		autoController.autonomousInit(this);
@@ -219,20 +211,19 @@ public class Robot extends IterativeRobot implements IRobot {
     }
 
     public void commonPeriodic() {
-    	// MOTOR_POWER_FACTOR = SmartDashboard.getNumber("Motor Tweak");
-
-    	int left = leftMotor.getEncVelocity();
-    	// int right = rightMotor.getEncVelocity();
-    	/*
-    	if (left != 0) {
-        	System.out.println("Left motor " + left);
-    	}
-    	if (right != 0) {
-    		System.out.println("Right motor " + right);
-    	}
-    	*/
+    	autoDriveDistance = SmartDashboard.getNumber("Distance");
+    	SmartDashboard.putNumber("Distance", autoDriveDistance);
+    	initialLidarSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
+    	SmartDashboard.putNumber("Initial Lidar Speed", initialLidarSpeed);
+    	SmartDashboard.putNumber("Left Encoder", leftMotor.getEncPosition());
+    	SmartDashboard.putNumber("Right Encoder", rightMotor.getEncPosition());
     }
 
+    @Override
+    public void disabledPeriodic() {
+    	commonPeriodic();
+    }
+    
 	@Override
 	public void setLeftSpeed(double speed) {
 		leftSlave.set(speed * MOTOR_POWER_FACTOR * robotSpeed);

@@ -15,10 +15,6 @@ public class TestController implements IRobotController {
 	public TestController(IGamepad gamepad) {
 		this.gamepad = gamepad;
 	}
-	
-	@Override
-	public void robotInit(IRobot robot) {
-	}
 
 	@Override
 	public void autonomousInit(IRobot robot) {

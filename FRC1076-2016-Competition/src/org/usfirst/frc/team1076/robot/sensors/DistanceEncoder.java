@@ -22,7 +22,7 @@ public class DistanceEncoder implements IDistanceEncoder {
 	
 	public void updateDistance() {
 		// This function should be called often.
-		double deltaCount = getRaw() - countAccumulator;
+		double deltaCount = Math.abs(getRaw() - countAccumulator);
 		GearStates currentGear = gearShifter.getGearState();
 		countAccumulator = getRaw();
 		
@@ -61,7 +61,7 @@ public class DistanceEncoder implements IDistanceEncoder {
 	public double getRaw() {
 		return encoder.getRaw();
 	}
-	
+
 	public double highGearCountsToInches(double counts) {
 		return counts / COUNTS_PER_MOTOR_ROTATION 
 				/ HIGH_GEAR_RATIO * INCHES_PER_WHEEL_ROTATION;
