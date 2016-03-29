@@ -42,7 +42,7 @@ public class SensorDataTest {
 	@Test
 	public void testVisionMessageOk() {
 		String message = "{\"sender\": \"vision\","
-				+ "\"message\": \"heading and range\","
+				+ "\"message\": \"range and heading\","
 				+ "\"status\": \"ok\","
 				+ "\"heading\": 42,"
 				+ "\"range\": 12}";
@@ -57,12 +57,12 @@ public class SensorDataTest {
 	public void testVisionMessageSides() {
 		data.setFieldPosition(FieldPosition.Left);
 		String leftMessage = "{\"sender\": \"vision\","
-				+ "\"message\": \"heading and range\","
+				+ "\"message\": \"range and heading\","
 				+ "\"status\": \"left\","
 				+ "\"heading\": 1,"
 				+ "\"range\": 2}";
 		String rightMessage = "{\"sender\": \"vision\","
-				+ "\"message\": \"heading and range\","
+				+ "\"message\": \"range and heading\","
 				+ "\"status\": \"right\","
 				+ "\"heading\": 3,"
 				+ "\"range\": 4}";
