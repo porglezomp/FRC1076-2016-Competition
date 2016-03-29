@@ -18,6 +18,11 @@ import org.usfirst.frc.team1076.robot.gamepad.TankInput;
 import org.usfirst.frc.team1076.robot.sensors.DistanceEncoder;
 import org.usfirst.frc.team1076.robot.sensors.IDistanceEncoder;
 import org.usfirst.frc.team1076.robot.statemachine.DistanceAutonomous;
+import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
+import org.usfirst.frc.team1076.robot.statemachine.IntakeAutonomous;
+import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
+import org.usfirst.frc.team1076.robot.statemachine.RotateAutonomous;
+import org.usfirst.frc.team1076.robot.statemachine.VisionAutonomous;
 import org.usfirst.frc.team1076.udp.Channel;
 import org.usfirst.frc.team1076.udp.IChannel;
 import org.usfirst.frc.team1076.udp.SensorData;
@@ -119,7 +124,7 @@ public class Robot extends IterativeRobot implements IRobot {
 		IOperatorInput operator = new OperatorInput(operatorGamepad);
 		teleopController = new TeleopController(arcade, operator, tank, arcade);
 		encoder = new DistanceEncoder(new MotorEncoder(leftMotor), gearShifter);
-		autoController = new AutoController(new DistanceAutonomous(156, -0.5, encoder));
+		autoController = new AutoController(new NothingAutonomous());
 		testController = new TestController(driverGamepad);
 		
 		IChannel channel = new Channel(5880);
@@ -147,9 +152,16 @@ public class Robot extends IterativeRobot implements IRobot {
 		}
 		*/
 		autoDriveDistance = SmartDashboard.getNumber("Distance");
-		AutoController controller = new AutoController(new DistanceAutonomous(autoDriveDistance, -0.5, encoder));
 		lidarMotorSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
-		autoController = controller;
+		autoController = new AutoController(
+				new ForwardAutonomous(600, -0.5)
+				.addNext(new RotateAutonomous(320, -1, RotateAutonomous.TurnDirection.Left))
+				.addNext(new ForwardAutonomous(4100, -0.5))
+				.addNext(new RotateAutonomous(750, -1, RotateAutonomous.TurnDirection.Right))
+				.addNext(new VisionAutonomous(1500, -0.7, sensorData))
+				.addNext(new IntakeAutonomous(1500, -1))
+				.addNext(new IntakeAutonomous(1000, 1))
+				.addNext(new IntakeAutonomous(1500, -1)));
 		
     	if (autoController != null) {
     		autoController.autonomousInit(this);
