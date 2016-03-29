@@ -28,10 +28,6 @@ public class AutoController implements IRobotController {
 		}
 	}
 	
-	private final double RPM_MIN = 260;
-	private final double RPM_MAX = 280;
-    public double motorSpeed = 7;
-	
 	@Override
 	public void autonomousPeriodic(IRobot robot) {
 		gearShifter.shiftLow(robot);
@@ -49,13 +45,6 @@ public class AutoController implements IRobotController {
 		robot.setLeftSpeed(drive.left);
 		robot.setRightSpeed(drive.right);
 		robot.setIntakeElevation(autoState.intakeRaiseState());
-		robot.setBrakes(autoState.setBrakes());
-	    if (robot.getSensorData().getLidarRpm() < RPM_MIN) {
-	    	motorSpeed *= 1.01;
-	    } else if (robot.getSensorData().getLidarRpm() > RPM_MAX) {
-	    	motorSpeed *= 0.99;
-	    }
-	    robot.setLidarSpeed(motorSpeed);
 	}
 
 	@Override

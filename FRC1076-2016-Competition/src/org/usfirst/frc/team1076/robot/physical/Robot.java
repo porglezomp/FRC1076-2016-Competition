@@ -73,6 +73,10 @@ public class Robot extends IterativeRobot implements IRobot {
 	double autoDriveDistance = 156;
 	double initialLidarSpeed = 7;
 	
+	private final double RPM_MIN = 260;
+	private final double RPM_MAX = 280;
+    private double lidarMotorSpeed = 7;
+	
 	SensorData sensorData;
 	GearShifter gearShifter = new GearShifter();
 	
@@ -117,7 +121,7 @@ public class Robot extends IterativeRobot implements IRobot {
 		encoder = new DistanceEncoder(new MotorEncoder(leftMotor), gearShifter);
 		autoController = new AutoController(new DistanceAutonomous(156, -0.5, encoder));
 		testController = new TestController(driverGamepad);
-    	
+		
 		IChannel channel = new Channel(5880);
 		sensorData = new SensorData(channel, FieldPosition.Right, new Gyro(new AnalogGyro(0)));
 		// TODO: Figure out what analog input channel we'll be using.
@@ -144,7 +148,7 @@ public class Robot extends IterativeRobot implements IRobot {
 		*/
 		autoDriveDistance = SmartDashboard.getNumber("Distance");
 		AutoController controller = new AutoController(new DistanceAutonomous(autoDriveDistance, -0.5, encoder));
-		controller.motorSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
+		lidarMotorSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
 		autoController = controller;
 		
     	if (autoController != null) {
@@ -159,6 +163,7 @@ public class Robot extends IterativeRobot implements IRobot {
      */
 	@Override
     public void autonomousPeriodic() {
+		controlLidarMotor();
 		commonPeriodic();
 		
     	if (autoController != null) {
@@ -182,6 +187,7 @@ public class Robot extends IterativeRobot implements IRobot {
      */
     @Override
     public void teleopPeriodic() {
+    	controlLidarMotor();
     	commonPeriodic();
     	
     	if (teleopController != null) {
@@ -308,5 +314,14 @@ public class Robot extends IterativeRobot implements IRobot {
 			intakePneumatic.setNeutral();
 			break;
 		}
+	}
+	
+	private void controlLidarMotor() {
+		if (getSensorData().getLidarRpm() < RPM_MIN) {
+	    	lidarMotorSpeed *= 1.01;
+	    } else if (getSensorData().getLidarRpm() > RPM_MAX) {
+	    	lidarMotorSpeed *= 0.99;
+	    }
+	    setLidarSpeed(lidarMotorSpeed);
 	}
 }
