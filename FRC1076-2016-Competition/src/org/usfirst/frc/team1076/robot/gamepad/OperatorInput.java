@@ -29,8 +29,10 @@ public class OperatorInput implements IOperatorInput {
 
 	@Override
 	public IntakeRaiseState intakeRaiseState() {
-		boolean up = gamepad.getButton(GamepadButton.LB);
-		boolean down = gamepad.getButton(GamepadButton.RB);
+		boolean up = gamepad.getButton(GamepadButton.LB) ||
+				gamepad.getButton(GamepadButton.Y);
+		boolean down = gamepad.getButton(GamepadButton.RB) ||
+				gamepad.getButton(GamepadButton.A);
 		if (up && down) {
 			return IntakeRaiseState.Neutral;
 		} else if (up) {
