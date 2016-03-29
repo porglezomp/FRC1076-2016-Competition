@@ -175,6 +175,8 @@ public class Robot extends IterativeRobot implements IRobot {
 
     @Override
     public void teleopInit() {
+    	lidarMotorSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
+    	
     	if (teleopController != null) {
     		teleopController.teleopInit(this);
     	} else {

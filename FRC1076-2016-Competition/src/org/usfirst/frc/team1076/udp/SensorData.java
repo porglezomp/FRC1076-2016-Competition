@@ -119,7 +119,7 @@ public class SensorData implements ISensorData {
 		double heading, range;
 		String message = (String) msg.get("message");
 		// TODO: Handle errors more specifically
-		if (msg.get("status").equals("ok")) {
+		if (!msg.get("status").equals("ok")) {
 			System.err.println("Error: " + msg);
 			return;
 		}
@@ -133,6 +133,7 @@ public class SensorData implements ISensorData {
 		case "range at heading":
 			heading = ((Number) msg.get("heading")).doubleValue();
 			range = ((Number) msg.get("range")).doubleValue();
+			break;
 		case "periodic":
 			double rpm = ((Number) msg.get("rpm")).doubleValue();
 			this.lidarRpm = rpm;
