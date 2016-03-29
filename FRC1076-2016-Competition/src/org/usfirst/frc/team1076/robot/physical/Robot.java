@@ -212,12 +212,14 @@ public class Robot extends IterativeRobot implements IRobot {
     }
 
     public void commonPeriodic() {
+    	sensorData.interpretData();
     	autoDriveDistance = SmartDashboard.getNumber("Distance");
     	SmartDashboard.putNumber("Distance", autoDriveDistance);
     	initialLidarSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
     	SmartDashboard.putNumber("Initial Lidar Speed", initialLidarSpeed);
     	SmartDashboard.putNumber("Left Encoder", leftMotor.getEncPosition());
     	SmartDashboard.putNumber("Right Encoder", rightMotor.getEncPosition());
+    	SmartDashboard.putNumber("Vision Heading", sensorData.getVisionHeading());
     }
 
     @Override

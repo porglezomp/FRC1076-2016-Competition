@@ -78,22 +78,27 @@ public class SensorData implements ISensorData {
 		String message = (String) msg.get("message");
 		switch (message.toLowerCase()) {
 		case "range and heading":
-			System.out.println(message);
 			String status = (String) msg.get("status");
-			double heading = ((Number) msg.get("heading")).doubleValue();
-			double range = ((Number) msg.get("range")).doubleValue();
+			double heading;
+			double range;
 			switch (status) {
 			case "left":
 				if (position == FieldPosition.Left) {
+					heading = ((Number) msg.get("heading")).doubleValue();
+					range = ((Number) msg.get("range")).doubleValue();
 					setVision(heading, range);
 				}
 				break;
 			case "right":
 				if (position == FieldPosition.Right) {
+					heading = ((Number) msg.get("heading")).doubleValue();
+					range = ((Number) msg.get("range")).doubleValue();
 					setVision(heading, range);
 				}
 				break;
 			case "ok":
+				heading = ((Number) msg.get("heading")).doubleValue();
+				range = ((Number) msg.get("range")).doubleValue();
 				setVision(heading, range);
 				break;
 			case "error":
