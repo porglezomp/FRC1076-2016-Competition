@@ -74,6 +74,7 @@ public class Robot extends IterativeRobot implements IRobot {
 	
 	@Override
 	public void disabledInit() {
+		setBrakes(true);
 	}
 	
     /**

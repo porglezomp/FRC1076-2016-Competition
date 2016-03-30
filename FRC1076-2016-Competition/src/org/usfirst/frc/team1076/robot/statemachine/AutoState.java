@@ -39,6 +39,10 @@ public abstract class AutoState {
 	public double intakeSpeed() {
 		return 0;
 	}
+	
+	public boolean setBrakes() {
+		return false;
+	}
 
 	public IntakeRaiseState intakeRaiseState() {
 		return IntakeRaiseState.Neutral;
