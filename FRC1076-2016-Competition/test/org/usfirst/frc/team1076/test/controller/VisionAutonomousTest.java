@@ -56,14 +56,14 @@ public class VisionAutonomousTest {
 	public void testShouldChange() {
 		sensorData.setVision(100, r);
 		double speed = 0.5;
-		VisionAutonomous auto = new VisionAutonomous(50, speed, sensorData);
+		VisionAutonomous auto = new VisionAutonomous(10, speed, sensorData);
 		auto.init();
 		assertFalse("Should not change, no motor created.", auto.shouldChange());
 		MotorOutput motor = auto.driveTrainSpeed();
 		assertFalse("Should not change even after motor was created.", auto.shouldChange());
 		
 		try {
-		    Thread.sleep(50); 
+		    Thread.sleep(11);
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}

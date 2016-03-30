@@ -57,7 +57,7 @@ public class VisionAutonomous extends AutoState {
 
 	@Override
 	public boolean shouldChange() {
-		return started && TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - timeStart) > timeLimit;
+		return started && TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - timeStart) >= timeLimit;
 	}
 	
 	public double getTolerance() {
