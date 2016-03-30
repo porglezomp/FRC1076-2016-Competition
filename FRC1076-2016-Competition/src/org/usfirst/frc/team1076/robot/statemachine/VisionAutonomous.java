@@ -19,6 +19,8 @@ public class VisionAutonomous extends AutoState {
 	double speed;
 	long timeLimit;
 	long timeStart;
+	// Protect against shouldChange() returning true before actually driving.
+	// Also protect against forgetting to call init().
 	boolean started = false;
 	
 	// TODO: Make LIDAR work so we can drive based off of LIDAR range instead of constant time.
@@ -38,6 +40,10 @@ public class VisionAutonomous extends AutoState {
 	@Override
 	public MotorOutput driveTrainSpeed() {
 		currentHeading = sensorData.getVisionHeading();
+		
+		if (shouldChange()) {
+			return new MotorOutput(0, 0);
+		}
 		
 		if (currentHeading > TOLERANCE) {
 			// Drive leftwards.
