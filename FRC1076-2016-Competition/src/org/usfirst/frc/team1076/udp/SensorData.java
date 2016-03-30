@@ -96,6 +96,12 @@ public class SensorData implements ISensorData {
 			case "ok":
 				setVision(heading, range);
 				break;
+			case "error":
+				System.err.println("Unknown error in vision status.");
+				break;
+			case "no target":
+			case "too many targets":
+				System.out.println("Status of \"" + status + "\" in vision message.");
 			default:
 			}
 			break;
