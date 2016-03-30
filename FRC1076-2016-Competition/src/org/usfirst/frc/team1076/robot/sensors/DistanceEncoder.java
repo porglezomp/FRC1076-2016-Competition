@@ -19,14 +19,17 @@ public class DistanceEncoder implements IDistanceEncoder {
 		this.encoder = encoder;
 		this.gearShifter = gearShifter;
 	}
-	
+
 	public void updateDistance() {
-		// This function should be called often.
+		// This function should be called often and whenever the gearShifter changes gears.
 		double deltaCount = getRaw() - countAccumulator;
-		GearStates currentGear = gearShifter.getGearState();
 		countAccumulator = getRaw();
+		GearStates currentGear = gearShifter.getGearState();
 		
-		// Add the distance traveled since last time we checked.
+		if (currentGear == null) {
+			System.err.println("currentGear is null or gearShifter is null in DistanceEncoder");
+			return;
+		}
 		switch (currentGear) {
 		case High:
 			totalDistance += highGearCountsToInches(deltaCount);
