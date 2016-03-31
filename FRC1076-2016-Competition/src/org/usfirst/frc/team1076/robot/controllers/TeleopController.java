@@ -60,7 +60,6 @@ public class TeleopController implements IRobotController {
     	} else if (driverInput.shiftLow()) {
     		gearShifter.shiftLow(robot);
     	} else {
-    		gearShifter.shiftLow(robot);
     		// gearShifter.shiftAuto(robot);
     	}
 	}
