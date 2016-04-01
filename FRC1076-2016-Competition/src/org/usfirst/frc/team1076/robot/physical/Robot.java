@@ -17,7 +17,6 @@ import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
 import org.usfirst.frc.team1076.robot.sensors.DistanceEncoder;
 import org.usfirst.frc.team1076.robot.sensors.IDistanceEncoder;
-import org.usfirst.frc.team1076.robot.statemachine.DistanceAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.IntakeAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
@@ -48,7 +47,9 @@ public class Robot extends IterativeRobot implements IRobot {
 	static final int RIGHT_INDEX = 1;
 	static final int RIGHT_SLAVE_INDEX = 2;
 	static final int INTAKE_INDEX = 5;
-	static final int ARM_INDEX = 6;
+	static final int ARM_INDEX = 8;
+	static final int ARM_EXTEND_INDEX = 7;
+	static final int ARM_EXTEND_SLAVE_INDEX = 6;
 	
 	double MOTOR_POWER_FACTOR = 0.9;
 	
@@ -57,7 +58,9 @@ public class Robot extends IterativeRobot implements IRobot {
 	CANTalon rightMotor = new CANTalon(RIGHT_INDEX);
 	CANTalon rightSlave = new CANTalon(RIGHT_SLAVE_INDEX);
 	CANTalon intakeMotor = new CANTalon(INTAKE_INDEX);
-	// CANTalon armMotor = new CANTalon(ARM_INDEX);
+	CANTalon armExtendMotor = new CANTalon(ARM_EXTEND_INDEX);
+	CANTalon armExtendSlave = new CANTalon(ARM_EXTEND_SLAVE_INDEX);
+	CANTalon armMotor = new CANTalon(ARM_INDEX);
 	Servo lidarServo = new Servo(0);
 	
 	Compressor compressor = new Compressor(0);
@@ -70,8 +73,9 @@ public class Robot extends IterativeRobot implements IRobot {
 	IRobotController testController;
 	
 	double robotSpeed = 1;
-	double armSpeed = 1;
 	double intakeSpeed = 1;
+	double armSpeed = 0.5;
+	double armExtendSpeed = 1;
 	double upperGearThreshold = 0.6;
 	double lowerGearThreshold = 0.4;
 	
@@ -109,6 +113,9 @@ public class Robot extends IterativeRobot implements IRobot {
 		// rightSlave.set(RIGHT_INDEX);
 		leftSlave.setInverted(true);
 		leftMotor.setInverted(true);
+		armMotor.enableBrakeMode(true);
+		armExtendMotor.enableBrakeMode(true);
+		armExtendSlave.enableBrakeMode(true);
 		
 		// leftSlave.changeControlMode(TalonControlMode.Follower);
 		// leftSlave.set(LEFT_INDEX);
@@ -261,7 +268,13 @@ public class Robot extends IterativeRobot implements IRobot {
 	
 	@Override
 	public void setArmSpeed(double speed) {
-		// armMotor.set(speed * armSpeed);
+		armMotor.set(speed * armSpeed);
+	}
+	
+	@Override
+	public void setArmExtendSpeed(double speed) {
+		armExtendMotor.set(speed * armExtendSpeed);
+		armExtendSlave.set(speed * armExtendSpeed);
 	}
 	
 	@Override
