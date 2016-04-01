@@ -82,6 +82,11 @@ public class Channel implements IChannel {
 		serverSocket.send(new UDPMessage(message, target).sendPacket(this.port));
 	}
 	
+	@Override
+	public void sendMessage(String message, InetAddress target, int port) throws IOException {
+		serverSocket.send(new UDPMessage(message, target).sendPacket(port));
+	}
+	
 	public void close() {
 		receiveWorker.interrupt();
 	}

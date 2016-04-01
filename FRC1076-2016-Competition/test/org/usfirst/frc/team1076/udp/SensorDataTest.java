@@ -2,6 +2,13 @@ package org.usfirst.frc.team1076.udp;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 import org.usfirst.frc.team1076.test.mock.MockChannel;
@@ -15,7 +22,7 @@ public class SensorDataTest {
 	
 	@Before
 	public void setupChannelAndData() {
-		channel = new MockChannel();
+		channel = new MockChannel(5880);
 		data = new SensorData(channel, FieldPosition.Left, new MockGyro());
 	}
 	
@@ -80,5 +87,34 @@ public class SensorDataTest {
 		
 		assertEquals(3, data.getVisionHeading(), EPSILON);
 		assertEquals(4, data.getVisionRange(), EPSILON);
+	}
+	
+	@Test
+	public void testVisionSendColor() throws IOException, ParseException {
+		DatagramSocket socket = new DatagramSocket(5888);
+		socket.setSoTimeout(1000);
+		
+		data.sendAttackColor("127.0.0.1", "red");
+		DatagramPacket packet = new DatagramPacket(new byte[1024], 1024	);
+		socket.receive(packet);
+		String message = new String(packet.getData());
+		message = message.substring(0, packet.getLength());
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject) parser.parse(message);
+		assertEquals("red", object.get("color"));
+		assertEquals("robot", object.get("sender"));
+		assertEquals("target", object.get("message"));
+		
+		data.sendAttackColor("127.0.0.1", "blue");
+		packet = new DatagramPacket(new byte[1024], 1024);
+		socket.receive(packet);
+		message = new String(packet.getData());
+		message = message.substring(0, packet.getLength());
+		object = (JSONObject) parser.parse(message);
+		assertEquals("blue", object.get("color"));
+		assertEquals("robot", object.get("sender"));
+		assertEquals("target", object.get("message"));
+		
+		socket.close();
 	}
 }

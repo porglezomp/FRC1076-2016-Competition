@@ -106,6 +106,7 @@ public class Robot extends IterativeRobot implements IRobot {
 		SmartDashboard.putBoolean("Backwards", false);		
     	SmartDashboard.putNumber("LIDAR Speed", 80);
     	SmartDashboard.putNumber("Motor Tweak", MOTOR_POWER_FACTOR);
+    	SmartDashboard.putString("Enemy Color", "red");
 		SmartDashboard.putNumber("Distance", autoDriveDistance);
 		SmartDashboard.putNumber("Initial Lidar Speed", initialLidarSpeed);
     	SmartDashboard.putBoolean("Auto Program Enabled", false);
@@ -157,10 +158,24 @@ public class Robot extends IterativeRobot implements IRobot {
 	 */
 	@Override
     public void autonomousInit() {
+		sensorData.sendAttackColor("tegra-ubuntu:5888", SmartDashboard.getString("Enemy Color"));
+		
 		if (SmartDashboard.getBoolean("Auto Program Enabled")) {
 			String source = SmartDashboard.getString("Auto Program");
 			AutoState program = StateMachineCompiler.compile(source, sensorData);
 			autoController = new AutoController(program);
+		} else {
+			autoDriveDistance = SmartDashboard.getNumber("Distance");
+			lidarMotorSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
+			autoController = new AutoController(
+					new ForwardAutonomous(600, -0.5)
+					.addNext(new RotateAutonomous(320, -1, RotateAutonomous.TurnDirection.Left))
+					.addNext(new ForwardAutonomous(4100, -0.5))
+					.addNext(new RotateAutonomous(750, -1, RotateAutonomous.TurnDirection.Right))
+					.addNext(new VisionAutonomous(1500, -0.7, sensorData))
+					.addNext(new IntakeAutonomous(1500, -1))
+					.addNext(new IntakeAutonomous(1000, 1))
+					.addNext(new IntakeAutonomous(1500, -1)));
 		}
 		/*
 		if (SmartDashboard.getBoolean("Low Bar")) {
@@ -170,17 +185,6 @@ public class Robot extends IterativeRobot implements IRobot {
 			autoController = new AutoController(new ForwardAutonomous(6000, 0.6));
 		}
 		*/
-		autoDriveDistance = SmartDashboard.getNumber("Distance");
-		lidarMotorSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
-		autoController = new AutoController(
-				new ForwardAutonomous(600, -0.5)
-				.addNext(new RotateAutonomous(320, -1, RotateAutonomous.TurnDirection.Left))
-				.addNext(new ForwardAutonomous(4100, -0.5))
-				.addNext(new RotateAutonomous(750, -1, RotateAutonomous.TurnDirection.Right))
-				.addNext(new VisionAutonomous(1500, -0.7, sensorData))
-				.addNext(new IntakeAutonomous(1500, -1))
-				.addNext(new IntakeAutonomous(1000, 1))
-				.addNext(new IntakeAutonomous(1500, -1)));
 		
     	if (autoController != null) {
     		autoController.autonomousInit(this);

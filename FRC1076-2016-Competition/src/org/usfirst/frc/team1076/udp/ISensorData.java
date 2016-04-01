@@ -23,4 +23,6 @@ public interface ISensorData {
 	double getLeftFront();
 	double getRightFront();
 	IGyro getGyro();
+	
+	void sendAttackColor(String destination, String color);
 }
