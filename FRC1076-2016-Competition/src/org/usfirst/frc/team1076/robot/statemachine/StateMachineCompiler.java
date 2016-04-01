@@ -89,12 +89,12 @@ public class StateMachineCompiler {
 					nextState = new NothingAutonomous();
 					break;
 				default:
-					throw new Exception("Unrecognized operation " + parts[0]);
+					throw new Exception("Unrecognized operation '" + parts[0] + "'");
 				}
 				state.addNext(nextState);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
-				System.out.println("Error in " + segment);
+				System.out.println("Error in '" + segment + "'");
 				continue;
 			}
 		}
