@@ -2,6 +2,7 @@ package org.usfirst.frc.team1076.test.controller;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.usfirst.frc.team1076.robot.controllers.TeleopController;
 import org.usfirst.frc.team1076.test.mock.MockDriverInput;
@@ -15,9 +16,13 @@ public class TeleopControllerTest {
 	TeleopController controller = new TeleopController(driverInput, operatorInput, driverInput, driverInput);
 	MockRobot robot = new MockRobot();
 	
+	@Before
+	public void reset() {
+		driverInput.reset();
+	}
+	
 	@Test
 	public void testMotion() {
-		driverInput.reset();
 		for (int i = -100; i <= 100; i++) {
 			for (int j = -100; j <= 100; j++) {
 				double left = i / 100.0;
@@ -35,7 +40,6 @@ public class TeleopControllerTest {
 	
 	@Test
 	public void testArmMotion() {
-		operatorInput.reset();
 		for (int i = -100; i <= 100; i++) {
 			double value = i / 100.0;
 			operatorInput.arm = value;
@@ -46,8 +50,18 @@ public class TeleopControllerTest {
 	}
 	
 	@Test
+	public void testArmExtension() {
+		for (int i = -100; i <= 100; i++) {
+			double value = i / 100.0;
+			operatorInput.extend = value;
+			controller.teleopPeriodic(robot);
+			assertEquals("The arm extension should match the extension input",
+					value, robot.extend, EPSILON);
+		}
+	}
+	
+	@Test
 	public void testIntakeMotion() {
-		operatorInput.reset();
 		for (int i = -100; i <= 100; i++) {
 			double value = i / 100.0;
 			operatorInput.intake = value;
@@ -59,7 +73,6 @@ public class TeleopControllerTest {
 	
 	@Test
 	public void testBrakes() {
-		driverInput.reset();
 		driverInput.brakes = true;
 		controller.teleopPeriodic(robot);
 		assertEquals(true, robot.brakes);
