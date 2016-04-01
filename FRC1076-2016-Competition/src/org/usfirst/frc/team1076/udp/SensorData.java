@@ -79,20 +79,26 @@ public class SensorData implements ISensorData {
 		switch (message.toLowerCase()) {
 		case "range and heading":
 			String status = (String) msg.get("status");
-			double heading = ((Number) msg.get("heading")).doubleValue();
-			double range = ((Number) msg.get("range")).doubleValue();
+			double heading;
+			double range;
 			switch (status) {
 			case "left":
 				if (position == FieldPosition.Left) {
+					heading = ((Number) msg.get("heading")).doubleValue();
+					range = ((Number) msg.get("range")).doubleValue();
 					setVision(heading, range);
 				}
 				break;
 			case "right":
 				if (position == FieldPosition.Right) {
+					heading = ((Number) msg.get("heading")).doubleValue();
+					range = ((Number) msg.get("range")).doubleValue();
 					setVision(heading, range);
 				}
 				break;
 			case "ok":
+				heading = ((Number) msg.get("heading")).doubleValue();
+				range = ((Number) msg.get("range")).doubleValue();
 				setVision(heading, range);
 				break;
 			case "error":
@@ -113,7 +119,7 @@ public class SensorData implements ISensorData {
 		double heading, range;
 		String message = (String) msg.get("message");
 		// TODO: Handle errors more specifically
-		if (msg.get("status").equals("ok")) {
+		if (!msg.get("status").equals("ok")) {
 			System.err.println("Error: " + msg);
 			return;
 		}
@@ -127,6 +133,7 @@ public class SensorData implements ISensorData {
 		case "range at heading":
 			heading = ((Number) msg.get("heading")).doubleValue();
 			range = ((Number) msg.get("range")).doubleValue();
+			break;
 		case "periodic":
 			double rpm = ((Number) msg.get("rpm")).doubleValue();
 			this.lidarRpm = rpm;

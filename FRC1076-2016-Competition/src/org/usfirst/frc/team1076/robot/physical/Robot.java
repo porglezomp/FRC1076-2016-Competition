@@ -15,10 +15,14 @@ import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput.IntakeRaiseState;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
+import org.usfirst.frc.team1076.robot.sensors.DistanceEncoder;
+import org.usfirst.frc.team1076.robot.sensors.IDistanceEncoder;
 import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
-import org.usfirst.frc.team1076.robot.statemachine.IntakeElevationAutonomous;
+import org.usfirst.frc.team1076.robot.statemachine.IntakeAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
+import org.usfirst.frc.team1076.robot.statemachine.RotateAutonomous;
+import org.usfirst.frc.team1076.robot.statemachine.VisionAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.StateMachineCompiler;
 import org.usfirst.frc.team1076.udp.Channel;
 import org.usfirst.frc.team1076.udp.IChannel;
@@ -45,7 +49,9 @@ public class Robot extends IterativeRobot implements IRobot {
 	static final int RIGHT_INDEX = 1;
 	static final int RIGHT_SLAVE_INDEX = 2;
 	static final int INTAKE_INDEX = 5;
-	static final int ARM_INDEX = 6;
+	static final int ARM_INDEX = 8;
+	static final int ARM_EXTEND_INDEX = 7;
+	static final int ARM_EXTEND_SLAVE_INDEX = 6;
 	
 	double MOTOR_POWER_FACTOR = 0.9;
 	
@@ -54,25 +60,36 @@ public class Robot extends IterativeRobot implements IRobot {
 	CANTalon rightMotor = new CANTalon(RIGHT_INDEX);
 	CANTalon rightSlave = new CANTalon(RIGHT_SLAVE_INDEX);
 	CANTalon intakeMotor = new CANTalon(INTAKE_INDEX);
-	// CANTalon armMotor = new CANTalon(ARM_INDEX);
+	CANTalon armExtendMotor = new CANTalon(ARM_EXTEND_INDEX);
+	CANTalon armExtendSlave = new CANTalon(ARM_EXTEND_SLAVE_INDEX);
+	CANTalon armMotor = new CANTalon(ARM_INDEX);
 	Servo lidarServo = new Servo(0);
 	
 	Compressor compressor = new Compressor(0);
-	ISolenoid intakePneumatic = new TwoSolenoid(2, 3);
-	ISolenoid shifterPneumatic = new TwoSolenoid(0, 1);
+	ISolenoid intakePneumatic = new OneSolenoid(1);
+	ISolenoid shifterPneumatic = new OneSolenoid(0);
+	IDistanceEncoder encoder;
 	
 	IRobotController teleopController;
 	IRobotController autoController;
 	IRobotController testController;
 	
 	double robotSpeed = 1;
-	double armSpeed = 1;
 	double intakeSpeed = 1;
+	double armSpeed = 0.5;
+	double armExtendSpeed = 1;
 	double upperGearThreshold = 0.6;
 	double lowerGearThreshold = 0.4;
 	
+	double autoDriveDistance = 156;
+	double initialLidarSpeed = 7;
+	
+	private final double RPM_MIN = 260;
+	private final double RPM_MAX = 280;
+    private double lidarMotorSpeed = 7;
+	
 	SensorData sensorData;
-	GearShifter gearShifter;
+	GearShifter gearShifter = new GearShifter();
 	
 	@Override
 	public void disabledInit() {
@@ -89,24 +106,30 @@ public class Robot extends IterativeRobot implements IRobot {
 		SmartDashboard.putBoolean("Backwards", false);		
     	SmartDashboard.putNumber("LIDAR Speed", 80);
     	SmartDashboard.putNumber("Motor Tweak", MOTOR_POWER_FACTOR);
+		SmartDashboard.putNumber("Distance", autoDriveDistance);
+		SmartDashboard.putNumber("Initial Lidar Speed", initialLidarSpeed);
     	SmartDashboard.putBoolean("Auto Program Enabled", false);
     	SmartDashboard.putString("Auto Program", "elevate up ; forward 3.9 0.65 ; elevate down ;"
     			+ "forward 0.6 0.5 ; rotate left 0.3 ; forward 3.5 ; rotate right 0.59 ;"
     			+ "vision 2.5 0.45 ; intake 1 out ; intake 0.5 in ; rotate right 0.05 ;"
     			+ "intake 1 out ; intake 0.5 in ; rotate right 0.05 ; intake 1 out");
-		
+
 		// Initialize the physical components before the controllers,
 		// in case they depend on them.
 		// rightSlave.changeControlMode(TalonControlMode.Follower);
 		// rightSlave.set(RIGHT_INDEX);
 		leftSlave.setInverted(true);
 		leftMotor.setInverted(true);
+		armMotor.enableBrakeMode(true);
+		armExtendMotor.enableBrakeMode(true);
+		armExtendSlave.enableBrakeMode(true);
 		
 		// leftSlave.changeControlMode(TalonControlMode.Follower);
 		// leftSlave.set(LEFT_INDEX);
 		
 		compressor.setClosedLoopControl(true);
 		setIntakeElevation(IntakeRaiseState.Raised);
+		gearShifter.shiftLow(this);
 		
 		IGamepad driverGamepad = new Gamepad(0);
 		IGamepad operatorGamepad = new Gamepad(1);
@@ -114,34 +137,13 @@ public class Robot extends IterativeRobot implements IRobot {
 		IDriverInput arcade = new ArcadeInput(driverGamepad);
 		IOperatorInput operator = new OperatorInput(operatorGamepad);
 		teleopController = new TeleopController(arcade, operator, tank, arcade);
-		autoController = new AutoController(new ForwardAutonomous(6000, -0.6));
+		encoder = new DistanceEncoder(new MotorEncoder(leftMotor), gearShifter);
+		autoController = new AutoController(new NothingAutonomous());
 		testController = new TestController(driverGamepad);
-
-    	if (teleopController != null) {
-    		teleopController.robotInit(this);
-    	} else {
-    		System.out.println("Teleop Controller on Robot is null in robotInit()");
-    	}
-    	
-    	if (autoController != null) {
-    		autoController.robotInit(this);
-    	} else {
-    		System.out.println("Autonomous Controller on Robot is null in robotInit()");
-    	}
-    	
-    	if (testController != null) {
-    		testController.robotInit(this);
-    	} else {
-    		System.out.println("Test Controller on Robot is null in robotInit()");
-    	}
-    	
-    	
+		
 		IChannel channel = new Channel(5880);
 		sensorData = new SensorData(channel, FieldPosition.Right, new Gyro(new AnalogGyro(0)));
 		// TODO: Figure out what analog input channel we'll be using.
-		
-		gearShifter = new GearShifter();
-		gearShifter.shiftLow(this);
 	}
     
 	/**
@@ -159,12 +161,26 @@ public class Robot extends IterativeRobot implements IRobot {
 			String source = SmartDashboard.getString("Auto Program");
 			AutoState program = StateMachineCompiler.compile(source, sensorData);
 			autoController = new AutoController(program);
-		} else if (SmartDashboard.getBoolean("Low Bar")) {
+		}
+		/*
+		if (SmartDashboard.getBoolean("Low Bar")) {
 			autoController = new AutoController(new IntakeElevationAutonomous(IntakeRaiseState.Lowered)
 					.addNext(new ForwardAutonomous(6000, -0.6)));
 		} else if (SmartDashboard.getBoolean("Backwards")) {
 			autoController = new AutoController(new ForwardAutonomous(6000, 0.6));
 		}
+		*/
+		autoDriveDistance = SmartDashboard.getNumber("Distance");
+		lidarMotorSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
+		autoController = new AutoController(
+				new ForwardAutonomous(600, -0.5)
+				.addNext(new RotateAutonomous(320, -1, RotateAutonomous.TurnDirection.Left))
+				.addNext(new ForwardAutonomous(4100, -0.5))
+				.addNext(new RotateAutonomous(750, -1, RotateAutonomous.TurnDirection.Right))
+				.addNext(new VisionAutonomous(1500, -0.7, sensorData))
+				.addNext(new IntakeAutonomous(1500, -1))
+				.addNext(new IntakeAutonomous(1000, 1))
+				.addNext(new IntakeAutonomous(1500, -1)));
 		
     	if (autoController != null) {
     		autoController.autonomousInit(this);
@@ -178,6 +194,7 @@ public class Robot extends IterativeRobot implements IRobot {
      */
 	@Override
     public void autonomousPeriodic() {
+		controlLidarMotor();
 		commonPeriodic();
 		
     	if (autoController != null) {
@@ -189,6 +206,8 @@ public class Robot extends IterativeRobot implements IRobot {
 
     @Override
     public void teleopInit() {
+    	lidarMotorSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
+    	
     	if (teleopController != null) {
     		teleopController.teleopInit(this);
     	} else {
@@ -201,6 +220,7 @@ public class Robot extends IterativeRobot implements IRobot {
      */
     @Override
     public void teleopPeriodic() {
+    	controlLidarMotor();
     	commonPeriodic();
     	
     	if (teleopController != null) {
@@ -231,20 +251,21 @@ public class Robot extends IterativeRobot implements IRobot {
     }
 
     public void commonPeriodic() {
-    	// MOTOR_POWER_FACTOR = SmartDashboard.getNumber("Motor Tweak");
-
-    	/*
-    	int left = leftMotor.getEncVelocity();
-    	int right = rightMotor.getEncVelocity();
-    	if (left != 0) {
-        	System.out.println("Left motor " + left);
-    	}
-    	if (right != 0) {
-    		System.out.println("Right motor " + right);
-    	}
-    	*/
+    	sensorData.interpretData();
+    	autoDriveDistance = SmartDashboard.getNumber("Distance");
+    	SmartDashboard.putNumber("Distance", autoDriveDistance);
+    	initialLidarSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
+    	SmartDashboard.putNumber("Initial Lidar Speed", initialLidarSpeed);
+    	SmartDashboard.putNumber("Left Encoder", leftMotor.getEncPosition());
+    	SmartDashboard.putNumber("Right Encoder", rightMotor.getEncPosition());
+    	SmartDashboard.putNumber("Vision Heading", sensorData.getVisionHeading());
     }
 
+    @Override
+    public void disabledPeriodic() {
+    	commonPeriodic();
+    }
+    
 	@Override
 	public void setLeftSpeed(double speed) {
 		leftSlave.set(speed * MOTOR_POWER_FACTOR * robotSpeed);
@@ -259,7 +280,13 @@ public class Robot extends IterativeRobot implements IRobot {
 	
 	@Override
 	public void setArmSpeed(double speed) {
-		// armMotor.set(speed * armSpeed);
+		armMotor.set(speed * armSpeed);
+	}
+	
+	@Override
+	public void setArmExtendSpeed(double speed) {
+		armExtendMotor.set(speed * armExtendSpeed);
+		armExtendSlave.set(speed * armExtendSpeed);
 	}
 	
 	@Override
@@ -290,10 +317,14 @@ public class Robot extends IterativeRobot implements IRobot {
 	public void setGear(SolenoidValue value) {
 		switch (value) {
 		case Forward:
-			shifterPneumatic.setForward();
+			// TODO: These functions may need to be swapped between
+			// the practice and competition robots.
+			// shifterPneumatic.setForward();
+			shifterPneumatic.setReverse();
 			break;
 		case Reverse:
-			shifterPneumatic.setReverse();
+			// shifterPneumatic.setReverse();
+			shifterPneumatic.setForward();
 			break;
 		case Off:
 		default:
@@ -322,5 +353,14 @@ public class Robot extends IterativeRobot implements IRobot {
 			intakePneumatic.setNeutral();
 			break;
 		}
+	}
+	
+	private void controlLidarMotor() {
+		if (getSensorData().getLidarRpm() < RPM_MIN) {
+	    	lidarMotorSpeed *= 1.01;
+	    } else if (getSensorData().getLidarRpm() > RPM_MAX) {
+	    	lidarMotorSpeed *= 0.99;
+	    }
+	    setLidarSpeed(lidarMotorSpeed);
 	}
 }

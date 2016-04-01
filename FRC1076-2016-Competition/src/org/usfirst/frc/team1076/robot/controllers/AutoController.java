@@ -4,16 +4,15 @@ import org.usfirst.frc.team1076.robot.IRobot;
 import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 import org.usfirst.frc.team1076.robot.gamepad.IDriverInput.MotorOutput;
+import org.usfirst.frc.team1076.robot.physical.GearShifter;
 
 public class AutoController implements IRobotController {
 	AutoState autoState;
+	GearShifter gearShifter = new GearShifter();
 	
 	public AutoController(AutoState mode) {
 		this.autoState = mode;
 	}
-	
-	@Override
-	public void robotInit(IRobot robot) { }
 
 	@Override
 	public void teleopInit(IRobot robot) { }
@@ -23,17 +22,15 @@ public class AutoController implements IRobotController {
 
 	@Override
 	public void autonomousInit(IRobot robot) {
+		gearShifter.shiftLow(robot);
 		if (autoState != null) {
 			autoState.init();
 		}
 	}
 	
-	private final double RPM_MIN = 240;
-	private final double RPM_MAX = 280;
-    private double motorSpeed = 7;
-	
 	@Override
 	public void autonomousPeriodic(IRobot robot) {
+		gearShifter.shiftLow(robot);
 		robot.getSensorData().interpretData();
 		if (autoState.shouldChange()) {
 			autoState = autoState.next();
@@ -48,13 +45,6 @@ public class AutoController implements IRobotController {
 		robot.setLeftSpeed(drive.left);
 		robot.setRightSpeed(drive.right);
 		robot.setIntakeElevation(autoState.intakeRaiseState());
-		robot.setBrakes(autoState.setBrakes());
-	    if (robot.getSensorData().getLidarRpm() < RPM_MIN) {
-	    	motorSpeed *= 1.01;
-	    } else if (robot.getSensorData().getLidarRpm() > RPM_MAX) {
-	    	motorSpeed *= 0.99;
-	    }
-	    robot.setLidarSpeed(motorSpeed);
 	}
 
 	@Override
