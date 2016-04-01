@@ -25,4 +25,5 @@ public interface ISensorData {
 	IGyro getGyro();
 	
 	void sendAttackColor(String destination, String color);
+	boolean isVisionStale();
 }

@@ -17,6 +17,9 @@ public class SensorData implements ISensorData {
 	private FieldPosition position;
 	private JSONParser parser = new JSONParser();
 	private IGyro gyro;
+	private static final int VISION_STALE_THRESHOLD = 80;
+	// We can't initially trust the vision number until we get some data
+	int visionStaleness = VISION_STALE_THRESHOLD;
 	
 	private double lidarRpm = 250;
 	private double leftSideBack, rightSideBack, leftSideFront, rightSideFront;
@@ -30,6 +33,9 @@ public class SensorData implements ISensorData {
 
 	@Override
 	public void interpretData() {
+		// Vision gets staler and staler over time, but will reset every time
+		// we actually see a message from the vision system.
+		visionStaleness++;
 		while (receiver.hasMessage()) {
 			UDPMessage latest = receiver.popLatestMessage();
 			JSONObject obj;
@@ -151,6 +157,7 @@ public class SensorData implements ISensorData {
 	public void setVision(double h, double r) {
 		this.visionHeading = h;
 		this.visionRange = r;
+		this.visionStaleness = 0;
 	}
 	
 	@Override
@@ -195,5 +202,10 @@ public class SensorData implements ISensorData {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public boolean isVisionStale() {
+		return visionStaleness >= VISION_STALE_THRESHOLD;
 	}
 }
