@@ -43,6 +43,7 @@ public class Channel implements IChannel {
 					}
 					String data = new String(receivePacket.getData());
 					data = data.substring(0, receivePacket.getLength());
+					System.out.println(data);
 					containerChannel.putMessage(new UDPMessage(data, receivePacket.getAddress()));
 				}
 				serverSocket.close();

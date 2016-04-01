@@ -7,7 +7,7 @@ public class RotateAutonomous extends AutoState {
 	long timeStart;
 	long timeLimit;
 	double speed = 1;
-	enum TurnDirection { Left, Right }
+	public enum TurnDirection { Left, Right }
 	TurnDirection turnDirection;
 
 	public RotateAutonomous(int millis, double speed, TurnDirection turnDirection) {
