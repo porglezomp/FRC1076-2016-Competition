@@ -20,10 +20,10 @@ public class VisionAutonomousTest {
 		VisionAutonomous auto = new VisionAutonomous(10, speed, sensorData);
 		auto.init();
 		MotorOutput motor = auto.driveTrainSpeed();
-		assertEquals("Right motor should drive slower to turn left.", 
-				speed * auto.getSpeedDifference(), motor.right, EPSILON);
-		assertEquals("Left motor should drive at normal speed.", 
-				speed, motor.left, EPSILON);
+		assertEquals("Right motor should drive at normal speed.", 
+				speed, motor.right, EPSILON);
+		assertEquals("Left motor should drive slower to turn right.", 
+				speed * auto.getSpeedDifference(), motor.left, EPSILON);
 	}
 	
 	@Test
@@ -33,15 +33,15 @@ public class VisionAutonomousTest {
 		VisionAutonomous auto = new VisionAutonomous(10, speed, sensorData);
 		auto.init();
 		MotorOutput motor = auto.driveTrainSpeed();
-		assertEquals("Right motor should drive at normal speed.", 
-				speed, motor.right, EPSILON);
-		assertEquals("Left motor should drive slower to turn right.", 
-				speed * auto.getSpeedDifference(), motor.left, EPSILON);
+		assertEquals("Right motor should drive slower to turn left.", 
+				speed * auto.getSpeedDifference(), motor.right, EPSILON);
+		assertEquals("Left motor should drive at normal speed.", 
+				speed, motor.left, EPSILON);
 	}
 	
 	@Test
 	public void testHeadingTolerance() {
-		sensorData.setVision(5, r);
+		sensorData.setVision(1, r);
 		double speed = 0.5;
 		VisionAutonomous auto = new VisionAutonomous(10, speed, sensorData);
 		auto.init();

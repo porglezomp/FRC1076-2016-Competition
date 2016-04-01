@@ -13,6 +13,7 @@ public class MockSensorData implements ISensorData {
 	public IGyro gyro;
 	public IChannel channel;
 	public FieldPosition position;
+	public boolean visionStale;
 	
 	@Override
 	public void interpretData() {
@@ -49,4 +50,5 @@ public class MockSensorData implements ISensorData {
 	}
 
 	@Override public void sendAttackColor(String destination, String color) { }
+	@Override public boolean isVisionStale() { return visionStale; }
 }

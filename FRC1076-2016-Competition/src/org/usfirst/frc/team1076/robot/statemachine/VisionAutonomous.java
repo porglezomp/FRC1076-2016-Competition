@@ -12,8 +12,8 @@ import org.usfirst.frc.team1076.udp.ISensorData;
  * It does not use range data. 
  *  */
 public class VisionAutonomous extends AutoState {
-	private final static double TOLERANCE = 10; // In degrees (?).
-	private final static double SPEED_DIFFERENCE = 0.75;
+	private final static double TOLERANCE = 2; // In degrees (?).
+	private final static double SPEED_DIFFERENCE = 0.85;
 	ISensorData sensorData;
 	double currentHeading;
 	double speed;
@@ -46,10 +46,11 @@ public class VisionAutonomous extends AutoState {
 		}
 		
 		if (currentHeading > TOLERANCE) {
-			// Drive leftwards.
-			return new MotorOutput(speed * SPEED_DIFFERENCE, speed);
-		} else if (currentHeading < -TOLERANCE) {
+			// Turn right
 			return new MotorOutput(speed, speed * SPEED_DIFFERENCE);
+		} else if (currentHeading < -TOLERANCE) {
+			// Turn left
+			return new MotorOutput(speed * SPEED_DIFFERENCE, speed);
 		} else {
 			return new MotorOutput(speed, speed);
 		}

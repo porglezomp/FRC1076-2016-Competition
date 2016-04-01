@@ -10,6 +10,7 @@ public class StateMachineCompiler {
 			segment = segment.trim();
 			String[] parts = segment.split(" ");
 			double time, speed;
+			RotateAutonomous.TurnDirection direction;
 			try {
 				AutoState nextState;
 				switch (parts[0].toLowerCase()) {
@@ -24,13 +25,12 @@ public class StateMachineCompiler {
 					break;
 				case "r":
 				case "rotate":
-					RotateAutonomous.TurnDirection direction;
 					if (parts[1].toLowerCase().equals("left")) {
 						direction = RotateAutonomous.TurnDirection.Left;
 					} else if (parts[1].toLowerCase().equals("right")) {
 						direction = RotateAutonomous.TurnDirection.Right;
 					} else {
-						throw new Exception("Unexpected rotation direction " + parts[1]);
+						throw new Exception("Unexpected rotation direction '" + parts[1] + "'");
 					}
 					time = Double.parseDouble(parts[2]);
 					speed = 1;
@@ -47,6 +47,21 @@ public class StateMachineCompiler {
 						speed = Double.parseDouble(parts[2]);
 					}
 					nextState = new VisionAutonomous((int) (time * 1000), -speed, sensorData);
+				case "l":
+				case "locate":
+					if (parts[1].toLowerCase().equals("left")) {
+						direction = RotateAutonomous.TurnDirection.Left;
+					} else if (parts[1].toLowerCase().equals("right")) {
+						direction = RotateAutonomous.TurnDirection.Right;
+					} else {
+						throw new Exception("Unexpected locate direction '" + parts[1] + "'");
+					}
+					speed = 1;
+					if (parts.length > 2) {
+						speed = Double.parseDouble(parts[2]);
+					}
+					nextState = new LocateTargetAutonomous(sensorData, direction, speed);
+					break;
 				case "i":
 				case "intake":
 					time = Double.parseDouble(parts[1]);
