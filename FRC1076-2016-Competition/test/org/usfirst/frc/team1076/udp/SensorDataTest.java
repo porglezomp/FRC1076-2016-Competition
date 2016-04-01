@@ -22,7 +22,7 @@ public class SensorDataTest {
 	
 	@Before
 	public void setupChannelAndData() {
-		channel = new MockChannel();
+		channel = new MockChannel(5880);
 		data = new SensorData(channel, FieldPosition.Left, new MockGyro());
 	}
 	
@@ -94,8 +94,8 @@ public class SensorDataTest {
 		DatagramSocket socket = new DatagramSocket(5888);
 		socket.setSoTimeout(1000);
 		
-		data.sendAttackColor("127.0.0.1:5888", "red");
-		DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
+		data.sendAttackColor("127.0.0.1", "red");
+		DatagramPacket packet = new DatagramPacket(new byte[1024], 1024	);
 		socket.receive(packet);
 		String message = new String(packet.getData());
 		message = message.substring(0, packet.getLength());
@@ -105,7 +105,7 @@ public class SensorDataTest {
 		assertEquals("robot", object.get("sender"));
 		assertEquals("target", object.get("message"));
 		
-		data.sendAttackColor("127.0.0.1:5888", "blue");
+		data.sendAttackColor("127.0.0.1", "blue");
 		packet = new DatagramPacket(new byte[1024], 1024);
 		socket.receive(packet);
 		message = new String(packet.getData());

@@ -180,7 +180,7 @@ public class SensorData implements ISensorData {
 			object.put("sender", "robot");
 			object.put("message", "target");
 			String message = object.toJSONString();
-			receiver.sendMessage(message, target);
+			receiver.sendMessage(message, target, 5888);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
