@@ -1,5 +1,9 @@
 package org.usfirst.frc.team1076.udp;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -165,4 +169,24 @@ public class SensorData implements ISensorData {
 	@Override public double getRightSideFront() { return rightSideFront; }
 	@Override public double getLeftFront() { return leftFront; }
 	@Override public double getRightFront() { return rightFront; }
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void sendAttackColor(String destination, String color) {
+		try {
+			InetAddress target = InetAddress.getByName(destination);
+			JSONObject object = new JSONObject();
+			object.put("color", color);
+			object.put("sender", "robot");
+			object.put("message", "target");
+			String message = object.toJSONString();
+			receiver.sendMessage(message, target);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

@@ -47,4 +47,6 @@ public class MockSensorData implements ISensorData {
 		this.visionHeading = h;
 		this.visionRange = r;
 	}
+
+	@Override public void sendAttackColor(String destination, String color) { }
 }
