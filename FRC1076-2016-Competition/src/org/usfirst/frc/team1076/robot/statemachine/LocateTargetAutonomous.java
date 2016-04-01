@@ -10,8 +10,8 @@ public class LocateTargetAutonomous extends AutoState {
 	private static final double SLOW_THRESHOLD = 1;
 	private static final double SLOW_SPEED = 0.4;
 	ISensorData sensorData;
-	TurnDirection turnDirection;
-	private double speed;
+	public final TurnDirection turnDirection;
+	public final double speed;
 	
 	public LocateTargetAutonomous(ISensorData sensorData, TurnDirection turnDirection, double speed) {
 		this.sensorData = sensorData;
