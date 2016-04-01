@@ -15,9 +15,11 @@ import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.IOperatorInput.IntakeRaiseState;
 import org.usfirst.frc.team1076.robot.gamepad.OperatorInput;
 import org.usfirst.frc.team1076.robot.gamepad.TankInput;
+import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.IntakeElevationAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
+import org.usfirst.frc.team1076.robot.statemachine.StateMachineCompiler;
 import org.usfirst.frc.team1076.udp.Channel;
 import org.usfirst.frc.team1076.udp.IChannel;
 import org.usfirst.frc.team1076.udp.SensorData;
@@ -87,6 +89,11 @@ public class Robot extends IterativeRobot implements IRobot {
 		SmartDashboard.putBoolean("Backwards", false);		
     	SmartDashboard.putNumber("LIDAR Speed", 80);
     	SmartDashboard.putNumber("Motor Tweak", MOTOR_POWER_FACTOR);
+    	SmartDashboard.putBoolean("Auto Program Enabled", false);
+    	SmartDashboard.putString("Auto Program", "elevate up ; forward 3.9 0.65 ; elevate down ;"
+    			+ "forward 0.6 0.5 ; rotate left 0.3 ; forward 3.5 ; rotate right 0.59 ;"
+    			+ "vision 2.5 0.45 ; intake 1 out ; intake 0.5 in ; rotate right 0.05 ;"
+    			+ "intake 1 out ; intake 0.5 in ; rotate right 0.05 ; intake 1 out");
 		
 		// Initialize the physical components before the controllers,
 		// in case they depend on them.
@@ -148,7 +155,11 @@ public class Robot extends IterativeRobot implements IRobot {
 	 */
 	@Override
     public void autonomousInit() {
-		if (SmartDashboard.getBoolean("Low Bar")) {
+		if (SmartDashboard.getBoolean("Auto Program Enabled")) {
+			String source = SmartDashboard.getString("Auto Program");
+			AutoState program = StateMachineCompiler.compile(source, sensorData);
+			autoController = new AutoController(program);
+		} else if (SmartDashboard.getBoolean("Low Bar")) {
 			autoController = new AutoController(new IntakeElevationAutonomous(IntakeRaiseState.Lowered)
 					.addNext(new ForwardAutonomous(6000, -0.6)));
 		} else if (SmartDashboard.getBoolean("Backwards")) {
