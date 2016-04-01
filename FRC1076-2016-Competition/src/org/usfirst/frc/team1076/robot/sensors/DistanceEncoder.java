@@ -22,9 +22,10 @@ public class DistanceEncoder implements IDistanceEncoder {
 
 	public void updateDistance() {
 		// This function should be called often and whenever the gearShifter changes gears.
-		double deltaCount = getRaw() - countAccumulator;
+		double deltaCount = Math.abs(getRaw() - countAccumulator);
 		countAccumulator = getRaw();
 		GearStates currentGear = gearShifter.getGearState();
+		countAccumulator = getRaw();
 		
 		if (currentGear == null) {
 			System.err.println("currentGear is null or gearShifter is null in DistanceEncoder");
@@ -64,7 +65,7 @@ public class DistanceEncoder implements IDistanceEncoder {
 	public double getRaw() {
 		return encoder.getRaw();
 	}
-	
+
 	public double highGearCountsToInches(double counts) {
 		return counts / COUNTS_PER_MOTOR_ROTATION 
 				/ HIGH_GEAR_RATIO * INCHES_PER_WHEEL_ROTATION;

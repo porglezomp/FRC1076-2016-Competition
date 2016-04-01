@@ -21,7 +21,7 @@ public class DistanceAutonomous extends AutoState {
 	}
 	
 	@Override
-	public void init(){
+	public void init() {
 		this.encoderZeroPoint = encoder.getDistance(); 		
 	}
 	
