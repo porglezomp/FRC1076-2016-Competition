@@ -66,8 +66,8 @@ public class Robot extends IterativeRobot implements IRobot {
 	Servo lidarServo = new Servo(0);
 	
 	Compressor compressor = new Compressor(0);
-	ISolenoid intakePneumatic = new OneSolenoid(1);
-	ISolenoid shifterPneumatic = new OneSolenoid(0);
+	ISolenoid intakePneumatic = new TwoSolenoid(2, 3);
+	ISolenoid shifterPneumatic = new TwoSolenoid(0, 1);
 	IDistanceEncoder encoder;
 	
 	IRobotController teleopController;
