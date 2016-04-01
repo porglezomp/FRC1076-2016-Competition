@@ -20,6 +20,7 @@ import org.usfirst.frc.team1076.robot.sensors.IDistanceEncoder;
 import org.usfirst.frc.team1076.robot.statemachine.AutoState;
 import org.usfirst.frc.team1076.robot.statemachine.ForwardAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.IntakeAutonomous;
+import org.usfirst.frc.team1076.robot.statemachine.IntakeElevationAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.NothingAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.RotateAutonomous;
 import org.usfirst.frc.team1076.robot.statemachine.VisionAutonomous;
@@ -110,10 +111,12 @@ public class Robot extends IterativeRobot implements IRobot {
 		SmartDashboard.putNumber("Distance", autoDriveDistance);
 		SmartDashboard.putNumber("Initial Lidar Speed", initialLidarSpeed);
     	SmartDashboard.putBoolean("Auto Program Enabled", false);
-    	SmartDashboard.putString("Auto Program", "elevate up ; forward 3.9 0.65 ; elevate down ;"
+    	SmartDashboard.putString("Auto Program", "forward 6 0.65");
+    	/* elevate up ; forward 3.9 0.65 ; elevate down ;"
     			+ "forward 0.6 0.5 ; rotate left 0.3 ; forward 3.5 ; rotate right 0.59 ;"
     			+ "vision 2.5 0.45 ; intake 1 out ; intake 0.5 in ; rotate right 0.05 ;"
     			+ "intake 1 out ; intake 0.5 in ; rotate right 0.05 ; intake 1 out");
+    	 */
 
 		// Initialize the physical components before the controllers,
 		// in case they depend on them.
@@ -158,14 +161,15 @@ public class Robot extends IterativeRobot implements IRobot {
 	 */
 	@Override
     public void autonomousInit() {
-		sensorData.sendAttackColor("tegra-ubuntu:5888", SmartDashboard.getString("Enemy Color"));
+		sensorData.sendAttackColor("tegra-ubuntu", SmartDashboard.getString("Enemy Color"));
 		
+		/*
 		if (SmartDashboard.getBoolean("Auto Program Enabled")) {
 			String source = SmartDashboard.getString("Auto Program");
 			AutoState program = StateMachineCompiler.compile(source, sensorData);
 			autoController = new AutoController(program);
 		} else {
-			autoDriveDistance = SmartDashboard.getNumber("Distance");
+		    autoDriveDistance = SmartDashboard.getNumber("Distance");
 			lidarMotorSpeed = SmartDashboard.getNumber("Initial Lidar Speed");
 			autoController = new AutoController(
 					new ForwardAutonomous(600, -0.5)
@@ -177,14 +181,15 @@ public class Robot extends IterativeRobot implements IRobot {
 					.addNext(new IntakeAutonomous(1000, 1))
 					.addNext(new IntakeAutonomous(1500, -1)));
 		}
-		/*
+		*/
+		
+		autoController = new AutoController(new ForwardAutonomous(6000, -0.65));
 		if (SmartDashboard.getBoolean("Low Bar")) {
 			autoController = new AutoController(new IntakeElevationAutonomous(IntakeRaiseState.Lowered)
 					.addNext(new ForwardAutonomous(6000, -0.6)));
 		} else if (SmartDashboard.getBoolean("Backwards")) {
-			autoController = new AutoController(new ForwardAutonomous(6000, 0.6));
+			autoController = new AutoController(new ForwardAutonomous(6000, 0.65));
 		}
-		*/
 		
     	if (autoController != null) {
     		autoController.autonomousInit(this);
