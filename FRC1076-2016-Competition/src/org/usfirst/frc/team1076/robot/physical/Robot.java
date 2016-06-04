@@ -45,23 +45,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot implements IRobot {
 	static final int LEFT_INDEX = 3;
-	static final int LEFT_SLAVE_INDEX = 4;
+	static final int LEFT_FOLLOWER_INDEX = 4;
 	static final int RIGHT_INDEX = 1;
-	static final int RIGHT_SLAVE_INDEX = 2;
+	static final int RIGHT_FOLLOWER_INDEX = 2;
 	static final int INTAKE_INDEX = 5;
 	static final int ARM_INDEX = 8;
 	static final int ARM_EXTEND_INDEX = 7;
-	static final int ARM_EXTEND_SLAVE_INDEX = 6;
+	static final int ARM_EXTEND_FOLLOWER_INDEX = 6;
 	
 	double MOTOR_POWER_FACTOR = 0.9;
 	
 	CANTalon leftMotor = new CANTalon(LEFT_INDEX);
-	CANTalon leftSlave = new CANTalon(LEFT_SLAVE_INDEX);
+	CANTalon leftFollower = new CANTalon(LEFT_FOLLOWER_INDEX);
 	CANTalon rightMotor = new CANTalon(RIGHT_INDEX);
-	CANTalon rightSlave = new CANTalon(RIGHT_SLAVE_INDEX);
+	CANTalon rightFollower = new CANTalon(RIGHT_FOLLOWER_INDEX);
 	CANTalon intakeMotor = new CANTalon(INTAKE_INDEX);
 	CANTalon armExtendMotor = new CANTalon(ARM_EXTEND_INDEX);
-	CANTalon armExtendSlave = new CANTalon(ARM_EXTEND_SLAVE_INDEX);
+	CANTalon armExtendFollower = new CANTalon(ARM_EXTEND_FOLLOWER_INDEX);
 	CANTalon armMotor = new CANTalon(ARM_INDEX);
 	Servo lidarServo = new Servo(0);
 	
@@ -117,16 +117,16 @@ public class Robot extends IterativeRobot implements IRobot {
 
 		// Initialize the physical components before the controllers,
 		// in case they depend on them.
-		// rightSlave.changeControlMode(TalonControlMode.Follower);
-		// rightSlave.set(RIGHT_INDEX);
-		leftSlave.setInverted(true);
+		// rightFollower.changeControlMode(TalonControlMode.Follower);
+		// rightFollower.set(RIGHT_INDEX);
+		leftFollower.setInverted(true);
 		leftMotor.setInverted(true);
 		armMotor.enableBrakeMode(true);
 		armExtendMotor.enableBrakeMode(true);
-		armExtendSlave.enableBrakeMode(true);
+		armExtendFollower.enableBrakeMode(true);
 		
-		// leftSlave.changeControlMode(TalonControlMode.Follower);
-		// leftSlave.set(LEFT_INDEX);
+		// leftFollower.changeControlMode(TalonControlMode.Follower);
+		// leftFollower.set(LEFT_INDEX);
 		
 		compressor.setClosedLoopControl(true);
 		setIntakeElevation(IntakeRaiseState.Raised);
@@ -272,14 +272,14 @@ public class Robot extends IterativeRobot implements IRobot {
     
 	@Override
 	public void setLeftSpeed(double speed) {
-		leftSlave.set(speed * MOTOR_POWER_FACTOR * robotSpeed);
+		leftFollower.set(speed * MOTOR_POWER_FACTOR * robotSpeed);
 		leftMotor.set(speed * MOTOR_POWER_FACTOR * robotSpeed);
 	}
 
 	@Override
 	public void setRightSpeed(double speed) {
 		rightMotor.set(speed * robotSpeed);
-		rightSlave.set(speed * robotSpeed);
+		rightFollower.set(speed * robotSpeed);
 	}
 	
 	@Override
@@ -290,7 +290,7 @@ public class Robot extends IterativeRobot implements IRobot {
 	@Override
 	public void setArmExtendSpeed(double speed) {
 		armExtendMotor.set(speed * armExtendSpeed);
-		armExtendSlave.set(speed * armExtendSpeed);
+		armExtendFollower.set(speed * armExtendSpeed);
 	}
 	
 	@Override
@@ -307,9 +307,9 @@ public class Robot extends IterativeRobot implements IRobot {
 	@Override
 	public void setBrakes(boolean enabled) {
 		leftMotor.enableBrakeMode(enabled);
-		leftSlave.enableBrakeMode(enabled);
+		leftFollower.enableBrakeMode(enabled);
 		rightMotor.enableBrakeMode(enabled);
-		rightSlave.enableBrakeMode(enabled);
+		rightFollower.enableBrakeMode(enabled);
 	}
 
 	@Override
